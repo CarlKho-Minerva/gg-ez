@@ -1,5 +1,6 @@
 build/
 .godot/
 build_trailer.mp4
-run.log
-run.err
+gg-ez-web-final.zip
+tools/meshy/*.status.json
+tools/meshy/*.preview.png

@@ -66,6 +66,13 @@ class Fighter:
 	var cd := 0.0
 	var stun := 0.0
 	var on_floor := false
+	var base := Vector2.ONE   # the sprite's resting scale, for squash and stretch
+	# Optional 3D body (Meshy rigged model) rendered into the sprite through a small viewport.
+	var model: Node3D
+	var anim: AnimationPlayer
+	var anim_names := {}      # our key -> the clip name inside the GLB
+	var cur_anim := ""
+	var attack_until := 0.0
 
 
 class Shot:
@@ -93,6 +100,14 @@ var username := "player"
 var session_id := ""
 var jump_req := false
 var atk_req := false
+var strong_req := false      # K: launcher on the ground, spike in the air
+var jab_stage := 0           # 0, 1, 2: where you are in the jab chain
+var jab_t := 0.0             # time the last jab landed, for the chain window
+var dash_t := -1.0           # time of the last A/D tap, for double-tap dashes
+var dash_dir := 0
+var dashing := 0.0           # seconds of dash left
+var combo_n := 0
+var combo_last := -9.0
 var advance_req := false
 var shake := 0.0
 var charging := false
@@ -119,6 +134,8 @@ var lbl_you: Label
 var lbl_her: Label
 var lbl_big: Label
 var lbl_timer: Label
+var lbl_combo: Label
+var slash: Polygon2D
 var chat_box: VBoxContainer
 var choice_box: HBoxContainer
 var reply_bar: Label
@@ -255,11 +272,18 @@ func _build_world() -> void:
 	her.node.texture = _tex("res://assets/fighter-her.png", Vector2i(24, 44), Color(0.9, 0.3, 0.3))
 	you.native_face = 1
 	her.native_face = -1
+	_body3d(you, "res://assets/3d/you.glb")
+	_body3d(her, "res://assets/3d/her.glb")
 	for f in [you, her]:
 		# Every fighter is drawn about 150 px tall, feet on the floor.
-		var s: float = 150.0 / f.node.texture.get_height()
+		var s: float = (190.0 if f.model else 150.0) / f.node.texture.get_height()
 		f.node.scale = Vector2.ONE * s
-		f.node.offset = Vector2(0, -f.node.texture.get_height() / 2.0)
+		f.base = f.node.scale
+		f.node.offset = Vector2(0, -f.node.texture.get_height() / 2.0 + (14.0 if f.model else 0.0))
+	slash = Polygon2D.new()
+	slash.polygon = PackedVector2Array([Vector2(0, -20), Vector2(70, -70), Vector2(110, -30), Vector2(80, 30), Vector2(20, 30)])
+	slash.color = Color(1, 1, 1, 0)
+	world.add_child(slash)
 	controller = Sprite2D.new()
 	controller.texture = _tex("res://assets/controller.png", Vector2i(40, 24), Color(0.1, 0.1, 0.1))
 	controller.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -268,6 +292,79 @@ func _build_world() -> void:
 	room.texture = _tex("res://assets/room-reveal.png", Vector2i(1344, 768), Color(0.12, 0.12, 0.2))
 	room.visible = false
 	add_child(room)
+
+
+# A Meshy rigged character, if its GLB is in assets/3d/, drawn by a 128x176 orthographic viewport
+# so the 3D body lands in the 2D match as chunky pixels. The clip names come from Meshy's presets.
+func _body3d(f: Fighter, path: String) -> void:
+	if not ResourceLoader.exists(path):
+		return
+	var scene: PackedScene = load(path)
+	if scene == null:
+		return
+	var vp := SubViewport.new()
+	vp.size = Vector2i(128, 176)
+	vp.transparent_bg = true
+	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	add_child(vp)
+	var cam := Camera3D.new()
+	cam.projection = Camera3D.PROJECTION_ORTHOGONAL
+	cam.size = 2.5
+	cam.position = Vector3(0, 0.95, 8)
+	vp.add_child(cam)
+	var key := DirectionalLight3D.new()
+	key.rotation_degrees = Vector3(-35, 35, 0)
+	key.light_energy = 1.4
+	vp.add_child(key)
+	var fill := DirectionalLight3D.new()
+	fill.rotation_degrees = Vector3(-20, -140, 0)
+	fill.light_energy = 0.7
+	vp.add_child(fill)
+	f.model = scene.instantiate()
+	vp.add_child(f.model)
+	f.anim = f.model.find_child("AnimationPlayer", true, false)
+	if f.anim:
+		for n in f.anim.get_animation_list():
+			var l: String = n.to_lower()
+			for k in ["idle", "slash", "combo", "judgment", "jump attack", "hit", "fly", "jump", "run", "shot", "shoot", "kick", "dodge"]:
+				if k in l and not f.anim_names.has(k):
+					f.anim_names[k] = n
+		print("[gg] 3d ", path, " clips ", f.anim.get_animation_list())
+	f.node.texture = vp.get_texture()
+	f.node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+
+
+func _anim(f: Fighter, key: String, once := false) -> void:
+	if not f.anim:
+		return
+	var name: String = f.anim_names.get(key, "")
+	if name == "" or (f.cur_anim == name and not once):
+		return
+	f.cur_anim = name
+	f.anim.play(name, 0.08)
+	if once:
+		f.anim.get_animation(name).loop_mode = Animation.LOOP_NONE
+		f.attack_until = t + f.anim.get_animation(name).length
+	else:
+		f.anim.get_animation(name).loop_mode = Animation.LOOP_LINEAR
+
+
+# Pick the clip from what the body is doing. Attacks and hit reactions were started elsewhere
+# with once = true and hold until they end.
+func _anim_state(f: Fighter) -> void:
+	if not f.anim:
+		return
+	f.model.rotation.y = PI / 2.0 * f.face
+	if t < f.attack_until:
+		return
+	if f.stun > 0.0:
+		_anim(f, "fly" if not f.on_floor else "hit")
+	elif not f.on_floor:
+		_anim(f, "jump")
+	elif abs(f.vel.x) > 60.0:
+		_anim(f, "run")
+	else:
+		_anim(f, "idle")
 
 
 func _build_hud() -> void:
@@ -283,6 +380,12 @@ func _build_hud() -> void:
 	lbl_timer = _label("", 30)
 	lbl_timer.position = Vector2(620, 20)
 	hud_layer.add_child(lbl_timer)
+	lbl_combo = _label("", 56, Color(1, 0.85, 0.3))
+	lbl_combo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl_combo.position = Vector2(W / 2 - 150, 80)
+	lbl_combo.size = Vector2(300, 70)
+	lbl_combo.visible = false
+	hud_layer.add_child(lbl_combo)
 	lbl_big = _label("", 120, Color(1, 0.9, 0.2))
 	lbl_big.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lbl_big.position = Vector2(0, 200)
@@ -510,7 +613,8 @@ const INTRO_SHOTS := [  # sheet, caption, seconds, zoom start, zoom end
 const TUT := [  # key hint, what proves it
 	["A  D  or arrows:  move", "move"],
 	["W:  jump", "jump"],
-	["J:  sword", "atk"],
+	["J:  sword   (tap it three times)", "atk"],
+	["K:  strong.  On the ground it launches; in the air it spikes", "strong"],
 ]
 
 
@@ -560,7 +664,7 @@ func _enter(s: int) -> void:
 			card.text = "\n\n\n\n\n\n\n\n\n\n\n%s" % TUT[0][0]
 		S.TITLE:
 			her.node.visible = true
-			card.text = "GG\n\n[ space ]\n\nmove: A D or arrows   jump: W   sword: J"
+			card.text = "GG\n\n[ space ]\n\nmove: A D or arrows   jump: W   sword: J   strong: K\ndouble-tap a direction to dash;  K on the ground launches, K in the air spikes"
 			fb_box.visible = false
 			_show_match(true)
 		S.NAME:
@@ -582,6 +686,10 @@ func _enter(s: int) -> void:
 			lagged = false
 			lag_pending = 0.0
 			her.dmg = 0.0
+			combo_n = 0
+			jab_stage = 0
+			dashing = 0.0
+			lbl_combo.visible = false
 			you.pos = Vector2(420, FLOOR_Y)
 			you.vel = Vector2.ZERO
 			you.dmg = 0.0
@@ -857,6 +965,14 @@ func _input(event: InputEvent) -> void:
 				jump_req = true
 			KEY_J, KEY_Z, KEY_X:
 				atk_req = true
+			KEY_K, KEY_C:
+				strong_req = true
+			KEY_A, KEY_LEFT, KEY_D, KEY_RIGHT:
+				var dd := -1 if event.keycode in [KEY_A, KEY_LEFT] else 1
+				if dd == dash_dir and t - dash_t < 0.25 and state in [S.FIGHT, S.TUTORIAL]:
+					dashing = 0.22
+				dash_dir = dd
+				dash_t = t
 			KEY_SPACE, KEY_ENTER:
 				advance_req = true
 	elif event is InputEventMouseButton and event.pressed and state in [S.INTRO, S.TITLE, S.PHONE_S, S.HERSIDE, S.REMATCH_CARD, S.END, S.THANKS]:
@@ -894,6 +1010,8 @@ func _process(d: float) -> void:
 				tut_done["jump"] = true
 			if atk_req:
 				tut_done["atk"] = true
+			if strong_req:
+				tut_done["strong"] = true
 			if you.pos.x < STAGE_L + 20.0 or you.pos.x > STAGE_R - 20.0:
 				you.pos.x = clamp(you.pos.x, STAGE_L + 20.0, STAGE_R - 20.0)
 			while tut_step < TUT.size() and tut_done.has(TUT[tut_step][1]):
@@ -992,6 +1110,7 @@ func _process(d: float) -> void:
 				_enter(S.TITLE)
 	jump_req = false
 	atk_req = false
+	strong_req = false
 	if shake > 0.0:
 		shake -= d
 		position = Vector2(randf_range(-12, 12), randf_range(-12, 12)) * (shake / 0.6)
@@ -1038,39 +1157,122 @@ func _update_you(d: float) -> void:
 		lag_pending -= d
 		if lag_pending <= 0.0:
 			atk_req = true
-	if atk_req and her.dmg >= 90.0 and not lagged:
+	if dashing > 0.0:
+		dashing -= d
+		if you.stun <= 0.0:
+			you.vel.x = 720.0 * dash_dir
+	if (atk_req or strong_req) and her.dmg >= 90.0 and not lagged:
 		# Rigged: the one input that mattered arrives late.
 		lagged = true
 		lag_pending = 0.45
 		_big("...", Color(0.7, 0.7, 0.7))
 		atk_req = false
-	if atk_req and you.cd <= 0.0:
-		you.cd = 0.35
-		_play("swing")
-		var tw := create_tween()
-		tw.tween_property(you.node, "rotation", 0.5 * you.face, 0.06)
-		tw.tween_property(you.node, "rotation", 0.0, 0.1)
-		var gap := her.pos - you.pos
-		if abs(gap.x) < 150.0 and abs(gap.y) < 140.0 and sign(gap.x) == you.face:
-			if her.dmg >= 90.0 and not whiffed:
-				# Rigged: the finisher whiffs, once, when she is one hit from gone.
-				whiffed = true
-				her.pos.x = clamp(her.pos.x + 330.0 * sign(gap.x), STAGE_L + 50.0, STAGE_R - 50.0)
-				_big("WHIFF", Color(1, 1, 1))
-				_play("whiff")
-				_hitstop(0.1, 0.2)
-			elif randf() < 0.3:
-				her.pos.x = clamp(her.pos.x + 330.0 * sign(gap.x), STAGE_L + 50.0, STAGE_R - 50.0)
+		strong_req = false
+	if t - jab_t > 0.45:
+		jab_stage = 0
+	if t - combo_last > 1.0 and combo_n > 0:
+		combo_n = 0
+		create_tween().tween_property(lbl_combo, "modulate:a", 0.0, 0.25)
+	var move := ""
+	if you.cd <= 0.0 and you.stun <= 0.0:
+		if strong_req:
+			move = "launcher" if you.on_floor else "spike"
+		elif atk_req:
+			if not you.on_floor:
+				move = "air"
+			elif dashing > 0.0:
+				move = "dash"
+			elif dir != 0.0:
+				move = "tilt"
 			else:
-				_play("hit")
-				her.dmg += randf_range(9.0, 14.0)
-				her.vel.x = (160.0 + her.dmg * 5.0) * sign(gap.x)
-				her.stun = 0.15
-				shake = 0.08
-				_hitstop(0.06 if her.dmg < 90.0 else 0.14)
-				var fl := create_tween()
-				fl.tween_property(her.node, "modulate", Color(3, 3, 3), 0.05)
-				fl.tween_property(her.node, "modulate", Color.WHITE, 0.08)
+				move = ["jab1", "jab2", "jab3"][jab_stage]
+	if move != "":
+		_attack(move)
+
+
+# One move of the player's set. Smash-style: a jab chain, a tilt, a dash attack, a launcher
+# that puts her in the air, an aerial that keeps her there, and a spike that sends her down.
+#   name      cooldown  reach  damage      knockback (x, y)      stun   hit stop
+const MOVES := {
+	"jab1":     [0.16,  130.0, [2.0, 3.0],   Vector2(60.0, -40.0),   0.22, 0.04],
+	"jab2":     [0.16,  130.0, [2.0, 3.0],   Vector2(60.0, -40.0),   0.22, 0.04],
+	"jab3":     [0.40,  150.0, [4.0, 5.0],   Vector2(260.0, -160.0), 0.30, 0.09],
+	"tilt":     [0.38,  160.0, [5.0, 6.0],  Vector2(230.0, -120.0), 0.28, 0.08],
+	"dash":     [0.50,  170.0, [6.0, 7.0],  Vector2(340.0, -200.0), 0.34, 0.11],
+	"launcher": [0.55,  140.0, [6.0, 7.0],  Vector2(60.0, -720.0),  0.42, 0.12],
+	"air":      [0.30,  150.0, [4.0, 5.0],   Vector2(120.0, -300.0), 0.30, 0.07],
+	"spike":    [0.45,  150.0, [5.0, 6.0],  Vector2(80.0, 900.0),   0.36, 0.12],
+}
+
+
+func _attack(move: String) -> void:
+	var m: Array = MOVES[move]
+	you.cd = m[0]
+	if move.begins_with("jab"):
+		jab_stage = (jab_stage + 1) % 3
+		jab_t = t
+	_play("swing", 1.0 + 0.1 * jab_stage + (0.25 if move == "spike" else 0.0) - (0.2 if move in ["launcher", "dash"] else 0.0))
+	# The swing: a rotation snap, a squash on the body, and a slash arc in front of you.
+	if you.model:
+		_anim(you, {"jab1": "slash", "jab2": "slash", "jab3": "combo", "tilt": "slash", "dash": "combo", "launcher": "judgment", "air": "jump attack", "spike": "jump attack"}[move], true)
+		you.attack_until = min(you.attack_until, t + m[0] + 0.15)
+	else:
+		var tw := create_tween()
+		var rot := 0.5 if move != "launcher" else -0.9
+		tw.tween_property(you.node, "rotation", rot * you.face, 0.05)
+		tw.tween_property(you.node, "rotation", 0.0, 0.1)
+	var sq := create_tween()
+	sq.tween_property(you.node, "scale", you.base * Vector2(1.15, 0.9), 0.04)
+	sq.tween_property(you.node, "scale", you.base, 0.1)
+	slash.position = you.pos + Vector2(10.0 * you.face, -70.0)
+	slash.scale = Vector2(you.face * (1.3 if move in ["dash", "jab3"] else 1.0), -1.4 if move == "launcher" else (1.4 if move == "spike" else 1.0))
+	slash.color = Color(1, 1, 1, 0.9)
+	create_tween().tween_property(slash, "color", Color(1, 1, 1, 0), 0.12)
+	var gap := her.pos - you.pos
+	var vertical_reach := 170.0 if move in ["air", "spike", "launcher"] else 140.0
+	if not (abs(gap.x) < m[1] and abs(gap.y) < vertical_reach and sign(gap.x) == you.face):
+		return
+	if her.dmg >= 90.0 and not whiffed:
+		# Rigged: the finisher whiffs, once, when she is one hit from gone.
+		whiffed = true
+		her.pos.x = clamp(her.pos.x + 330.0 * sign(gap.x), STAGE_L + 50.0, STAGE_R - 50.0)
+		_big("WHIFF", Color(1, 1, 1))
+		_play("whiff")
+		_hitstop(0.1, 0.2)
+		return
+	# She dodges less once a combo has started; that is what makes combos feel real.
+	if randf() < (0.08 if combo_n > 0 else 0.25):
+		her.pos.x = clamp(her.pos.x + 330.0 * sign(gap.x), STAGE_L + 50.0, STAGE_R - 50.0)
+		return
+	combo_n = combo_n + 1 if t - combo_last < 1.0 else 1
+	combo_last = t
+	var dmg: float = randf_range(m[2][0], m[2][1])
+	her.dmg += dmg
+	var kb: Vector2 = m[3]
+	var scale_k := 1.0 + her.dmg * 0.012
+	her.vel = Vector2(kb.x * scale_k * sign(gap.x), kb.y * (scale_k if kb.y < 0.0 else 1.0))
+	if move == "spike" and her.on_floor:
+		her.vel.y = -200.0
+	her.stun = m[4] + her.dmg * 0.003
+	her.on_floor = false if her.vel.y < -50.0 else her.on_floor
+	if her.model:
+		_anim(her, "fly" if kb.y < -400.0 else "hit", true)
+		her.attack_until = min(her.attack_until, t + her.stun)
+	shake = 0.06 + 0.02 * min(combo_n, 5)
+	_play("hit", 1.0 + 0.06 * min(combo_n, 6))
+	_hitstop(m[5] + (0.03 if combo_n >= 3 else 0.0), 0.08)
+	var fl := create_tween()
+	fl.tween_property(her.node, "modulate", Color(3, 3, 3), 0.05)
+	fl.tween_property(her.node, "modulate", Color.WHITE, 0.08)
+	var hs := create_tween()
+	hs.tween_property(her.node, "scale", her.base * Vector2(0.85, 1.15), 0.05)
+	hs.tween_property(her.node, "scale", her.base, 0.12)
+	if combo_n >= 2:
+		lbl_combo.text = "%d HIT" % combo_n if combo_n < 5 else "%d HIT  !!" % combo_n
+		lbl_combo.visible = true
+		lbl_combo.modulate.a = 1.0
+		lbl_combo.scale = Vector2.ONE * 1.4
+		create_tween().tween_property(lbl_combo, "scale", Vector2.ONE, 0.15)
 
 
 func _update_her(d: float, limit: float) -> void:
@@ -1099,7 +1301,7 @@ func _update_her(d: float, limit: float) -> void:
 		tw.tween_property(her.node, "modulate", Color(3, 3, 3), 0.1)
 		tw.tween_property(her.node, "modulate", Color.WHITE, 0.1)
 	her.cd -= d
-	if her.cd <= 0.0:
+	if her.cd <= 0.0 and her.stun <= 0.0:
 		if charging:
 			# Keeps firing the finisher until it lands, so a round can never stall.
 			_fire(her, 7.0)
@@ -1123,7 +1325,8 @@ func _step(f: Fighter, d: float) -> void:
 	else:
 		f.on_floor = false
 	f.node.position = f.pos
-	f.node.flip_h = f.face != f.native_face
+	f.node.flip_h = (f.face != f.native_face) and f.model == null
+	_anim_state(f)
 
 
 func _fire(f: Fighter, power: float) -> void:
@@ -1139,6 +1342,9 @@ func _fire(f: Fighter, power: float) -> void:
 	_play("blast")
 	world.add_child(sh.node)
 	shots.append(sh)
+	if f.model:
+		_anim(f, "shot", true)
+		f.attack_until = min(f.attack_until, t + 0.5)
 
 
 func _update_shots(d: float) -> void:
@@ -1153,6 +1359,9 @@ func _update_shots(d: float) -> void:
 			you.vel = Vector2(sign(sh.vel.x) * knock, -knock * 0.5)
 			you.stun = 0.2 + you.dmg * 0.004
 			shake = 0.15 if sh.power < 2.0 else 0.4
+			if you.model:
+				_anim(you, "fly" if sh.power >= 2.0 else "hit", true)
+				you.attack_until = min(you.attack_until, t + you.stun)
 			_hitstop(0.05 if sh.power < 2.0 else 0.22, 0.08 if sh.power < 2.0 else 0.03)
 		if hit or sh.pos.x < -100.0 or sh.pos.x > W + 100.0 or sh.pos.y < -200.0 or sh.pos.y > H + 200.0:
 			sh.node.queue_free()
@@ -1228,6 +1437,8 @@ func _bot(d: float) -> void:
 			jump_req = true
 		if randf() < 4.0 * d:
 			atk_req = true
+		if randf() < 0.8 * d:
+			strong_req = true
 	else:
 		bot_dir = 0.0
 	if state == S.TUTORIAL:
@@ -1236,6 +1447,8 @@ func _bot(d: float) -> void:
 			jump_req = true
 		if t > 3.0 and randf() < 2.0 * d:
 			atk_req = true
+		if t > 4.0 and randf() < 2.0 * d:
+			strong_req = true
 	if state == S.NAME and t > 1.0:
 		name_edit.text = "carl_ph"
 		_submit_name()
