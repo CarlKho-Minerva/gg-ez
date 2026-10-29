@@ -3,6 +3,7 @@
 import gc, sys, time
 from pathlib import Path
 import torch
+DEV = "cuda" if torch.cuda.is_available() else "mps"
 from diffusers import Krea2Pipeline
 
 OUT = Path(__file__).parent / "outputs" / "checkpoint"
@@ -30,20 +31,20 @@ def main():
     want = set(sys.argv[1:])
     OUT.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
-    pipe = Krea2Pipeline.from_pretrained("krea/Krea-2-Turbo", torch_dtype=torch.float16).to("mps")
+    pipe = Krea2Pipeline.from_pretrained("krea/Krea-2-Turbo", torch_dtype=torch.float16).to(DEV)
     print(f"model ready in {time.time()-t0:.0f}s", flush=True)
     for name, prompt, n, w, h in sorted(SHOTS, key=lambda x: ORDER.index(x[0])):
         n = COUNTS.get(name, n)
         if want and name not in want:
             continue
         for i in range(n):
-            g = torch.Generator("mps").manual_seed(SEED + i)
+            g = torch.Generator(DEV).manual_seed(SEED + i)
             t1 = time.time()
             img = pipe(prompt, height=h, width=w, num_inference_steps=8, guidance_scale=0.0, generator=g).images[0]
             p = OUT / f"{name}_{i}.png"
             img.save(p)
             print(f"{p.name} {time.time()-t1:.1f}s", flush=True)
-    del pipe; gc.collect(); torch.mps.empty_cache()
+    del pipe; gc.collect(); (torch.cuda.empty_cache() if DEV == "cuda" else torch.mps.empty_cache())
 
 if __name__ == "__main__":
     main()
