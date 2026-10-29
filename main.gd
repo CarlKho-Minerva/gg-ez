@@ -180,9 +180,17 @@ func _load_sfx() -> void:
 		room_loop.volume_db = -6.0
 
 
-func _play(n: String) -> void:
+func _play(n: String, pitch := 1.0) -> void:
 	if sfx.has(n):
+		sfx[n].pitch_scale = pitch
 		sfx[n].play()
+
+
+# Freeze the whole match for a few real milliseconds. The eye reads it as weight.
+func _hitstop(secs: float, scale := 0.08) -> void:
+	Engine.time_scale = scale
+	get_tree().create_timer(secs, true, false, true).timeout.connect(func() -> void:
+		Engine.time_scale = 1.0)
 
 
 func _label(txt: String, size: int, col := Color.WHITE) -> Label:
@@ -514,11 +522,18 @@ func _enter(s: int) -> void:
 			since_room += 1
 			lbl_big.add_theme_color_override("font_color", Color(1, 0.9, 0.2))
 			lbl_big.text = "KO"
+			Engine.time_scale = 1.0
+			lbl_her.scale = Vector2.ONE
+			if her.dmg >= 90.0:
+				card.text = "\n\n\n\n\n\n\n\n\nshe had %d%% to go" % int(100.0 - her.dmg)
+			elif her.dmg >= 50.0:
+				card.text = "\n\n\n\n\n\n\n\n\nshe was at %d%%" % int(her.dmg)
 			_play("ko")
 			_chat(HER_NAME, TAUNTS[min(losses - 1, TAUNTS.size() - 1)], Color(1, 0.6, 0.6))
 			_track("ko", {"loss": losses, "her_dmg": int(her.dmg), "you_dmg": int(you.dmg), "match_s": snapped(match_s, 0.1)})
 		S.CHOICE:
 			lbl_big.text = ""
+			card.text = ""
 			choice_box.visible = true
 			reply_bar.visible = true
 		S.SENT:
@@ -885,6 +900,8 @@ func _fight(d: float) -> void:
 	_update_shots(d)
 	lbl_you.text = "%s  %d%%" % [username, int(you.dmg)]
 	lbl_her.text = "%s  %d%%" % [HER_NAME, int(her.dmg)]
+	lbl_her.add_theme_color_override("font_color", Color(1, 0.25, 0.25) if her.dmg >= 90.0 else Color(1, 0.6, 0.6))
+	lbl_her.scale = Vector2.ONE * (1.0 + 0.08 * sin(t * 18.0)) if her.dmg >= 90.0 else Vector2.ONE
 	if you.pos.x < -150 or you.pos.x > W + 150 or you.pos.y > H + 250 or you.pos.y < -400:
 		_enter(S.KO)
 
@@ -928,6 +945,8 @@ func _update_you(d: float) -> void:
 				whiffed = true
 				her.pos.x = clamp(her.pos.x + 330.0 * sign(gap.x), STAGE_L + 50.0, STAGE_R - 50.0)
 				_big("WHIFF", Color(1, 1, 1))
+				_play("swing", 0.55)
+				_hitstop(0.1, 0.2)
 			elif randf() < 0.3:
 				her.pos.x = clamp(her.pos.x + 330.0 * sign(gap.x), STAGE_L + 50.0, STAGE_R - 50.0)
 			else:
@@ -935,6 +954,8 @@ func _update_you(d: float) -> void:
 				her.dmg += randf_range(9.0, 14.0)
 				her.vel.x = (160.0 + her.dmg * 5.0) * sign(gap.x)
 				her.stun = 0.15
+				shake = 0.08
+				_hitstop(0.06 if her.dmg < 90.0 else 0.14)
 				var fl := create_tween()
 				fl.tween_property(her.node, "modulate", Color(3, 3, 3), 0.05)
 				fl.tween_property(her.node, "modulate", Color.WHITE, 0.08)
@@ -1020,6 +1041,7 @@ func _update_shots(d: float) -> void:
 			you.vel = Vector2(sign(sh.vel.x) * knock, -knock * 0.5)
 			you.stun = 0.2 + you.dmg * 0.004
 			shake = 0.15 if sh.power < 2.0 else 0.4
+			_hitstop(0.05 if sh.power < 2.0 else 0.22, 0.08 if sh.power < 2.0 else 0.03)
 		if hit or sh.pos.x < -100.0 or sh.pos.x > W + 100.0 or sh.pos.y < -200.0 or sh.pos.y > H + 200.0:
 			sh.node.queue_free()
 			shots.erase(sh)
