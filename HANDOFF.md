@@ -1,4 +1,28 @@
-# Handoff, 2026-10-28 17:45 PT (Mac shutting down; continue on the PC)
+# Handoff, 2026-10-28 18:20 PT (built on the Mac after all; the PC pivot was dropped)
+
+State: the game is the rage loop now. `godot --path . -- --autoplay` plays it end to end (verified headless: 5 losses, a silent timeout, a rage quit at loss 3, one room visit, nice twice, end, feedback). All sprites are real; `assets/fighter-her.png` and `assets/controller.png` were cut from `tools/raw/` which already held the generated art (the old note that they needed regenerating was wrong).
+
+## The loop (main.gd)
+1. One 30 s match (`MATCH_TIME`). Your hits now land for 9-14%. She never leaves the stage ("teched it"). At 90%+ three rigs fire once each: your next swing in range WHIFFS, your next input "lags" 0.45 s ("..."), and she charges the finisher you cannot survive. If you never get her to 90, the timer does it.
+2. KO. She types "ez". A 3 s reply window (`REPLY_WINDOW`) with a countdown. Nothing picked = "said nothing", logged with reply_ms 3000.
+3. Defeat card: REMATCH (space works). After 3 losses since the last room visit (`RAGE_AFTER`) a RAGE QUIT button appears. After 5 (`FORCED_AFTER`) the controller flies on its own.
+4. Rage quit = the controller = the crack = her room. Visit 1 shows the phone and two things; each visit adds one hotspot (`_hotspots_now`). A "log off" button in the room ends the game.
+5. Then her side ("queue again") and the same two replies. The game ends on two nice replies in a row once you have seen the room at least once (`nice_streak`, `visits`), or at 8 losses (`MAX_LOSSES`), or log off.
+6. End card lists every loss: pick, reply time or "rage quit". `result` and `feedback` events carry the whole loop array (user://feedback.jsonl, PostHog if the key is set).
+
+Rig tunables are the constants at the top of main.gd. The first nice reply still "could not be sent" and does not count toward the streak.
+
+## Still open
+- Feel: Carl's note (17:35) was "too fast, reads like a movie". The loop addresses the structure; the match itself still wants a human pass (hit pause, screen shake on her hits, a sound when the whiff happens).
+- Web export: `godot --headless --export-release Web build/index.html` after installing export templates 4.7.2 in the editor. Not done.
+- POSTHOG_KEY in main.gd is empty.
+- The Checkpoint concept brief (checkpoint-jam/docs/CONCEPT_BRIEF.md) sections 2-7 still describe the retired cookie-chain game. Rewrite from this loop before Oct 31.
+- Both registration forms, the itch.io page, the 2-minute trailer.
+
+---
+
+## Earlier handoff (17:45 PT)
+
 
 State: the game plays end to end in Godot 4.7 (`godot --path . -- --autoplay` plays itself). Pushed to https://github.com/CarlKho-Minerva/gg-ez. The Mac was shut down mid-batch, so two placeholders remain: `assets/fighter-her.png` (opponent, currently a red block) and `assets/controller.png` (black block). Regenerate on the PC GPU with `tools/checkpoint_assets.py fighter-her controller` (needs the krea venv: diffusers + Krea-2-Turbo), then `tools/process_assets.py <raw dir>`.
 

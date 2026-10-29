@@ -22,9 +22,12 @@ const FLOOR_Y := 436.0
 const STAGE_L := 120.0
 const STAGE_R := 1160.0
 const GRAV := 2400.0
-const ROUND_TIME := [15.0, 10.0, 6.0]
-const REMATCH_TIME := 9.0
-const TAUNTS := ["ez", "lol", "gg ez"]
+const MATCH_TIME := 30.0
+const REPLY_WINDOW := 3.0   # seconds you get to answer "ez" before it counts as silence
+const RAGE_AFTER := 3       # losses since the last room visit before RAGE QUIT appears
+const FORCED_AFTER := 5     # losses since the last room visit before the controller flies on its own
+const MAX_LOSSES := 8
+const TAUNTS := ["ez", "ez", "gg ez", "ez", "lol ez", "ez"]
 const HER_NAME := "lia_ph"
 const OPT_NICE := "wow, you're good"
 const OPT_MEAN := "fuck you"
@@ -50,7 +53,7 @@ const PHONE := [
 	["Notes", "isang panalo pa tapos tulog na", "one more win, then sleep"],
 ]
 
-enum S { TITLE, NAME, QUEUE, FIGHT, KO, CHOICE, SENT, CRASH, REVEAL, ROOM, PHONE_S, HERSIDE, REMATCH_CARD, END, FEEDBACK, THANKS }
+enum S { TITLE, NAME, QUEUE, FIGHT, KO, CHOICE, SENT, POSTMATCH, CRASH, REVEAL, ROOM, PHONE_S, HERSIDE, REMATCH_CARD, END, FEEDBACK, THANKS }
 
 
 class Fighter:
@@ -74,9 +77,18 @@ class Shot:
 
 var state: int = S.TITLE
 var t := 0.0
-var round_i := 0
-var rematch := false
+var losses := 0
+var since_room := 0        # losses since the controller last flew
+var rematch := false       # true once you have lost at least once
+var loops: Array = []      # one dict per loss: pick, reply_ms, rage
 var choices: Array[String] = []
+var nice_streak := 0
+var visits := 0
+var end_reason := ""
+var whiffed := false
+var match_s := 0.0        # how long the last match ran
+var lagged := false
+var lag_pending := 0.0
 var username := "player"
 var session_id := ""
 var jump_req := false
@@ -109,6 +121,10 @@ var lbl_big: Label
 var lbl_timer: Label
 var chat_box: VBoxContainer
 var choice_box: HBoxContainer
+var reply_bar: Label
+var post_box: HBoxContainer
+var rage_btn: Button
+var logoff_btn: Button
 var top_layer: CanvasLayer
 var caption: Label
 var crack: TextureRect
@@ -266,6 +282,10 @@ func _build_hud() -> void:
 		b.custom_minimum_size = Vector2(290, 70)
 		b.pressed.connect(_on_choice.bind(opt))
 		choice_box.add_child(b)
+	reply_bar = _label("", 26, Color(1, 0.8, 0.5))
+	reply_bar.position = Vector2(330, 390)
+	reply_bar.visible = false
+	hud_layer.add_child(reply_bar)
 	# The old-TV filter sits above the match and its chat, below everything after the crash.
 	var crt_layer := CanvasLayer.new()
 	crt_layer.layer = 2
@@ -321,6 +341,25 @@ func _build_top() -> void:
 	top_layer.add_child(her_screen)
 	her_screen_list = VBoxContainer.new()
 	her_screen.add_child(her_screen_list)
+	post_box = HBoxContainer.new()
+	post_box.add_theme_constant_override("separation", 40)
+	post_box.position = Vector2(380, 430)
+	post_box.visible = false
+	top_layer.add_child(post_box)
+	var again := _button("REMATCH", 34)
+	again.custom_minimum_size = Vector2(240, 80)
+	again.pressed.connect(_on_rematch)
+	post_box.add_child(again)
+	rage_btn = _button("RAGE QUIT", 34)
+	rage_btn.custom_minimum_size = Vector2(240, 80)
+	rage_btn.add_theme_color_override("font_color", Color(1, 0.4, 0.4))
+	rage_btn.pressed.connect(_on_rage)
+	post_box.add_child(rage_btn)
+	logoff_btn = _button("log off", 22)
+	logoff_btn.position = Vector2(W - 170, 20)
+	logoff_btn.visible = false
+	logoff_btn.pressed.connect(_on_logoff)
+	top_layer.add_child(logoff_btn)
 	caption = _label("", 28)
 	caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -407,7 +446,7 @@ func _room_point(uv: Vector2) -> Vector2:
 func _build_hotspots() -> void:
 	for c in hotspot_layer.get_children():
 		c.queue_free()
-	for h in HOTSPOTS:
+	for h in HOTSPOTS.slice(0, _hotspots_now()):
 		var b := Button.new()
 		b.flat = true
 		b.text = "◯"
@@ -423,6 +462,11 @@ func _build_hotspots() -> void:
 		tw.tween_property(b, "modulate:a", 0.35, 0.7)
 		tw.tween_property(b, "modulate:a", 1.0, 0.7)
 		b.set_meta("tw", tw)
+
+
+func _hotspots_now() -> int:
+	# Visit 1 shows the phone and two things; every later visit adds one more.
+	return min(HOTSPOTS.size(), 2 + visits)
 
 
 # ---------- state machine ----------
@@ -448,7 +492,12 @@ func _enter(s: int) -> void:
 		S.FIGHT:
 			card.text = ""
 			lbl_big.text = ""
+			post_box.visible = false
 			charging = false
+			whiffed = false
+			lagged = false
+			lag_pending = 0.0
+			her.dmg = 0.0
 			you.pos = Vector2(420, FLOOR_Y)
 			you.vel = Vector2.ZERO
 			you.dmg = 0.0
@@ -461,16 +510,29 @@ func _enter(s: int) -> void:
 				sh.node.queue_free()
 			shots.clear()
 		S.KO:
+			losses += 1
+			since_room += 1
+			lbl_big.add_theme_color_override("font_color", Color(1, 0.9, 0.2))
 			lbl_big.text = "KO"
 			_play("ko")
-			_chat(HER_NAME, TAUNTS[min(round_i, TAUNTS.size() - 1)] if not rematch else "ez", Color(1, 0.6, 0.6))
-			_track("ko", {"round": round_i, "rematch": rematch})
+			_chat(HER_NAME, TAUNTS[min(losses - 1, TAUNTS.size() - 1)], Color(1, 0.6, 0.6))
+			_track("ko", {"loss": losses, "her_dmg": int(her.dmg), "you_dmg": int(you.dmg), "match_s": snapped(match_s, 0.1)})
 		S.CHOICE:
 			lbl_big.text = ""
 			choice_box.visible = true
+			reply_bar.visible = true
 		S.SENT:
 			choice_box.visible = false
+			reply_bar.visible = false
+		S.POSTMATCH:
+			rematch = true
+			card.text = "Defeat %d\n\n%s is still in the lobby.\n\n\n\n\n\n" % [losses, HER_NAME]
+			rage_btn.visible = since_room >= RAGE_AFTER
+			post_box.visible = true
 		S.CRASH:
+			post_box.visible = false
+			card.text = ""
+			since_room = 0
 			controller.visible = true
 			controller.position = Vector2(W / 2, H + 150)
 			controller.scale = Vector2.ONE * 1.5
@@ -481,6 +543,8 @@ func _enter(s: int) -> void:
 			tw.tween_property(controller, "rotation", 0.4, 0.35)
 			tw.chain().tween_callback(_impact)
 		S.REVEAL:
+			visits += 1
+			seen.clear()
 			crack.visible = false
 			controller.visible = false
 			_show_match(false)
@@ -500,11 +564,15 @@ func _enter(s: int) -> void:
 		S.ROOM:
 			room.modulate = Color.WHITE
 			hotspot_layer.visible = true
+			logoff_btn.visible = true
 			if seen.is_empty():
 				_build_hotspots()
-				caption.text = "2:14 AM, Quezon City. Look around."
+				var minute := 14 + 26 * (visits - 1)
+				caption.text = "%d:%02d AM, Quezon City. Look around." % [2 + minute / 60, minute % 60] if visits == 1 \
+					else "%d:%02d AM. Her room again. Something you did not see last time." % [2 + minute / 60, minute % 60]
 		S.PHONE_S:
 			hotspot_layer.visible = false
+			logoff_btn.visible = false
 			caption.text = "[ space ]"
 			phone_i = 0
 			for c in phone_list.get_children():
@@ -514,6 +582,7 @@ func _enter(s: int) -> void:
 			create_tween().tween_property(phone, "position", Vector2(840, 24), 0.5).set_trans(Tween.TRANS_BACK)
 		S.HERSIDE:
 			hotspot_layer.visible = false
+			logoff_btn.visible = false
 			create_tween().tween_property(room, "modulate", Color(0.55, 0.55, 0.6), 0.6)
 			herside_step = 0
 			portrait.texture = _tex("res://assets/portrait-her-sad.png", Vector2i(400, 400), Color(0.3, 0.3, 0.4))
@@ -521,13 +590,20 @@ func _enter(s: int) -> void:
 			her_screen.visible = true
 			for c in her_screen_list.get_children():
 				c.queue_free()
-			_screen_line("[%s] gg ez" % HER_NAME, Color(1, 0.6, 0.6))
-			if choices[0] == OPT_MEAN:
+			_screen_line("[%s] %s" % [HER_NAME, TAUNTS[min(losses - 1, TAUNTS.size() - 1)]], Color(1, 0.6, 0.6))
+			var last: String = choices[-1] if choices.size() > 0 else ""
+			if last == OPT_MEAN:
 				_screen_line("[%s] %s" % [username, OPT_MEAN], Color(1, 0.95, 0.7))
 				caption.text = "She reads it.   [ space ]"
-			else:
+			elif last == "":
+				_screen_line("[%s left the match]" % username, Color(0.7, 0.7, 0.7))
+				caption.text = "You said nothing. She only saw you leave.   [ space ]"
+			elif losses == 1:
 				_screen_line("[%s left the match]" % username, Color(0.7, 0.7, 0.7))
 				caption.text = "Your message never reached her. She only saw you leave.   [ space ]"
+			else:
+				_screen_line("[%s] %s" % [username, OPT_NICE], Color(1, 0.95, 0.7))
+				caption.text = "She reads it twice.   [ space ]"
 		S.REMATCH_CARD:
 			portrait.visible = false
 			her_screen.visible = false
@@ -540,11 +616,26 @@ func _enter(s: int) -> void:
 			card.text = "Match found: %s\n\n[ space ]" % HER_NAME
 		S.END:
 			_show_match(false)
+			post_box.visible = false
+			logoff_btn.visible = false
 			room.visible = false
-			var first: String = choices[0] if choices.size() > 0 else "-"
-			var second: String = choices[1] if choices.size() > 1 else "-"
-			card.text = "First match, you said: \"%s\"\nRematch, you said: \"%s\"\n\n%s logged off at 3:02 AM.\nHer shift starts at 10 PM.\n\n[ space ]" % [first, second, HER_NAME]
-			_track("result", {"first": first, "second": second, "changed": first != second, "seen": seen.keys()})
+			if room_loop:
+				room_loop.stop()
+			var lines: Array[String] = []
+			for i in loops.size():
+				var l: Dictionary = loops[i]
+				var how: String = "rage quit" if l["rage"] else "%.1f s" % (l["reply_ms"] / 1000.0)
+				lines.append("loss %d: %s   (%s)" % [i + 1, l["pick"], how])
+			var tail := ""
+			match end_reason:
+				"nice_twice":
+					tail = "[%s] gg. you too.\n\n%s logged off at 3:02 AM. Her shift starts at 10 PM." % [HER_NAME, HER_NAME]
+				"quit_room":
+					tail = "You logged off from her room.\n%s is still queuing." % HER_NAME
+				_:
+					tail = "%s is still queuing. So were you." % HER_NAME
+			card.text = "\n".join(lines) + "\n\n" + tail + "\n\n[ space ]"
+			_track("result", {"losses": losses, "picks": choices.duplicate(), "visits": visits, "reason": end_reason, "loops": loops.duplicate(true)})
 		S.FEEDBACK:
 			card.text = ""
 			fb_box.visible = true
@@ -579,15 +670,54 @@ func _submit_name() -> void:
 	_enter(S.QUEUE)
 
 
+# opt == "" means the reply window closed with nothing typed.
 func _on_choice(opt: String) -> void:
 	if state != S.CHOICE:
 		return
+	var reply_ms := int(t * 1000.0)
 	choices.append(opt)
-	_track("choice", {"pick": opt, "rematch": rematch})
-	_chat(username, opt, Color(1, 0.95, 0.7))
-	if not rematch and opt == OPT_NICE:
+	loops.append({"pick": opt if opt != "" else "said nothing", "reply_ms": reply_ms, "rage": false})
+	_track("choice", {"pick": opt if opt != "" else "nothing", "reply_ms": reply_ms, "loss": losses})
+	if opt == "":
+		_chat("system", "%s left the match." % username, Color(0.7, 0.7, 0.7))
+	else:
+		_chat(username, opt, Color(1, 0.95, 0.7))
+	if losses == 1 and opt == OPT_NICE:
+		# Rigged: the first kind word does not go through. It does not count toward the streak.
 		_chat("system", "Message could not be sent.", Color(0.7, 0.7, 0.7))
+		nice_streak = 0
+	elif opt == OPT_NICE:
+		nice_streak += 1
+	else:
+		nice_streak = 0
+	# The game ends on two kind replies in a row, once you have seen her room.
+	if nice_streak >= 2 and visits >= 1:
+		end_reason = "nice_twice"
 	_enter(S.SENT)
+
+
+func _on_rematch() -> void:
+	if state != S.POSTMATCH:
+		return
+	_track("rematch", {"loss": losses})
+	_enter(S.QUEUE)
+
+
+func _on_rage() -> void:
+	if state != S.POSTMATCH:
+		return
+	if loops.size() > 0:
+		loops[-1]["rage"] = true
+	_track("rage_quit", {"loss": losses, "since_room": since_room})
+	_enter(S.CRASH)
+
+
+func _on_logoff() -> void:
+	if state != S.ROOM:
+		return
+	end_reason = "quit_room"
+	_track("logoff", {"loss": losses, "visit": visits})
+	_enter(S.END)
 
 
 func _on_hotspot(thing: String, line: String, b: Button) -> void:
@@ -606,7 +736,7 @@ func _on_hotspot(thing: String, line: String, b: Button) -> void:
 
 
 func _check_room_done() -> void:
-	if seen.has("phone") and seen.size() >= 3 and state == S.ROOM:
+	if seen.has("phone") and seen.size() >= _hotspots_now() and state == S.ROOM:
 		get_tree().create_timer(2.5).timeout.connect(func() -> void:
 			if state == S.ROOM:
 				_play("queue")
@@ -618,7 +748,7 @@ func _check_room_done() -> void:
 
 func _send_feedback() -> void:
 	var props := {"stars": fb["stars"], "pause": fb["pause"], "text": fb_text.text.strip_edges(),
-		"first": choices[0] if choices.size() > 0 else "", "second": choices[1] if choices.size() > 1 else ""}
+		"losses": losses, "picks": choices.duplicate(), "reason": end_reason}
 	_track("feedback", props)
 	_enter(S.THANKS)
 
@@ -647,9 +777,14 @@ func _process(d: float) -> void:
 	match state:
 		S.TITLE:
 			if adv:
-				round_i = 0
+				losses = 0
+				since_room = 0
 				rematch = false
 				choices.clear()
+				loops.clear()
+				nice_streak = 0
+				visits = 0
+				end_reason = ""
 				seen.clear()
 				fb = {"stars": 0, "pause": ""}
 				fb_text.text = ""
@@ -657,7 +792,7 @@ func _process(d: float) -> void:
 					c.queue_free()
 				_enter(S.NAME)
 		S.QUEUE:
-			var wait := 4.0
+			var wait := 2.0 if rematch else 4.0
 			if t < wait:
 				card.text = "Finding a match...  0:%02d" % int(t)
 			elif card.text.begins_with("Finding"):
@@ -669,14 +804,28 @@ func _process(d: float) -> void:
 			_fight(d)
 		S.KO:
 			if t > 1.6:
-				if rematch or round_i >= ROUND_TIME.size() - 1:
-					_enter(S.CHOICE)
-				else:
-					round_i += 1
-					_enter(S.FIGHT)
+				_enter(S.CHOICE)
+		S.CHOICE:
+			reply_bar.text = "reply   %.1f" % max(REPLY_WINDOW - t, 0.0)
+			if t > REPLY_WINDOW:
+				_on_choice("")
 		S.SENT:
 			if t > 1.4:
-				_enter(S.END if rematch else S.CRASH)
+				if end_reason != "" or losses >= MAX_LOSSES:
+					if end_reason == "":
+						end_reason = "max_losses"
+					_enter(S.END)
+				elif since_room >= FORCED_AFTER:
+					# Nobody pressed anything. The controller goes anyway.
+					if loops.size() > 0:
+						loops[-1]["rage"] = true
+					_track("rage_quit", {"loss": losses, "since_room": since_room, "forced": true})
+					_enter(S.CRASH)
+				else:
+					_enter(S.POSTMATCH)
+		S.POSTMATCH:
+			if adv:
+				_on_rematch()
 		S.CRASH:
 			if t > 2.6:
 				_enter(S.REVEAL)
@@ -726,7 +875,8 @@ func _process(d: float) -> void:
 # ---------- the rigged match ----------
 
 func _fight(d: float) -> void:
-	var limit: float = REMATCH_TIME if rematch else ROUND_TIME[round_i]
+	var limit: float = MATCH_TIME
+	match_s = t
 	lbl_timer.text = "%d" % ceil(max(limit - t, 0.0))
 	_update_you(d)
 	_update_her(d, limit)
@@ -755,6 +905,16 @@ func _update_you(d: float) -> void:
 		if jump_req and you.on_floor:
 			you.vel.y = -950.0
 	you.cd -= d
+	if lag_pending > 0.0:
+		lag_pending -= d
+		if lag_pending <= 0.0:
+			atk_req = true
+	if atk_req and her.dmg >= 90.0 and not lagged:
+		# Rigged: the one input that mattered arrives late.
+		lagged = true
+		lag_pending = 0.45
+		_big("...", Color(0.7, 0.7, 0.7))
+		atk_req = false
 	if atk_req and you.cd <= 0.0:
 		you.cd = 0.35
 		_play("swing")
@@ -763,13 +923,18 @@ func _update_you(d: float) -> void:
 		tw.tween_property(you.node, "rotation", 0.0, 0.1)
 		var gap := her.pos - you.pos
 		if abs(gap.x) < 150.0 and abs(gap.y) < 140.0 and sign(gap.x) == you.face:
-			# Rigged: your hits barely register, and half the time she is already gone.
-			if randf() < 0.5:
+			if her.dmg >= 90.0 and not whiffed:
+				# Rigged: the finisher whiffs, once, when she is one hit from gone.
+				whiffed = true
+				her.pos.x = clamp(her.pos.x + 330.0 * sign(gap.x), STAGE_L + 50.0, STAGE_R - 50.0)
+				_big("WHIFF", Color(1, 1, 1))
+			elif randf() < 0.3:
 				her.pos.x = clamp(her.pos.x + 330.0 * sign(gap.x), STAGE_L + 50.0, STAGE_R - 50.0)
 			else:
 				_play("hit")
-				her.dmg += 1.0
-				her.vel.x = 120.0 * sign(gap.x)
+				her.dmg += randf_range(9.0, 14.0)
+				her.vel.x = (160.0 + her.dmg * 5.0) * sign(gap.x)
+				her.stun = 0.15
 				var fl := create_tween()
 				fl.tween_property(her.node, "modulate", Color(3, 3, 3), 0.05)
 				fl.tween_property(her.node, "modulate", Color.WHITE, 0.08)
@@ -785,11 +950,16 @@ func _update_her(d: float, limit: float) -> void:
 		target = -sign(dx) * 300.0
 	if (her.pos.x < STAGE_L + 70.0 and target < 0.0) or (her.pos.x > STAGE_R - 70.0 and target > 0.0):
 		target = 0.0
-	her.vel.x = move_toward(her.vel.x, target, 2600.0 * d)
+	if her.stun > 0.0:
+		her.stun -= d
+	else:
+		her.vel.x = move_toward(her.vel.x, target, 2600.0 * d)
+	# Rigged: she never leaves the stage, however hard she is hit. She "teched it".
+	her.pos.x = clamp(her.pos.x, STAGE_L + 40.0, STAGE_R - 40.0)
 	if her.on_floor and randf() < 0.7 * d:
 		her.vel.y = -850.0
-	if t > limit and not charging:
-		# Time is up: she winds up one shot you cannot survive.
+	if (t > limit or her.dmg >= 90.0) and not charging:
+		# Time is up, or she is one hit from gone: she winds up one shot you cannot survive.
 		charging = true
 		her.cd = 0.8
 		var tw := create_tween().set_loops(4)
@@ -857,6 +1027,14 @@ func _update_shots(d: float) -> void:
 
 # ---------- text, metrics, test bot ----------
 
+func _big(txt: String, col: Color, secs := 0.5) -> void:
+	lbl_big.text = txt
+	lbl_big.add_theme_color_override("font_color", col)
+	get_tree().create_timer(secs).timeout.connect(func() -> void:
+		if state == S.FIGHT and lbl_big.text == txt:
+			lbl_big.text = "")
+
+
 func _chat(who: String, msg: String, col: Color) -> void:
 	_play("chat")
 	chat_box.add_child(_label("[%s] %s" % [who, msg], 24, col))
@@ -921,7 +1099,7 @@ func _bot(d: float) -> void:
 	if state == S.NAME and t > 1.0:
 		name_edit.text = "carl_ph"
 		_submit_name()
-	if state in [S.TITLE, S.PHONE_S, S.HERSIDE, S.REMATCH_CARD, S.END, S.THANKS] and bot_t > 1.6:
+	if state in [S.TITLE, S.PHONE_S, S.HERSIDE, S.REMATCH_CARD, S.END] and bot_t > 1.6:
 		bot_t = 0.0
 		advance_req = true
 	if state == S.ROOM and bot_t > 1.6:
@@ -930,8 +1108,15 @@ func _bot(d: float) -> void:
 			if b is Button and not seen.has(b.tooltip_text):
 				b.pressed.emit()
 				break
-	if state == S.CHOICE and t > 1.5:
-		_on_choice(OPT_MEAN if not rematch else OPT_NICE)
+	# Bot script: mean, silent, mean then rage quit, nice, nice -> end.
+	if state == S.CHOICE and t > 1.2 and losses != 2:
+		_on_choice(OPT_NICE if losses >= 4 else OPT_MEAN)
+	if state == S.POSTMATCH and bot_t > 1.6:
+		bot_t = 0.0
+		if since_room >= RAGE_AFTER:
+			_on_rage()
+		else:
+			_on_rematch()
 	if state == S.FEEDBACK and t > 1.5:
 		fb["stars"] = 4
 		fb["pause"] = "maybe"
