@@ -1,3 +1,5 @@
 build/
 .godot/
 build_trailer.mp4
+run.log
+run.err
