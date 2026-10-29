@@ -308,6 +308,7 @@ func _body3d(f: Fighter, path: String) -> void:
 	var vp := SubViewport.new()
 	vp.size = Vector2i(176, 168)   # room around the body for sword arcs, kicks and the scarf
 	vp.transparent_bg = true
+	vp.own_world_3d = true   # otherwise every viewport draws every fighter: both bodies in one box
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(vp)
 	var env := WorldEnvironment.new()
@@ -725,12 +726,14 @@ func _enter(s: int) -> void:
 			her.vel = Vector2.ZERO
 			her.dmg = 0.0
 			her.node.visible = false
+			_place_fighters()
 			lbl_you.text = ""
 			lbl_her.text = ""
 			lbl_timer.text = ""
 			card.text = "\n\n\n\n\n\n\n\n\n\n\n%s" % TUT[0][0]
 		S.TITLE:
 			her.node.visible = true
+			_place_fighters()
 			card.text = "GG\n\n[ space ]\n\nmove: A D or arrows   jump: W   sword: J   strong: K\ndouble-tap a direction to dash;  K on the ground launches, K in the air spikes"
 			fb_box.visible = false
 			_show_match(true)
@@ -742,6 +745,7 @@ func _enter(s: int) -> void:
 		S.QUEUE:
 			card.position.y = 0
 			name_box.visible = false
+			_place_fighters()
 			card.text = "Finding a match..."
 			_track("queue", {})
 		S.FIGHT:
@@ -911,6 +915,21 @@ func _enter(s: int) -> void:
 		S.THANKS:
 			fb_box.visible = false
 			card.text = "Thank you. gg.\n\n[ space to play again ]"
+
+
+# Both fighters at their corners, standing on the floor, sprites updated at once.
+func _place_fighters() -> void:
+	you.pos = Vector2(420, FLOOR_Y)
+	her.pos = Vector2(860, FLOOR_Y)
+	for f in [you, her]:
+		f.vel = Vector2.ZERO
+		f.stun = 0.0
+		f.on_floor = true
+		f.node.position = f.pos
+		f.node.rotation = 0.0
+		f.node.scale = f.base
+		f.face = f.native_face
+		_anim_state(f)
 
 
 func _show_match(on: bool) -> void:
