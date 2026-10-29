@@ -1,3 +1,20 @@
+# Handoff, 2026-10-28 18:35 PT
+
+Everything for the Checkpoint itch.io submission exists; only the itch.io page and the jam form are left, and both need a signed-in browser (plan: `SUBMIT_ITCH.md`).
+
+- Game: intro from three pixelised Pexels clips (street, pisonet, player), a practise-each-key tutorial, then the rage loop (30 s near-miss match with hit stop, whiff, lag, her percent red past 90; 3 s "ez" window; rematch / rage quit; growing room visits; nice-twice ending). Bot run verified end to end at commit d2b3970.
+- Sound: thirteen ElevenLabs clips in `assets/sfx/` (credits in `assets/sfx/CREDITS.md`), loops for the street, the CRT hum and her room.
+- Web build: `gg-ez-web-final.zip` (13.9 MB, single-threaded export, loads on plain http and itch.io); exported on the PC, verified in a browser on the Mac at commit 00b512c and re-exported at d2b3970.
+- Trailer: `build_trailer.mp4`, 2:00, real footage of the autoplay run with the new sounds (not in git; also in the scratch folder of the 2026-10-28 session).
+- Brief: `~/CODELocalProjects/checkpoint-jam/docs/CONCEPT_BRIEF.md` and `.pdf`, rewritten from this loop.
+- Hogpatch jam (Nimble Fox): the one-prompt version is `NIMBLEFOX_PROMPT.md`.
+
+Still open: POSTHOG_KEY is empty; both Alchemer registrations unconfirmed; Dain has not seen any of tonight's build.
+
+---
+
+## Earlier handoffs
+
 # Handoff, 2026-10-28 18:20 PT (built on the Mac after all; the PC pivot was dropped)
 
 State: the game is the rage loop now. `godot --path . -- --autoplay` plays it end to end (verified headless: 5 losses, a silent timeout, a rage quit at loss 3, one room visit, nice twice, end, feedback). All sprites are real; `assets/fighter-her.png` and `assets/controller.png` were cut from `tools/raw/` which already held the generated art (the old note that they needed regenerating was wrong).
