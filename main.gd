@@ -172,22 +172,33 @@ func _tex(path: String, fallback: Vector2i, col: Color) -> Texture2D:
 
 
 func _load_sfx() -> void:
-	for n in ["swing", "hit", "blast", "ko", "chat", "queue", "smash", "phone", "room"]:
+	for n in ["swing", "whiff", "hit", "blast", "ko", "chat", "type", "queue", "smash", "phone", "room", "crt", "street"]:
 		var p := "res://assets/sfx/%s.mp3" % n
 		if ResourceLoader.exists(p):
 			var a := AudioStreamPlayer.new()
 			a.stream = load(p)
+			if n in ["room", "crt", "street"] and a.stream is AudioStreamMP3:
+				a.stream.loop = true
 			add_child(a)
 			sfx[n] = a
 	room_loop = sfx.get("room")
 	if room_loop:
 		room_loop.volume_db = -6.0
+	if sfx.has("crt"):
+		sfx["crt"].volume_db = -16.0
+	if sfx.has("street"):
+		sfx["street"].volume_db = -8.0
 
 
 func _play(n: String, pitch := 1.0) -> void:
 	if sfx.has(n):
 		sfx[n].pitch_scale = pitch
 		sfx[n].play()
+
+
+func _stop(n: String) -> void:
+	if sfx.has(n):
+		sfx[n].stop()
 
 
 # Freeze the whole match for a few real milliseconds. The eye reads it as weight.
@@ -527,9 +538,12 @@ func _enter(s: int) -> void:
 			intro.modulate = Color(1, 1, 1, 0)
 			create_tween().tween_property(intro, "modulate", Color.WHITE, 0.8)
 			caption.text = INTRO_SHOTS[0][1]
+			_play("street")
 		S.TUTORIAL:
 			intro.visible = false
 			caption.text = ""
+			_stop("street")
+			_play("crt")
 			_show_match(true)
 			tut_step = 0
 			tut_done = {}
@@ -584,6 +598,7 @@ func _enter(s: int) -> void:
 			since_room += 1
 			lbl_big.add_theme_color_override("font_color", Color(1, 0.9, 0.2))
 			lbl_big.text = "KO"
+			_play("type")
 			Engine.time_scale = 1.0
 			lbl_her.scale = Vector2.ONE
 			if her.dmg >= 90.0:
@@ -687,12 +702,14 @@ func _enter(s: int) -> void:
 			room.visible = false
 			if room_loop:
 				room_loop.stop()
+			_play("crt")
 			caption.text = ""
 			_show_match(true)
 			_play("queue")
 			card.text = "Match found: %s\n\n[ space ]" % HER_NAME
 		S.END:
 			_show_match(false)
+			_stop("crt")
 			post_box.visible = false
 			logoff_btn.visible = false
 			room.visible = false
@@ -730,6 +747,7 @@ func _show_match(on: bool) -> void:
 
 
 func _impact() -> void:
+	_stop("crt")
 	crack.visible = true
 	controller.visible = false
 	shake = 0.6
@@ -1039,7 +1057,7 @@ func _update_you(d: float) -> void:
 				whiffed = true
 				her.pos.x = clamp(her.pos.x + 330.0 * sign(gap.x), STAGE_L + 50.0, STAGE_R - 50.0)
 				_big("WHIFF", Color(1, 1, 1))
-				_play("swing", 0.55)
+				_play("whiff")
 				_hitstop(0.1, 0.2)
 			elif randf() < 0.3:
 				her.pos.x = clamp(her.pos.x + 330.0 * sign(gap.x), STAGE_L + 50.0, STAGE_R - 50.0)
