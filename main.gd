@@ -279,10 +279,10 @@ func _build_world() -> void:
 	_body3d(her, "res://assets/3d/her.glb")
 	for f in [you, her]:
 		# Every fighter is drawn about 150 px tall, feet on the floor.
-		var s: float = (190.0 if f.model else 150.0) / f.node.texture.get_height()
+		var s: float = (165.0 / 0.72 if f.model else 150.0) / f.node.texture.get_height()
 		f.node.scale = Vector2.ONE * s
 		f.base = f.node.scale
-		f.node.offset = Vector2(0, -f.node.texture.get_height() / 2.0 + (14.0 if f.model else 0.0))
+		f.node.offset = Vector2(0, -f.node.texture.get_height() * (0.36 if f.model else 0.5))
 	slash = Polygon2D.new()
 	slash.polygon = PackedVector2Array([Vector2(0, -20), Vector2(70, -70), Vector2(110, -30), Vector2(80, 30), Vector2(20, 30)])
 	slash.color = Color(1, 1, 1, 0)
@@ -306,7 +306,7 @@ func _body3d(f: Fighter, path: String) -> void:
 	if scene == null:
 		return
 	var vp := SubViewport.new()
-	vp.size = Vector2i(96, 132)
+	vp.size = Vector2i(176, 168)   # room around the body for sword arcs, kicks and the scarf
 	vp.transparent_bg = true
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(vp)
@@ -388,15 +388,16 @@ func _fit3d(f: Fighter) -> void:
 		f.fit_left = 3
 		return
 	var drawn: float = float(bottom - top + 1)
-	var want: float = img.get_height() * 0.94
+	var want: float = img.get_height() * 0.72
 	var units_per_px: float = f.cam.size / img.get_height()
 	var center_y_px: float = (top + bottom) / 2.0
 	var center_units: float = f.cam.position.y + (img.get_height() / 2.0 - center_y_px) * units_per_px
 	f.cam.size = f.cam.size * drawn / want
 	f.cam.position.y = center_units
 	# Feet on the floor: the drawn body now ends 3 percent above the bottom of the texture.
-	# Sprite2D centres the texture, so the bottom edge sits at offset.y + h/2: feet at the floor.
-	f.node.offset = Vector2(0, -img.get_height() * 0.47)
+	# Sprite2D centres the texture; put the body's feet (at 86 percent of the height) on the floor.
+	f.node.offset = Vector2(0, -img.get_height() * 0.36)
+	f.cam.position.y = center_units + (0.5 - 0.50) * f.cam.size
 	print("[gg] 3d fit: drawn ", drawn, " px of ", img.get_height(), " -> cam.size ", f.cam.size)
 
 
