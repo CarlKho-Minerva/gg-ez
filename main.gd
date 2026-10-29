@@ -394,6 +394,8 @@ func _fit3d(f: Fighter) -> void:
 	var center_units: float = f.cam.position.y + (img.get_height() / 2.0 - center_y_px) * units_per_px
 	f.cam.size = f.cam.size * drawn / want
 	f.cam.position.y = center_units
+	# Feet on the floor: the drawn body now ends 3 percent above the bottom of the texture.
+	f.node.offset = Vector2(0, -img.get_height() * 0.97)
 	print("[gg] 3d fit: drawn ", drawn, " px of ", img.get_height(), " -> cam.size ", f.cam.size)
 
 
@@ -1289,8 +1291,8 @@ func _attack(move: String) -> void:
 	sq.tween_property(you.node, "scale", you.base, 0.1)
 	slash.position = you.pos + Vector2(10.0 * you.face, -70.0)
 	slash.scale = Vector2(you.face * (1.3 if move in ["dash", "jab3"] else 1.0), -1.4 if move == "launcher" else (1.4 if move == "spike" else 1.0))
-	slash.color = Color(1, 1, 1, 0.9)
-	create_tween().tween_property(slash, "color", Color(1, 1, 1, 0), 0.12)
+	slash.color = Color(1, 1, 1, 0.35 if you.model else 0.9)
+	create_tween().tween_property(slash, "color", Color(1, 1, 1, 0), 0.1)
 	var gap := her.pos - you.pos
 	var vertical_reach := 170.0 if move in ["air", "spike", "launcher"] else 140.0
 	if not (abs(gap.x) < m[1] and abs(gap.y) < vertical_reach and sign(gap.x) == you.face):
