@@ -1,0 +1,16 @@
+19:25:06 her preview: IN_PROGRESS 1
+19:25:26 her preview: IN_PROGRESS 46
+19:25:46 her preview: IN_PROGRESS 99
+19:26:06 her preview: IN_PROGRESS 99
+19:26:26 her preview: SUCCEEDED 100
+19:26:27 her refine: IN_PROGRESS 0
+19:26:47 her refine: IN_PROGRESS 34
+19:27:07 her refine: IN_PROGRESS 87
+19:27:27 her refine: SUCCEEDED 100
+19:27:31 her rig: IN_PROGRESS 0
+19:27:51 her rig: SUCCEEDED 100
+19:27:51 her animations: IN_PROGRESS 1
+19:28:11 her animations: IN_PROGRESS 82
+19:28:31 her animations: SUCCEEDED 100
+her: /Users/carl/CODELocalProjects/gg-ez/tools/meshy/../../assets/3d/her.glb 5806180 bytes
+balance {'balance': 926, 'monthly_credits': 876, 'permanent_credits': 50, 'monthly_resets_at': 1795918599000}

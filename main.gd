@@ -73,6 +73,9 @@ class Fighter:
 	var anim_names := {}      # our key -> the clip name inside the GLB
 	var cur_anim := ""
 	var attack_until := 0.0
+	var vp: SubViewport
+	var cam: Camera3D
+	var fit_left := 3          # frames to wait before fitting the camera to the rendered pixels
 
 
 class Shot:
@@ -303,10 +306,16 @@ func _body3d(f: Fighter, path: String) -> void:
 	if scene == null:
 		return
 	var vp := SubViewport.new()
-	vp.size = Vector2i(128, 176)
+	vp.size = Vector2i(96, 132)
 	vp.transparent_bg = true
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(vp)
+	var env := WorldEnvironment.new()
+	env.environment = Environment.new()
+	env.environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.environment.ambient_light_color = Color(0.75, 0.7, 0.8)
+	env.environment.ambient_light_energy = 1.0
+	vp.add_child(env)
 	var cam := Camera3D.new()
 	cam.projection = Camera3D.PROJECTION_ORTHOGONAL
 	cam.size = 2.5
@@ -322,16 +331,70 @@ func _body3d(f: Fighter, path: String) -> void:
 	vp.add_child(fill)
 	f.model = scene.instantiate()
 	vp.add_child(f.model)
+	# Frame the body whatever Meshy's units are: the skeleton's rest pose gives the height.
+	var lo := 1e9
+	var hi := -1e9
+	var sk: Skeleton3D = f.model.find_child("*", true, false) as Skeleton3D if f.model.find_child("*", true, false) is Skeleton3D else null
+	for n in f.model.find_children("*", "Skeleton3D", true, false):
+		sk = n
+	if sk:
+		for i in sk.get_bone_count():
+			var y: float = (sk.global_transform * sk.get_bone_global_rest(i)).origin.y
+			lo = min(lo, y)
+			hi = max(hi, y)
+	var h: float = (hi - lo) if hi > lo else 0.85
+	h *= 1.12   # bones stop at the ankles and the neck; the mesh goes further
+	cam.size = h * 1.1
+	cam.position = Vector3(0, (lo if hi > lo else 0.0) + h * 0.5, 8)
+	f.vp = vp
+	f.cam = cam
+	print("[gg] 3d ", path, " height ", h)
+
 	f.anim = f.model.find_child("AnimationPlayer", true, false)
 	if f.anim:
-		for n in f.anim.get_animation_list():
-			var l: String = n.to_lower()
-			for k in ["idle", "slash", "combo", "judgment", "jump attack", "hit", "fly", "jump", "run", "shot", "shoot", "kick", "dodge"]:
-				if k in l and not f.anim_names.has(k):
-					f.anim_names[k] = n
+		# Meshy names its clips after the presets (Combat_Stance, Left_Slash, BeHit_FlyUp...).
+		const ALIASES := {"idle": ["stance", "idle"], "slash": ["slash", "attack"], "combo": ["combo"], "judgment": ["judgment", "combo"],
+			"jump attack": ["jump_attack", "basic_jump", "slash"], "hit": ["hit_reaction", "hit"], "fly": ["flyup", "fly"],
+			"jump": ["regular_jump", "basic_jump", "jump"], "run": ["run"], "shot": ["shot", "shoot"], "kick": ["kick"], "dodge": ["dodge"]}
+		for k in ALIASES:
+			for alias in ALIASES[k]:
+				for n in f.anim.get_animation_list():
+					if alias in n.to_lower() and not f.anim_names.has(k):
+						f.anim_names[k] = n
 		print("[gg] 3d ", path, " clips ", f.anim.get_animation_list())
 	f.node.texture = vp.get_texture()
 	f.node.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+
+
+# Units from Meshy do not match the skeleton, so after a few frames fit the camera to the
+# pixels that were actually drawn: feet two pixels above the bottom edge, 4 percent of air above.
+func _fit3d(f: Fighter) -> void:
+	if not f.vp or f.fit_left <= 0:
+		return
+	f.fit_left -= 1
+	if f.fit_left > 0:
+		return
+	var img := f.vp.get_texture().get_image()
+	var top := -1
+	var bottom := -1
+	for y in img.get_height():
+		for x in img.get_width():
+			if img.get_pixel(x, y).a > 0.1:
+				if top < 0:
+					top = y
+				bottom = y
+				break
+	if top < 0 or bottom - top < 8:
+		f.fit_left = 3
+		return
+	var drawn: float = float(bottom - top + 1)
+	var want: float = img.get_height() * 0.94
+	var units_per_px: float = f.cam.size / img.get_height()
+	var center_y_px: float = (top + bottom) / 2.0
+	var center_units: float = f.cam.position.y + (img.get_height() / 2.0 - center_y_px) * units_per_px
+	f.cam.size = f.cam.size * drawn / want
+	f.cam.position.y = center_units
+	print("[gg] 3d fit: drawn ", drawn, " px of ", img.get_height(), " -> cam.size ", f.cam.size)
 
 
 func _anim(f: Fighter, key: String, once := false) -> void:
@@ -1327,6 +1390,7 @@ func _step(f: Fighter, d: float) -> void:
 	f.node.position = f.pos
 	f.node.flip_h = (f.face != f.native_face) and f.model == null
 	_anim_state(f)
+	_fit3d(f)
 
 
 func _fire(f: Fighter, power: float) -> void:
