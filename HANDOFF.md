@@ -61,3 +61,10 @@ Rage comes from near-misses, not from a wall. Loop:
 - Install Godot 4.7 (winget or the Steam-free download), clone the repo, `godot --path . -- --autoplay` to see it run.
 - Web export: `godot --headless --export-release Web build/index.html` after installing export templates 4.7.2 in the editor. Not yet done anywhere.
 - Set POSTHOG_KEY in main.gd (PostHog project, public key) so feedback reaches PostHog.
+
+## Builds and playtesting (set up 2026-10-28 18:40 PT on the PC, by the Mac thread)
+- **Browser build, playable from any OS inside the tailnet:** https://sixseven-carl.tail979b70.ts.net/index.html (Tailscale serve on the PC, proxying a tiny Python server on port 8808; both are logon tasks `gg-ez-web`). The Windows firewall has a "Python: Block" rule, so the raw port is unreachable from other machines; Tailscale serve bypasses it.
+- **Auto-rebuild:** scheduled task `gg-ez-build` on the PC pulls GitHub `main` every 5 minutes and re-exports the web build when it moved (`C:\Users\Carlk\gg-ez-build.ps1`, log `C:\Users\Carlk\gg-ez-build.log`). Push to main and the URL above updates within about 6 minutes. The PC clone is reset hard to origin/main, so never edit in the PC clone.
+- **itch.io upload:** the zip is at the URL above as `/gg-ez-web.zip` (also `build\gg-ez-web.zip` on the PC). itch.io: new project, kind "HTML", upload the zip, tick "This file will be played in the browser", viewport 1280x720. SharedArrayBuffer is not needed (threads off in `export_presets.cfg`). butler is not installed anywhere and no itch API key is on file, so the upload is a manual step for Carl.
+- **Moonlight:** the PC's Sunshine app list has a `GG` entry that launches the Godot project on the desktop, for native playtests from the Mac or the Zenbook.
+- Web build size: `index.wasm` is 39.5 MB uncompressed; itch.io serves it gzipped (about 10 MB). Over a phone hotspot it took about 2.5 minutes to load; on Wi-Fi it is seconds.
