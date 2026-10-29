@@ -395,7 +395,8 @@ func _fit3d(f: Fighter) -> void:
 	f.cam.size = f.cam.size * drawn / want
 	f.cam.position.y = center_units
 	# Feet on the floor: the drawn body now ends 3 percent above the bottom of the texture.
-	f.node.offset = Vector2(0, -img.get_height() * 0.97)
+	# Sprite2D centres the texture, so the bottom edge sits at offset.y + h/2: feet at the floor.
+	f.node.offset = Vector2(0, -img.get_height() * 0.47)
 	print("[gg] 3d fit: drawn ", drawn, " px of ", img.get_height(), " -> cam.size ", f.cam.size)
 
 
