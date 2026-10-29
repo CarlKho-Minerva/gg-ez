@@ -53,7 +53,7 @@ const PHONE := [
 	["Notes", "isang panalo pa tapos tulog na", "one more win, then sleep"],
 ]
 
-enum S { TITLE, NAME, QUEUE, FIGHT, KO, CHOICE, SENT, POSTMATCH, CRASH, REVEAL, ROOM, PHONE_S, HERSIDE, REMATCH_CARD, END, FEEDBACK, THANKS }
+enum S { INTRO, TUTORIAL, TITLE, NAME, QUEUE, FIGHT, KO, CHOICE, SENT, POSTMATCH, CRASH, REVEAL, ROOM, PHONE_S, HERSIDE, REMATCH_CARD, END, FEEDBACK, THANKS }
 
 
 class Fighter:
@@ -131,6 +131,10 @@ var crack: TextureRect
 var flash: ColorRect
 var controller: Sprite2D
 var room: Sprite2D
+var intro: Sprite2D          # pixelised real footage, 8 fps sprite sheets (assets/intro/)
+var intro_shot := 0
+var tut_step := 0
+var tut_done := {}
 var hotspot_layer: Control
 var phone: PanelContainer
 var phone_list: VBoxContainer
@@ -154,7 +158,7 @@ func _ready() -> void:
 	_build_world()
 	_build_hud()
 	_build_top()
-	_enter(S.TITLE)
+	_enter(S.INTRO)
 
 
 # ---------- building ----------
@@ -311,6 +315,14 @@ func _build_top() -> void:
 	top_layer = CanvasLayer.new()
 	top_layer.layer = 3
 	add_child(top_layer)
+	intro = Sprite2D.new()
+	intro.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	intro.region_enabled = true
+	intro.centered = true
+	intro.position = Vector2(W / 2, H / 2)
+	intro.scale = Vector2.ONE * 4.0
+	intro.visible = false
+	top_layer.add_child(intro)
 	crack = TextureRect.new()
 	crack.texture = _tex("res://assets/crack.png", Vector2i(4, 4), Color(1, 1, 1, 0))
 	crack.size = Vector2(W, H)
@@ -477,13 +489,63 @@ func _hotspots_now() -> int:
 	return min(HOTSPOTS.size(), 2 + visits)
 
 
+# The intro: three pixelised real clips (Pexels, free licence), 32 frames each at 8 fps,
+# then the controls, practised once each, then the game.
+const INTRO_SHOTS := [  # sheet, caption, seconds, zoom start, zoom end
+	["res://assets/intro/intro_street.png", "Quezon City. 1:40 AM.", 4.0, 4.0, 4.6],
+	["res://assets/intro/intro_lounge.png", "Pisonet. One peso buys five minutes.", 4.0, 4.0, 4.4],
+	["res://assets/intro/intro_face.png", "You. One more game.", 4.0, 4.0, 6.5],
+]
+const TUT := [  # key hint, what proves it
+	["A  D  or arrows:  move", "move"],
+	["W:  jump", "jump"],
+	["J:  sword", "atk"],
+]
+
+
+func _intro_frame(sheet_i: int, secs: float) -> void:
+	var shot: Array = INTRO_SHOTS[sheet_i]
+	var frame := int(secs * 8.0) % 32
+	intro.region_rect = Rect2(320 * (frame % 8), 180 * (frame / 8), 320, 180)
+	var k: float = clamp(secs / float(shot[2]), 0.0, 1.0)
+	intro.scale = Vector2.ONE * lerp(float(shot[3]), float(shot[4]), k)
+
+
 # ---------- state machine ----------
 
 func _enter(s: int) -> void:
 	state = s
 	t = 0.0
 	match s:
+		S.INTRO:
+			_show_match(false)
+			fb_box.visible = false
+			card.text = ""
+			intro_shot = 0
+			intro.texture = _tex(INTRO_SHOTS[0][0], Vector2i(2560, 720), Color.BLACK)
+			intro.visible = true
+			intro.modulate = Color(1, 1, 1, 0)
+			create_tween().tween_property(intro, "modulate", Color.WHITE, 0.8)
+			caption.text = INTRO_SHOTS[0][1]
+		S.TUTORIAL:
+			intro.visible = false
+			caption.text = ""
+			_show_match(true)
+			tut_step = 0
+			tut_done = {}
+			you.pos = Vector2(420, FLOOR_Y)
+			you.vel = Vector2.ZERO
+			you.dmg = 0.0
+			her.pos = Vector2(860, FLOOR_Y)
+			her.vel = Vector2.ZERO
+			her.dmg = 0.0
+			her.node.visible = false
+			lbl_you.text = ""
+			lbl_her.text = ""
+			lbl_timer.text = ""
+			card.text = "\n\n\n\n\n\n\n\n\n\n\n%s" % TUT[0][0]
 		S.TITLE:
+			her.node.visible = true
 			card.text = "GG\n\n[ space ]\n\nmove: A D or arrows   jump: W   sword: J"
 			fb_box.visible = false
 			_show_match(true)
@@ -779,7 +841,7 @@ func _input(event: InputEvent) -> void:
 				atk_req = true
 			KEY_SPACE, KEY_ENTER:
 				advance_req = true
-	elif event is InputEventMouseButton and event.pressed and state in [S.TITLE, S.PHONE_S, S.HERSIDE, S.REMATCH_CARD, S.END, S.THANKS]:
+	elif event is InputEventMouseButton and event.pressed and state in [S.INTRO, S.TITLE, S.PHONE_S, S.HERSIDE, S.REMATCH_CARD, S.END, S.THANKS]:
 		advance_req = true
 
 
@@ -790,6 +852,38 @@ func _process(d: float) -> void:
 	var adv := advance_req
 	advance_req = false
 	match state:
+		S.INTRO:
+			var shot: Array = INTRO_SHOTS[intro_shot]
+			_intro_frame(intro_shot, t)
+			if adv or t > float(shot[2]):
+				intro_shot += 1
+				t = 0.0
+				if intro_shot >= INTRO_SHOTS.size() or adv:
+					_enter(S.TUTORIAL)
+				else:
+					intro.texture = _tex(INTRO_SHOTS[intro_shot][0], Vector2i(2560, 720), Color.BLACK)
+					caption.text = INTRO_SHOTS[intro_shot][1]
+		S.TUTORIAL:
+			# Practise each control once; the match starts the moment the sword is swung.
+			_update_you(d)
+			_step(you, d)
+			var dir_now := bot_dir
+			if Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT) or Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT):
+				dir_now = 1.0
+			if dir_now != 0.0:
+				tut_done["move"] = true
+			if jump_req:
+				tut_done["jump"] = true
+			if atk_req:
+				tut_done["atk"] = true
+			if you.pos.x < STAGE_L + 20.0 or you.pos.x > STAGE_R - 20.0:
+				you.pos.x = clamp(you.pos.x, STAGE_L + 20.0, STAGE_R - 20.0)
+			while tut_step < TUT.size() and tut_done.has(TUT[tut_step][1]):
+				tut_step += 1
+			if tut_step >= TUT.size() or adv:
+				_enter(S.TITLE)
+			else:
+				card.text = "\n\n\n\n\n\n\n\n\n\n\n%s" % TUT[tut_step][0]
 		S.TITLE:
 			if adv:
 				losses = 0
@@ -1118,6 +1212,12 @@ func _bot(d: float) -> void:
 			atk_req = true
 	else:
 		bot_dir = 0.0
+	if state == S.TUTORIAL:
+		bot_dir = 1.0 if int(t * 2.0) % 2 == 0 else -1.0
+		if t > 1.5 and randf() < 2.0 * d:
+			jump_req = true
+		if t > 3.0 and randf() < 2.0 * d:
+			atk_req = true
 	if state == S.NAME and t > 1.0:
 		name_edit.text = "carl_ph"
 		_submit_name()
