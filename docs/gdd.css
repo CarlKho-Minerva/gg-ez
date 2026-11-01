@@ -1,0 +1,58 @@
+@page {
+  size: A4;
+  margin: 2cm;
+  @bottom-center {
+    content: "GG EZ, game design document, 2026-10-31, page " counter(page);
+    font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
+    font-size: 8.5pt;
+    color: #666;
+  }
+}
+html { font-size: 10.5pt; }
+body {
+  font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.35;
+  color: #111;
+  max-width: none;
+  margin: 0;
+}
+header#title-block-header { display: none; }
+h1.title { font-size: 24pt; margin: 0 0 0.2em 0; border-bottom: 1px solid #999; padding-bottom: 0.2em; }
+p.author, p.date { margin: 0.15em 0; color: #444; font-size: 11pt; }
+h1 { font-size: 24pt; font-weight: 600; line-height: 1.2; margin: 1.4em 0 0.5em 0; border-bottom: 1px solid #999; padding-bottom: 0.2em; page-break-after: avoid; }
+h2 { font-size: 16pt; font-weight: 600; line-height: 1.25; margin: 1.3em 0 0.4em 0; page-break-after: avoid; }
+h3 { font-size: 12.5pt; font-weight: 600; margin: 1.1em 0 0.3em 0; page-break-after: avoid; }
+p { margin: 0 0 0.7em 0; orphans: 3; widows: 3; }
+ul, ol { margin: 0 0 0.7em 1.4em; padding: 0; }
+li { margin-bottom: 0.2em; }
+code { font-family: Menlo, "SF Mono", Consolas, monospace; font-size: 9.5pt; background: #f3f3f3; padding: 0 2px; }
+pre { font-size: 9pt; background: #f6f6f6; padding: 0.6em; border: 1px solid #ddd; white-space: pre-wrap; word-wrap: break-word; }
+blockquote { margin: 0.5em 0 0.8em 1em; padding-left: 0.8em; border-left: 2px solid #ccc; color: #333; }
+a { color: #1a4d8f; text-decoration: none; }
+hr { border: 0; border-top: 1px solid #ccc; margin: 1.5em 0; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.8em 0 1.2em 0;
+  font-size: 9pt;
+  line-height: 1.3;
+  table-layout: auto;
+}
+thead { display: table-header-group; }
+th, td {
+  border: 1px solid #ccc;
+  padding: 4px 6px;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+th { background: #e9e9e9; font-weight: 600; }
+tbody tr:nth-child(even) td { background: #f7f7f7; }
+tr { page-break-inside: avoid; break-inside: avoid; }
+figure { margin: 1em 0 1.2em 0; text-align: center; page-break-inside: avoid; }
+figure img, p img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+figcaption { font-size: 9pt; color: #444; margin-top: 0.4em; text-align: left; line-height: 1.3; }
+img { image-rendering: auto; }
+table caption { text-align: left; font-weight: 600; }

@@ -1,0 +1,3 @@
+wrote /Users/carl/CODELocalProjects/gg-ez/docs/fig-scene-clock.png (190686 bytes)
+ERROR: Failed to load image for failure-path test
+render reported a failed resource; previous PDF preserved

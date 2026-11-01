@@ -1,0 +1,27 @@
+🔴 Vet Issue `commit_message_mismatch` *severity: 3/5*, *confidence: 0.86*
+  docs/GDD.md:6
+  #composition The GDD still frames itself as a review artifact, despite the request saying the design document body should not be a review and review results should be separate artifacts. Rewrite this as source/status context without calling the document a source review.
+
+🔴 Vet Issue `commit_message_mismatch` *severity: 4/5*, *confidence: 0.78*
+  main.gd:0-4
+  The request scoped main.gd as reference context for reviewing the GDD/PDF production code, but the diff adds the full runtime script. This is an unrelated functional change that can affect game behavior and should be omitted from this commit.
+
+🔴 Vet Issue `documentation_implementation_mismatch` *severity: 3/5*, *confidence: 0.90*
+  docs/GDD.md:6
+  #composition The GDD cites storyboard tables under `docs/storyboards/`, but the repository snapshot contains `docs/ACT3-TABLES.md` and `docs/ACT45-TABLES.md` at the docs root, not a `docs/storyboards/` directory. This source path should be corrected so the document remains source-backed.
+
+🔴 Vet Issue `dependency_management` *severity: 3/5*, *confidence: 0.84*
+  tools/fig_scene_clock.py:7-10
+  The new figure-generation script imports Pillow, but the repository does not add a dependency file or update an existing one to declare it. Add a requirements/pyproject entry or otherwise document/install this dependency through the project's dependency management.
+
+🔴 Vet Issue `correctness_syntax_issues` *severity: 3/5*, *confidence: 0.80*
+  main.gd:489-491
+  The newly added Godot script directly loads `res://crt.gdshader`, but that file is not present in the provided repository snapshot. Add the shader file or guard this load like the other optional assets to avoid referencing a missing resource.
+
+🔴 Vet Issue `fails_silently` *severity: 2/5*, *confidence: 0.87*
+  main.gd:1499-1504
+  If opening `user://feedback.jsonl` fails, the code simply skips saving without logging or reporting the failure. Add an else branch that reports the failed local append so feedback/result persistence does not fail silently.
+
+🔴 Vet Issue `runtime_error_risk` *severity: 2/5*, *confidence: 0.73*
+  tools/fig_scene_clock.py:33
+  `ImageFont.load_default(size=...)` requires a sufficiently recent Pillow version, but the new code only says it requires Pillow and does not pin or check the version. On older Pillow installations this fallback path raises `TypeError`; use a compatible fallback or declare the minimum Pillow version.

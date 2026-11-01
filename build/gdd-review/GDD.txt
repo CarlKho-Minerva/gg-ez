@@ -1,0 +1,273 @@
+GG EZ Game Design Document
+GG EZ is a short fighting-game prototype about the impulse to insult a stranger after losing. The
+current build contains a repeatable match, reply and room-visit loop. The thirteen-scene story is a
+production plan, not a playable campaign.
+
+Carl Kho and Dain Kim · 31 October 2026 · Checkpoint Game Jam, theme: Play to Prevent.
+
+Implementation baseline: main.gd at commit 96537b5 . Story sources: docs/storyboards/ACT3-
+TABLES.md , docs/storyboards/ACT45-TABLES.md and their linked boards. Repository: https://
+github.com/CarlKho-Minerva/gg-ez.
+
+
+1. The player loses, then gets three seconds to reply
+You lose an online fighting match. The opponent types “ez”. Two replies appear beside a three-second
+clock. Letting it expire is a third choice: silence.
+
+The intended checkpoint is the return of that same choice after seeing the other person’s room. We
+use “checkpoint” here as our working design term for a pause in an automatic hostile response. The
+story asks whether knowing something about a stranger changes what the player presses. It does not
+claim that a game about trash talk prevents radicalisation.
+
+The planned opening and final chat have the same framing, wording and reply window. The approved
+storyboard pair is “okay that was clean” and “fuck off”. The runtime still uses “wow, you’re good” and
+“fuck you” ( OPT_NICE , OPT_MEAN ). Those quoted insults are game content, not the document’s voice.
+
+The build records choices and elapsed reply times. No player study or evidence of lasting behaviour
+change is presented here. A different reply within one run would be a description of that run, not proof
+of prevention.
+
+
+2. The current build repeats a rigged match
+The runtime is a rage loop, not the story’s three-match arc. Its thresholds come from main.gd ; its
+overall play length is unmeasured.
+
+1. Fight. Move, jump and attack in a side-view arena. The move table assigns damage ranges from 2
+   to 7 percentage points ( MOVES ). At 90 percent opponent damage, an attack input is delayed by
+   0.45 seconds and an in-range attack misses once. Lia starts firing a decisive attack at that
+   threshold or after the 30-second match timer. She keeps firing until it lands ( _update_you ,
+   _attack , _update_her ), so 30 seconds is not a measured hard limit on the round.
+2. Reply. After the knockout, Lia taunts the player. The reply window is 3 seconds ( REPLY_WINDOW ).
+   Silence is recorded when the next update notices expiry; the stored time is actual elapsed time, not
+   fixed at exactly 3000 milliseconds ( _on_choice ).
+3. Rematch or leave. RAGE QUIT appears after 3 losses since the last room visit. The controller is
+   thrown automatically after 5 ( RAGE_AFTER , FORCED_AFTER ). Its impact cracks the screen and
+   reveals her room.
+4. Look around. Click room objects to read a line about them. Later visits expose more objects. The
+   phone opens a conversation. Her portrait and screen then show the other side of the exchange
+   before another queue.
+
+
+                              GG EZ, game design document, 2026-10-31, page 1
+5. End. Two consecutive kind replies after at least one room visit, 8 losses, or “log off” lead to an end
+   card and feedback form ( nice_streak , visits , MAX_LOSSES ). The first kind reply is deliberately
+   shown as unsent and does not count toward the streak.
+
+The last rule matters: the runtime rewards a kind-reply streak by ending the loop. The proposed ending
+instead avoids an empathy score or a labelled correct answer. They are different designs.
+
+HANDOFF.md records an earlier end-to-end self-playing test at commit d2b3970 . That historical test
+does not certify the current build or the planned scenes.
+
+What the build records
+All events pass through _track . With the current empty POSTHOG_KEY , that function does not send
+analytics to PostHog. This statement concerns the game’s analytics code, not unrelated hosting
+requests.
+
+ Record                             Contents                                  Destination in the current
+                                                                              configuration
+
+ Choice                             Reply or silence, elapsed                 Console; included in the loop
+                                    milliseconds, loss number                 summary
+
+ Play events                        Start, queue, knockout, rematch,          Console
+                                    rage quit, object look, log off
+
+ Result                             Picks, visits, end reason, loop entries   Console and attempted local append
+                                                                              to user://feedback.jsonl
+
+ Feedback                           Form answers and run summary              Console and attempted local append
+                                                                              to the same file
+
+
+Local saving depends on the file opening successfully; the runtime does not report a failed open.
+Manual rage quit records loss counts, while forced rage quit also adds forced: true . The game
+does not send a player’s chosen reply to another player. Enabling analytics would require a separate
+privacy and reliability review.
+
+
+3. The story has thirteen scenes; only parts have runtime
+counterparts
+The full plan uses an arena and Lia’s bedroom across five acts. The table below separates the
+intended action from the existing implementation. A room reveal or end card is not completion of the
+corresponding story scene.
+
+
+
+
+                              GG EZ, game design document, 2026-10-31, page 2
+Figure 1. Planned scene order and current production evidence. Filled squares mark scenes with a partial runtime
+counterpart, outlined circles mark graybox-only scenes, and triangles mark table-only scenes. These are production
+states, not completion percentages. The order is not a measured play clock; the only timing shown is the planned three-
+second reply window in storyboard cards M2.6 and E.1.
+
+Scene 8, the customer call, is the main next story task. Figure 1 makes the gap visible: the prototype
+has repeated matches and a room, but not the work sequence or fair final fight. Storyboard timings are
+draft holds, often player-paced; no total campaign duration is asserted.
+
+ Scene                                  Intended action                         Current evidence and gap
+
+ 1. Title                               Start and find lia_ph                   Title, username and queue exist;
+                                                                                planned menu details remain a
+                                                                                graybox
+
+ 2. First loss                          Lose and answer “ez”                    Rigged match and timed reply exist;
+                                                                                not the exact staged storyboard
+                                                                                exchange
+
+ 3. Broken screen                       Throw controller and cross through      Throw, crack and reveal exist;
+                                        the crack                               crossing choreography remains
+                                                                                partial
+
+ 4. Wrong room                          Float and watch Lia replay her win      Room reveal exists; no ghost
+                                                                                movement or replay beat
+
+ 5. Exploration                         Read badge, phone or food               Progressive hotspots exist; not the
+                                                                                planned first-visit scene
+
+ 6. Second match                        Lose with one inner line tied to an     Rematch exists; no object-
+                                        observed object                         dependent inner line
+
+ 7. Return                              See the same room in work mode          Graybox only; no runtime work-mode
+                                                                                arrival
+
+
+
+                                  GG EZ, game design document, 2026-10-31, page 3
+ Scene                              Intended action                       Current evidence and gap
+
+ 8. Call                            Watch a refund call and a quality     Graybox only; no runtime call
+                                    review
+
+ 9. Message home                    See her message her mother and        Proposal tables only
+                                    photograph dinner
+
+ 10. One more game                  Read the exchange with her friend     Proposal tables only
+                                    Mika
+
+ 11. Longest night                  Observe the shift pass, then          Proposal tables only
+                                    approach the monitor
+
+ 12. Fair fight                     Play a stable match that can be won   Proposal tables only; current
+                                    or lost                               matches remain rigged
+
+ 13. Last reply                     Answer the same chat, then see        Runtime end card only; planned final
+                                    “Good morning”                        chat and epilogue absent
+
+
+The repository tables document grayboxes for scenes 6–8 in ACT3-TABLES.md and proposals for
+scenes 9–13 in ACT45-TABLES.md . Earlier scene boards are linked in the team’s existing design
+record; the local tables, rather than current remote board contents, are the status source here. Editable
+board: https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ.
+
+Three rules for the proposed story
+ • The ghost observes, never intervenes. It cannot touch anything, speak to Lia or fix her
+   circumstances. She never knows it is there. The current runtime has GHOST = false ; it shows the
+   other side without implementing this character.
+ • One faulty connection links both rooms. The broken screen sends the player into her room;
+   another queue brings them back. There is no separate afterlife explanation.
+ • Winning is independent of empathy. The planned final match allows either outcome.
+   Understanding Lia is not a combat upgrade. This is not true of the current rigged-match loop.
+
+
+4. Lia is competitive before she is sympathetic
+In the proposed story, Lia (lia_ph) lives in Lapu-Lapu City and takes customer calls remotely during a
+night shift. She games during a scheduled break. She is skilled, funny, competitive and sometimes
+inconsiderate. Her working conditions explain the evening without excusing every action.
+
+Her voice depends on who she is addressing: gamer slang to strangers, Cebuano to family, scripted
+English to customers. The runtime still says Quezon City and uses the older phone copy. The draft
+Cebuano and customer-call dialogue need independent language and workplace review before they
+are treated as finished.
+
+The player is a username whose character comes from their choices. Dain’s proposed fighters are a
+wolf for the player and a wizard for Lia. The ghost retains the wolf’s ears and muzzle but replaces its
+legs with a floating tail. Those drawn designs and the ghost are intended replacements, not a claim
+about the generated runtime art.
+
+
+
+
+                               GG EZ, game design document, 2026-10-31, page 4
+5. Repeat the frame so the person changes its meaning
+The staging uses SANABI as a composition reference, credited to WONDER POTION and NEOWIZ.
+These are our design choices, not verified quotations from its director. The local storyboard tables
+describe how to apply them.
+
+1. Establish the arena wide. Move closer when frustration becomes the subject.
+2. Give the chat the same crop and scale at the opening and ending. Do not announce a correct
+   answer with a new colour or celebratory effect.
+3. Match the monitor’s position across the crossing. Let the fan be heard before the room is revealed.
+4. Show Lia’s humour before work pressure. The first visit is not a tour of hardship.
+5. Repeat the wide room on the second visit. Changed posture and voice should explain the change
+   before the camera moves ( ACT3-TABLES.md , V2.2).
+6. Hold after the call; avoid a dramatic camera move on every line. Return wide when the work
+   resumes (C1.8, C1.13).
+7. End with her life continuing. A polite reply does not fix her shift ( ACT45-TABLES.md , E.3–E.7).
+
+The proposed palette separates the vivid arena from the warm bedroom and cooler work-screen light.
+The room should not become colourless when the subject turns serious. Sound follows the same
+distinction: arcade noise gives way to fan and room tone, then to the work call. These are staging
+targets, not claims that every cue is implemented.
+
+
+6. Reuse the room, then add the missing performance
+The current assets/ directory contains an arena background, bedroom reveal, fighters, controller,
+screen crack and two Lia portraits. assets/sfx/ contains effects and room, screen and street
+ambience. Their presence does not establish a finished cinematic sequence.
+
+ Reuse from the prototype                                  Add for the story
+
+ Arena, match/reply interface, queue                       A fair final match and outcome branches
+
+ Room background and hotspots                              Work-mode room, call interface and staged phone
+                                                           scenes
+
+ Two portraits and generated fighter assets                Dain’s portraits, fighters and Lia’s seated performance
+
+ Crack and controller transition                           Ghost form, movement and return transition
+
+ Effects and ambient clips                                 Call audio and scene-specific sound timing
+
+
+After the jam, the proposed order is:
+
+1. Reconcile reply wording and locale, review the language, then implement the ghost rather than
+   merely changing its framing flag.
+2. Build scenes 7 and 8 from the grayboxes. Protect the call scene if scope must shrink.
+3. Replace generated art and develop scenes 9–13, including the fair final match and shared epilogue.
+
+This PDF describes design and implementation status. It does not verify an uploaded package, a live
+submission page or the current export archive.
+
+
+
+
+                                   GG EZ, game design document, 2026-10-31, page 5
+7. Test whether the pause reads as a choice, not a lesson
+The design has moved from a short story proposal to a repeatable prototype and editable scene
+boards. That is evidence of iteration, not evidence that the intended audience finds it effective. No new
+participant feedback was collected for this document.
+
+The next human playtest should ask whether the loss feels unfair but understandable, whether the
+reply window allows a deliberate choice, and whether the room reveals a person rather than a moral
+lesson. Observe where players hesitate or become confused, then revise the relevant beat. Review the
+dialogue with a Cebuano speaker and someone familiar with Philippine customer-support work. Those
+are planned checks, not completed reviews.
+
+Choice logs can describe a before-and-after within one session. They cannot establish lasting change,
+distinguish empathy from learning how to end the loop, or remove the bias introduced by the first
+unsent kind reply. The feedback form is self-report. Claims about prevention require evidence beyond
+this prototype.
+
+
+AI use and credits
+The repository records AI-assisted code and storyboard drafting, generated runtime art, Meshy fighter
+models, ElevenLabs sound and Pexels intro footage. Dain’s drawn art is the planned replacement
+direction. SANABI is a composition reference only, not GG EZ art or training material. This document
+was revised and source-checked with AI assistance.
+
+
+
+
+                              GG EZ, game design document, 2026-10-31, page 6

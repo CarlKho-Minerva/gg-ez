@@ -1,0 +1,7 @@
+ docs/GDD.md              | 130 +++++++++++++++++++++++++++++++++++++++++++++++
+ docs/GDD.pdf             | Bin 0 -> 252337 bytes
+ docs/fig-scene-clock.png | Bin 0 -> 190686 bytes
+ docs/gdd.css             |  58 +++++++++++++++++++++
+ tools/fig_scene_clock.py |  68 +++++++++++++++++++++++++
+ tools/render_gdd.sh      |  40 +++++++++++++++
+ 6 files changed, 296 insertions(+)

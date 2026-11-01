@@ -1,0 +1,19 @@
+🔴 Vet Issue `dependency_management` *severity: 3/5*, *confidence: 0.92*
+  tools/fig_scene_clock.py:7-10
+  The new figure-generation script imports Pillow, but the repository does not add or update any dependency manifest to declare it. A fresh environment following the repo alone cannot know to install `Pillow`; add a requirements/pyproject entry or otherwise use an already-declared dependency.
+
+🔴 Vet Issue `commit_message_mismatch` *severity: 3/5*, *confidence: 0.82*
+  docs/GDD.md:6
+  The request was to keep review results separate from the document body, but this GDD repeatedly frames itself as a source review and includes review-result caveats in the deliverable document. A cleaner implementation should move review methodology/results into a separate artifact and leave the GDD as the concise design document.
+
+🔴 Vet Issue `documentation_implementation_mismatch` *severity: 2/5*, *confidence: 0.90*
+  docs/GDD.md:6
+  The GDD says storyboard claims come from `docs/storyboards/` tables, but this diff adds the referenced storyboard tables directly under `docs/` as `ACT3-TABLES.md` and `ACT45-TABLES.md`. This makes the document point readers to a non-existent path in the current repository.
+
+🔴 Vet Issue `documentation_implementation_mismatch` *severity: 2/5*, *confidence: 0.76*
+  tools/render_gdd.sh:1
+  The render script says it validates the PDF, but it only checks that `pdfinfo` exits and writes metadata; it does not validate page count, embedded resources, accessibility, or any other PDF quality criteria. The comment should be narrowed or the script should add real validation checks.
+
+🔴 Vet Issue `error_handling_missing` *severity: 3/5*, *confidence: 0.72*
+  tools/render_gdd.sh:17-21
+  The script claims to reject dropped stylesheets/images, but it never checks whether `pandoc` emitted missing-resource warnings while embedding resources. If the CSS or image path is wrong at the pandoc stage, the script can continue into WeasyPrint with an already-degraded HTML; capture and reject pandoc resource warnings as well.

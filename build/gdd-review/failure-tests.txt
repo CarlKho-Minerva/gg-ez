@@ -1,0 +1,7 @@
+missing-pandoc PASS: exit 1, existing PDF unchanged
+missing-python PASS: exit 1, existing PDF unchanged
+missing-validator PASS: exit 1, existing PDF unchanged
+missing-pillow PASS: exit 1, existing PDF unchanged
+renderer-error PASS: exit 23, existing PDF unchanged
+silent-resource-error PASS: exit 1, existing PDF unchanged
+pandoc-warning PASS: exit 1, existing PDF unchanged

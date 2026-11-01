@@ -1,0 +1,15 @@
+🔴 Vet Issue `commit_message_mismatch` *severity: 3/5*, *confidence: 0.90*
+  docs/GDD.md:6
+  #communicationdesign: "This is a source review, not a new playtest." puts review-process framing into the audience-facing GDD even though the request explicitly says review results should be separate artifacts and the document body should be a clean, concise design document. Move this provenance/review note to a separate review artifact or build metadata.
+
+🔴 Vet Issue `documentation_implementation_mismatch` *severity: 3/5*, *confidence: 0.95*
+  docs/GDD.md:6
+  The GDD cites storyboard tables under `docs/storyboards/`, but the diff adds the tables as `docs/ACT3-TABLES.md` and `docs/ACT45-TABLES.md` and there is no `docs/storyboards/` path in the snapshot. This weakens the requested source-backed document because readers are pointed to a non-existent source location.
+
+🔴 Vet Issue `documentation_implementation_mismatch` *severity: 3/5*, *confidence: 0.95*
+  docs/GDD.md:30
+  The document cites `HANDOFF.md`, but that file is not present in the provided project snapshot. A source-backed GDD should not rely on a missing local artifact; either add the referenced file or remove/reword this claim.
+
+🔴 Vet Issue `commit_message_mismatch` *severity: 4/5*, *confidence: 0.75*
+  main.gd:0-1
+  The request says `main.gd` is reference context for reviewing the GDD/PDF production work, but the diff introduces the entire runtime script. This is a large unrelated functional change outside the requested document/PDF scope and can affect gameplay behavior unexpectedly.

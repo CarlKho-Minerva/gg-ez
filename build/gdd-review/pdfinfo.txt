@@ -1,0 +1,18 @@
+Title:           GG EZ Game Design Document
+Author:          Carl Kho and Dain Kim
+Creator:         pandoc 3.11
+Producer:        WeasyPrint 70.0
+Custom Metadata: no
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           6
+Encrypted:       no
+Page size:       595.276 x 841.89 pts (A4)
+Page rot:        0
+File size:       252337 bytes
+Optimized:       no
+PDF version:     1.7

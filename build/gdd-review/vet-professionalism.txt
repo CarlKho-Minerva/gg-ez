@@ -1,0 +1,15 @@
+🔴 Vet Issue `dependency_management` *severity: 3/5*, *confidence: 0.86*
+  tools/fig_scene_clock.py:7-10
+  The new figure-generation script imports Pillow, but the repository snapshot does not include a dependency manifest or other project dependency file listing Pillow. The added tool will fail in a fresh environment unless this non-stdlib dependency is documented in a requirements/pyproject-style file or otherwise integrated into the project setup.
+
+🔴 Vet Issue `documentation_implementation_mismatch` *severity: 2/5*, *confidence: 0.95*
+  docs/GDD.md:6
+  The GDD says storyboard claims come from `docs/storyboards/` tables, but the added tables are actually placed at `docs/ACT3-TABLES.md` and `docs/ACT45-TABLES.md`. This makes the source note in the document point readers to a path that is not present in the repository snapshot.
+
+🔴 Vet Issue `documentation_implementation_mismatch` *severity: 2/5*, *confidence: 0.93*
+  docs/GDD.md:30
+  The document cites `HANDOFF.md`, but that file is not present in the provided repository snapshot. A source-backed GDD should not reference a missing local artifact unless it is added or the citation is changed to an available source.
+
+🔴 Vet Issue `runtime_error_risk` *severity: 2/5*, *confidence: 0.78*
+  tools/fig_scene_clock.py:33
+  `ImageFont.load_default(size=size)` uses a `size` keyword that is not supported by older Pillow versions. Since the script only states 'Requires Pillow' and does not constrain a version, the fallback path can raise `TypeError` on environments with older Pillow even though Pillow is installed.

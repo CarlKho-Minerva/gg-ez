@@ -1,0 +1,2 @@
+🔴 Vet Issue `commit_message_mismatch` *severity: 3/5*, *confidence: 0.86*
+  The request asks to deliver a GDD/PDF, but the staged diff only adds the Markdown source and render script; the generated `docs/GDD.pdf` artifact is not included. A better implementation should run the render script and stage the resulting PDF so jam readers receive the requested deliverable.

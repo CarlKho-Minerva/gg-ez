@@ -1,0 +1,1 @@
+missing dependency: Pillow >= 10.1; select a Python environment with Pillow

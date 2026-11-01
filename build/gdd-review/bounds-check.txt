@@ -1,0 +1,7 @@
+page 1: 501 text words, all inside page bounds
+page 2: 310 text words, all inside page bounds
+page 3: 246 text words, all inside page bounds
+page 4: 419 text words, all inside page bounds
+page 5: 437 text words, all inside page bounds
+page 6: 227 text words, all inside page bounds
+Six pages; figure script syntax OK

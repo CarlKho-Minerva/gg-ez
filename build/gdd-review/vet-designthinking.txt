@@ -1,0 +1,11 @@
+🔴 Vet Issue `commit_message_mismatch` *severity: 3/5*, *confidence: 0.91*
+  docs/GDD.md:6
+  The user explicitly requested a clean design document, not review findings in the document body. This text frames the GDD itself as a source review, so the review artifact was not kept separate from the deliverable.
+
+🔴 Vet Issue `documentation_implementation_mismatch` *severity: 3/5*, *confidence: 0.86*
+  docs/GDD.md:6
+  This source citation points readers to `docs/storyboards/`, but the added local storyboard tables are `docs/ACT3-TABLES.md` and `docs/ACT45-TABLES.md`; no `docs/storyboards/` files are present in the provided project snapshot. A source-backed GDD should cite the actual checked-in source paths.
+
+🔴 Vet Issue `dependency_management` *severity: 2/5*, *confidence: 0.89*
+  tools/fig_scene_clock.py:7-10
+  The new figure-generation script imports Pillow, but the repository does not add or update any dependency manifest documenting that external Python package. Add a requirements/pyproject entry or otherwise document/install Pillow through the project’s dependency management.
