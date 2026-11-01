@@ -4,11 +4,11 @@ Carl Kho and Dain Kim. Written 2026-10-31 for the Checkpoint Game Jam 2026 submi
 
 ## 1. What the game is and what it is for
 
-You lose an online fighting match by a hair. The stranger who beat you types "ez". A chat box opens with two replies and a three-second clock. Most people press the cruel one. That reflex is the whole subject of the game.
+You lose an online fighting match by a hair. The stranger who beat you types "ez". A chat box opens with two replies and a three-second clock. The cruel one is designed to be the easy one. That reflex is the whole subject of the game.
 
 GG EZ is a short browser game about the first rung of online hostility: the fast, automatic insult at whoever is nearest when something goes wrong. Nobody in it is recruited or radicalised. The jam's design resource defines a checkpoint as a gameplay intervention that interrupts a harmful path and shifts the player's perspective. Ours is not the moment the player crosses into the other person's room. It is the moment the same two buttons come back after they have been there.
 
-That is also the measurement. The opening chat and the closing chat use the same crop, the same scale, the same wording and the same clock. The two replies are "okay that was clean" and "fuck off", and letting the clock run out is the third answer, silence. The game records which one the player picked and how many milliseconds it took, every time. Nothing on screen marks either button as right. What changes between the first press and the last is only what the player knows about the person who typed "ez".
+That is also the measurement. The opening chat and the closing chat use the same crop, the same scale, the same wording and the same clock. The two replies in the storyboard are "okay that was clean" and "fuck off" (the jam build still carries the older pair, "wow, you're good" and "fuck you"; see section 8), and letting the clock run out is the third answer, silence. The game records which one the player picked and how many milliseconds it took, every time. Nothing on screen marks either button as right. What changes between the first press and the last is only what the player knows about the person who typed "ez".
 
 We make the narrow claim, not the wide one. A game about trash talk does not prevent radicalisation. It lets a player practise one pause, in a setting they already know, and it shows them their own before-and-after.
 
@@ -25,9 +25,9 @@ The build is a rage loop. One run takes a few minutes. The tunables are the cons
 
 The first nice reply "could not be sent" and does not count toward the streak.
 
-What is logged. Every event goes through one function, `_track`: `start`, `queue`, `ko` (loss number, both damage values, match length), `choice` (pick, reply time in ms, loss number), `rematch`, `rage_quit` (loss number, losses since the room, whether it was forced), `look` (which hotspot), `logoff`, `result` (total losses, every pick, visits, the end reason, the whole loop array) and `feedback`. Each line is appended to a local file (`user://feedback.jsonl` on the player's machine) and, when a project key is set, sent to PostHog, a product analytics service, under a per-session id. Nothing a player types is shown to another person.
+What is logged. Every event goes through one function, `_track`: `start`, `queue`, `ko` (loss number, both damage values, match length), `choice` (pick, reply time in ms, loss number), `rematch`, `rage_quit` (loss number, losses since the room, whether it was forced), `look` (which hotspot), `logoff`, `result` (total losses, every pick, visits, the end reason, the whole loop array) and `feedback`. Every event is printed to the console and, when a project key is set, sent to PostHog, a product analytics service, under a per-session id. Only `result` and `feedback` are also written to a local file (`user://feedback.jsonl` on the player's machine). Nothing a player types is shown to another person.
 
-Two things in the build differ from the story decisions in section 3: the reply buttons still read "wow, you're good" and "fuck you", the pair the storyboard replaced on 2026-10-31, and the room text is Quezon City and Tagalog. Both are listed in section 8.
+Three things in the build differ from the story decisions in section 3: the reply buttons still read "wow, you're good" and "fuck you", the pair the storyboard replaced on 2026-10-31; the room text is Quezon City and Tagalog; and the crossing is shown without the ghost (`GHOST = false`). All three are listed in section 8.
 
 ## 3. The five-act story and the supernatural rule
 
@@ -105,13 +105,13 @@ The v0.3 bible argues that a small set of reusable assets carries the whole stor
 
 Palette: vivid magenta and cyan for combat, warm amber with muted blues for the bedroom, cooler monitor light for the work sequence. The room never goes colourless when the story turns serious; it is still her home.
 
-Sound. Thirteen short effects generated with ElevenLabs from prompts written for this game (swing, whiff, hit, blast, ko, chat, type, queue, smash, phone, room, crt, street), plus the three loops. The arcade music cuts off mid-beat at the crossing and the fan comes in first.
+Sound. Thirteen clips generated with ElevenLabs from prompts written for this game: ten short effects (swing, whiff, hit, blast, ko, chat, type, queue, smash, phone) and three looped ambiences (room, crt, street). The arcade music cuts off mid-beat at the crossing and the fan comes in first.
 
-Logging. Section 2 lists the events. Each loop entry holds the pick, the reply time and whether the player rage quit, so a single run already contains its own before-and-after. PostHog receives the same events as `gg_<event>` when `POSTHOG_KEY` is set; today it is empty, so events stay on the player's machine.
+Logging. Section 2 lists the events. Each loop entry holds the pick, the reply time and whether the player rage quit, so a single run already contains its own before-and-after. PostHog receives the same events as `gg_<event>` when `POSTHOG_KEY` is set; today it is empty, so nothing leaves the player's machine.
 
 ## 7. What this jam submission contains and the roadmap after it
 
-Submitted on itch.io: the web build (`gg-ez-web-final.zip`, single-threaded export, 1280 by 720), the concept brief as a PDF, and a two-minute trailer of real footage from the self-playing run. This document lives in the repository as `docs/GDD.md`. The build is a partial play of the story: Act I and the rage loop, with the room, the phone and the same-two-replies rematch. Acts II to V are storyboarded in v0.3, and scenes 1 to 8 are grayboxed in Figma with per-frame camera, action, sound and duration values that Dain can edit.
+The submission package for itch.io: the web build (`gg-ez-web-final.zip`, single-threaded export, 1280 by 720), the concept brief as a PDF, and a two-minute trailer of real footage from the self-playing run. This document lives in the repository as `docs/GDD.md`. At the time of writing the itch.io page and the jam form are the remaining steps (`SUBMIT_ITCH.md`). The build is a partial play of the story: Act I and the rage loop, with the room, the phone and the same-two-replies rematch. Acts II to V are storyboarded in v0.3, and scenes 1 to 8 are grayboxed in Figma with per-frame camera, action, sound and duration values that Dain can edit.
 
 After the jam, in order:
 
@@ -127,7 +127,7 @@ Language review. The Cebuano lines are new draft copy with English glosses, tune
 
 The build and the story disagree in three places. `GHOST` is `false`, so the build's crossing is "the camera shows the other side", not the ghost; the room text is Quezon City and Tagalog; the reply buttons are the older pair. Each is a constant or a string in `main.gd`. None has been changed, because the story documents were not allowed to silently rewrite the runtime.
 
-`POSTHOG_KEY` is empty. Every event stays on the player's machine, so the jam build measures nothing beyond it. Setting the public project key is one line.
+`POSTHOG_KEY` is empty. Nothing leaves the player's machine, so the jam build measures nothing beyond it. Setting the public project key is one line.
 
 The measure is small. A changed pick on loop five says the player paused once, after a room designed to make them pause. It says nothing about the next day, and the feedback form is self-report. The page and the brief should say so rather than let a logged number stand in for impact.
 
