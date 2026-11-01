@@ -2,6 +2,7 @@
 
 The current master is the **recovered original Complete Game Storyboard v0.3** from [Develop GG EZ Direction](https://chatgpt.com/c/6ae67a4a-aac4-83e8-bd15-41b00f9d8730). It contains 13 scenes, the title screen, complete dialogue, a variable final win/loss, six ending variations, the Good morning epilogue and a production bible.
 
+- [Scene 1: ten editable frames, handoff and phone previews](docs/storyboards/SCENE-01.md)
 - [Complete original storyboard v0.3](docs/recovered/RECOVERED-Complete-Game-Storyboard-v0.3.md)
 - [Preserved live conversation, including director research](docs/recovered/RECOVERED-LIVE-GG-EZ-CONVERSATION.md)
 - [SANABI director research and camera directions](SANABI_DIRECTOR_RESEARCH.md)
