@@ -12,3 +12,7 @@ Draft state (2026-10-28): playable end to end with placeholder text; the opponen
 - Code drafted with Claude (Anthropic), edited by the team.
 - Art generated locally with Krea 2 Turbo (`tools/checkpoint_assets.py`, raw outputs in `tools/raw/`), cut out with `tools/process_assets.py`. Screen crack drawn by script.
 - Sound effects generated with ElevenLabs.
+
+## Between Rounds story and storyboard
+
+Current narrative: [BETWEEN_ROUNDS.md](BETWEEN_ROUNDS.md). Revised to Lapu-Lapu City and Cebuano, with the call-centre story at its centre. Visual sources: [VISUAL_REFERENCES.md](VISUAL_REFERENCES.md). This is a narrative handoff; runtime and web exports are unchanged.
