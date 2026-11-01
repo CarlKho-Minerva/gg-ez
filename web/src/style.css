@@ -1,0 +1,12 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #080913; color: #f4f2eb; font-family: Arial, sans-serif; }
+#frame { position: absolute; width: 1280px; height: 720px; transform-origin: top left; }
+#game, #ui { position: absolute; inset: 0; }
+canvas { display: block; image-rendering: pixelated; }
+#ui { pointer-events: none; }
+button { pointer-events: auto; font: 26px Arial, sans-serif; background: #2a2c44; color: #f4f2eb; border: 2px solid #8991b9; border-radius: 8px; padding: 14px 20px; cursor: pointer; }
+button:hover, button:focus-visible { background: #3a3d5c; outline: 3px solid #65f8d1; }
+button:disabled { opacity: .55; cursor: default; }
+.button-row { position: absolute; display: flex; gap: 24px; }
+#preview-label { position: absolute; left: 24px; bottom: 12px; color: #8991b9; font-size: 13px; letter-spacing: 1px; pointer-events: none; }
+#error { position: absolute; inset: 180px 100px; padding: 30px; background: #141625; color: #ff729b; white-space: pre-wrap; }
