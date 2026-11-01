@@ -17,3 +17,12 @@ button:active { transform: translateY(3px); box-shadow: 0 1px 0 #111320; }
 @media (prefers-reduced-motion: reduce) { button { transition: none; } }
 #preview-label { position: absolute; left: 24px; bottom: 12px; color: #8991b9; font-size: 13px; letter-spacing: 1px; pointer-events: none; }
 #error { position: absolute; inset: 180px 100px; padding: 30px; background: #141625; color: #ff729b; white-space: pre-wrap; }
+.survey { position: absolute; left: 290px; top: 306px; width: 700px; padding: 14px 24px; background: #0f1020; border: 2px solid #3a3d5c; border-radius: 4px; pointer-events: auto; color: #f4f2eb; }
+.survey-title { margin: 0 0 10px; font-size: 24px; }
+.survey-q p { margin: 10px 0 6px; font-size: 19px; color: #c3d6d1; }
+.survey-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0; }
+.survey-row button { font-size: 18px; padding: 8px 14px; }
+.survey-row button.picked { background: #2f6b63; border-color: #93e6d4; }
+.survey-note { width: 100%; height: 46px; margin-top: 10px; font: 17px Arial, sans-serif; background: #141625; color: #f4f2eb; border: 2px solid #3a3d5c; border-radius: 3px; padding: 8px; resize: none; }
+.survey-status { margin: 8px 0 0; font-size: 16px; color: #8991b9; min-height: 20px; }
+.survey-status a { color: #93e6d4; }
