@@ -1,5 +1,16 @@
 # HTML campaign verification — 2026-11-01
 
+## 2026-11-01 02:25 PST: the fight rewrite, Cebuano voice lines, spoiler-free page
+
+What changed since the 00:51 upload: Lia now moves in every match (approach, retreat, hop, blink behind the player, staff swing up close, spell from range, three-spell barrage in later rounds); the player has a three-hit string, a finisher on K after two strikes, a dash on S, a directional guard and a timed parry; the first three matches stay rigged by lag and a drain and end by a hair; the final match is fair with 150 health on her side, no floor and no drain; the controller throw is a drawn pad that trembles, winds up, spins into the monitor, cracks it progressively and bounces onto the desk; the title, matchmaking card, meta description and itch page no longer name the twist; fifteen Lia lines were regenerated with ElevenLabs eleven v3 told the language is Cebuano (CREDITS.md has the full record); new cover from Dain's thumbnail, five new screenshots that stop at the cracked monitor, and a rewritten concept PDF with the spoilers in a final section for judges.
+
+Checks run on this build (Chrome 1280x720 through Playwright, PREVIEW_BROWSER set to Chrome on the PC):
+- TypeScript and Vite build: pass. Package: 53 files, ZIP SHA-256 21715750dc972c30985bab246661115489b29f5732d7e7057464f6e9b9bb6b1b.
+- Balance probe, final match with cast and block held (`node tools/fight-probe.mjs 4`): four wins in 11.0 to 12.9 seconds, 15 hits each, 5 to 9 blocked spells. Before tuning the same hold won in 6.8 seconds with 9 hits, which is why her final-round health, dodge rate, guard chip and barrage rate went up. In words: a player who only holds two buttons still wins, but it now takes twice as long and she takes a third of their health doing it; a player who strings and parries wins faster.
+- Final run on the packaged build (02:22 to 02:26 PST): campaign suite passed (six routes, real keyboard final fight: win, 15 hits, 5 blocks, 13.9 s; real silence 3,015 ms; passive opening: loss, 0 hits, 31.3 s); exploration suite passed; presentation suite passed; audio decode passed, 40 clips, 115.04 s.
+
+Not verified: nobody listened to the regenerated Cebuano clips (the language setting is the only guarantee); human feel of the parry window; phone performance. The standalone playthrough and the hosted end-to-end run (`node tools/hosted-check.mjs <upload-id>`) are recorded in docs/itch/SUBMISSION_LOG.md.
+
 ## Current collision / character-polish build
 
 - Production typecheck, Vite build and packaging passed. Release check `5qev3ukpg` completed successfully in 462 seconds.
