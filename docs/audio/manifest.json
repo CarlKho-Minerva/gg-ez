@@ -1,0 +1,1552 @@
+[
+  {
+    "id": "arcade",
+    "kind": "loop",
+    "prompt": "Bright playful energetic arcade arena instrumental bed, driving synthetic rhythm, no vocals, seamless loop; no ominous emotional hint.",
+    "seconds": 20,
+    "file": "docs/audio/generated/arcade.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "1.01",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 33, Sound",
+        "cue": "Energetic arcade loop and light combat ticks."
+      },
+      {
+        "id": "1.02",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 34, Sound",
+        "cue": "One selection tick, not a repeating sound."
+      },
+      {
+        "id": "1.03",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 35, Sound",
+        "cue": "Sharp confirm. Music continues."
+      },
+      {
+        "id": "1.04",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 36, Sound",
+        "cue": "A short sideways whoosh begins."
+      },
+      {
+        "id": "1.05",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 37, Sound",
+        "cue": "Whoosh peaks, arcade loop unbroken."
+      },
+      {
+        "id": "L3.1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=L3.1].sound",
+        "cue": "Arena music; staff recovery"
+      },
+      {
+        "id": "L3.2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=L3.2].sound",
+        "cue": "Music uninterrupted; button press"
+      },
+      {
+        "id": "T.2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.2].sound",
+        "cue": "Impact; glass crack; music slows"
+      },
+      {
+        "id": "T.3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.3].sound",
+        "cue": "Low suction; slowed arcade"
+      },
+      {
+        "id": "T.7",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.7].sound",
+        "cue": "Fan enters BEFORE room reveal; arcade breaks mid-beat"
+      },
+      {
+        "id": "N3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=N3].sound",
+        "cue": "Queue click; flicker; suction; arcade returns"
+      },
+      {
+        "id": "M2.1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.1].sound",
+        "cue": "Arena music resumes loud mid-phrase; the fan cuts dead"
+      },
+      {
+        "id": "M2.2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.2].sound",
+        "cue": "Music continues under the line; no sting"
+      },
+      {
+        "id": "M2.8",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.8].sound",
+        "cue": "Music pitches down and stops; soft suction, far quieter than the first pull"
+      },
+      {
+        "id": "V2.6",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "v2[id=V2.6].sound",
+        "cue": "The warm gaming music fades to nothing; her professional voice only"
+      }
+    ]
+  },
+  {
+    "id": "swing",
+    "kind": "sfx",
+    "prompt": "Light combat swing / cloak swish, short dry movement accent.",
+    "seconds": 0.6,
+    "file": "assets/sfx/swing.mp3",
+    "reuse": true,
+    "cards": [
+      {
+        "id": "1.01",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 33, Sound",
+        "cue": "Energetic arcade loop and light combat ticks."
+      },
+      {
+        "id": "L2.3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss2[id=L2.3].sound",
+        "cue": "Cloak swish; brief quiet"
+      }
+    ]
+  },
+  {
+    "id": "hit",
+    "kind": "sfx",
+    "prompt": "One clear arcade hit thud, clean impact.",
+    "seconds": 0.6,
+    "file": "assets/sfx/hit.mp3",
+    "reuse": true,
+    "cards": [
+      {
+        "id": "1.01",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 33, Sound",
+        "cue": "Energetic arcade loop and light combat ticks."
+      },
+      {
+        "id": "2.02",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-scene2/SCENE-02.md",
+        "locator": "line 12, Action / sound",
+        "cue": "One clear hit before any unfairness."
+      },
+      {
+        "id": "2.04",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-scene2/SCENE-02.md",
+        "locator": "line 14, Action / sound",
+        "cue": "Knockback, fixed side-view camera."
+      },
+      {
+        "id": "L2.4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss2[id=L2.4].sound",
+        "cue": "Clean hit; GAME"
+      },
+      {
+        "id": "M2.3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.3].sound",
+        "cue": "Spell hiss, hit thud, one chat ping"
+      }
+    ]
+  },
+  {
+    "id": "tick",
+    "kind": "sfx",
+    "prompt": "Single quiet interface selection tick; dry, gentle, not a notification.",
+    "seconds": 0.5,
+    "file": "docs/audio/generated/tick.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "1.02",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 34, Sound",
+        "cue": "One selection tick, not a repeating sound."
+      },
+      {
+        "id": "1.08",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 40, Sound",
+        "cue": "A small interface tick."
+      },
+      {
+        "id": "L2.5",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss2[id=L2.5].sound",
+        "cue": "Quiet menu tick"
+      },
+      {
+        "id": "R.5",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=R.5].sound",
+        "cue": "Save tick; frustrated chuckle"
+      },
+      {
+        "id": "M2.6",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.6].sound",
+        "cue": "Chat ping; the timer ticks each second"
+      },
+      {
+        "id": "M2.7C",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.7C].sound",
+        "cue": "Final tick, then nothing"
+      }
+    ]
+  },
+  {
+    "id": "confirm",
+    "kind": "sfx",
+    "prompt": "Single sharp arcade menu confirmation tone, concise and bright.",
+    "seconds": 0.5,
+    "file": "docs/audio/generated/confirm.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "1.03",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 35, Sound",
+        "cue": "Sharp confirm. Music continues."
+      }
+    ]
+  },
+  {
+    "id": "whoosh",
+    "kind": "sfx",
+    "prompt": "Short sideways launch whoosh, fast lateral air movement, no impact or voice.",
+    "seconds": 1,
+    "file": "docs/audio/generated/whoosh.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "1.04",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 36, Sound",
+        "cue": "A short sideways whoosh begins."
+      },
+      {
+        "id": "1.05",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 37, Sound",
+        "cue": "Whoosh peaks, arcade loop unbroken."
+      },
+      {
+        "id": "2.04",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-scene2/SCENE-02.md",
+        "locator": "line 14, Action / sound",
+        "cue": "Knockback, fixed side-view camera."
+      },
+      {
+        "id": "L3.4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=L3.4].sound",
+        "cue": "Whoosh; GAME"
+      },
+      {
+        "id": "R.2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=R.2].sound",
+        "cue": "Replay whoosh; Lia laugh"
+      },
+      {
+        "id": "M2.5",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.5].sound",
+        "cue": "Launch whoosh, announcer GAME"
+      }
+    ]
+  },
+  {
+    "id": "loading",
+    "kind": "loop",
+    "prompt": "Quiet electronic loading pulse, low-key and seamless, no alarm.",
+    "seconds": 4,
+    "file": "docs/audio/generated/loading.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "1.06",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 38, Sound",
+        "cue": "Quiet loading pulse."
+      }
+    ]
+  },
+  {
+    "id": "chat",
+    "kind": "sfx",
+    "prompt": "Single chat / opponent-found notification ping.",
+    "seconds": 0.48,
+    "file": "assets/sfx/chat.mp3",
+    "reuse": true,
+    "cards": [
+      {
+        "id": "1.07",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 39, Sound",
+        "cue": "One notification ping."
+      },
+      {
+        "id": "2.06",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-scene2/SCENE-02.md",
+        "locator": "line 16, Action / sound",
+        "cue": "Announcer: `GAME!`; then notification ping. The static frame depicts the result and ensuing notification; it is not an animation."
+      },
+      {
+        "id": "L3.5",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=L3.5].sound",
+        "cue": "Single chat ping"
+      },
+      {
+        "id": "M2.3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.3].sound",
+        "cue": "Spell hiss, hit thud, one chat ping"
+      },
+      {
+        "id": "M2.6",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.6].sound",
+        "cue": "Chat ping; the timer ticks each second"
+      },
+      {
+        "id": "M2.7A",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.7A].sound",
+        "cue": "Send blip, reply ping"
+      },
+      {
+        "id": "M2.7B",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.7B].sound",
+        "cue": "Send blip, reply ping"
+      }
+    ]
+  },
+  {
+    "id": "warning",
+    "kind": "sfx",
+    "prompt": "Brief restrained interface warning chirp / work-app break beep, not an emergency alarm.",
+    "seconds": 0.5,
+    "file": "docs/audio/generated/warning.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "1.09",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 41, Sound",
+        "cue": "Brief warning chirp."
+      },
+      {
+        "id": "N2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=N2].sound",
+        "cue": "Work-app beep; spoken line"
+      }
+    ]
+  },
+  {
+    "id": "street",
+    "kind": "loop",
+    "prompt": "Distant late-night city traffic, unobtrusive room-window ambience.",
+    "seconds": 8.0,
+    "file": "assets/sfx/street.mp3",
+    "reuse": true,
+    "cards": [
+      {
+        "id": "1.10",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-direct/SCENE-01.md",
+        "locator": "line 42, Sound",
+        "cue": "Loading tone ends; arena ambience comes forward."
+      },
+      {
+        "id": "T.8",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.8].sound",
+        "cue": "Rattling fan; traffic; faint laugh"
+      },
+      {
+        "id": "T.9",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.9].sound",
+        "cue": "Fan and traffic continue"
+      },
+      {
+        "id": "R.1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=R.1].sound",
+        "cue": "Fan; distant traffic"
+      }
+    ]
+  },
+  {
+    "id": "footsteps",
+    "kind": "sfx",
+    "prompt": "Two responsive light footsteps on a flat arena platform; no voice.",
+    "seconds": 1,
+    "file": "docs/audio/generated/footsteps.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "2.01",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-scene2/SCENE-02.md",
+        "locator": "line 11, Action / sound",
+        "cue": "Movement responds normally."
+      },
+      {
+        "id": "L2.1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss2[id=L2.1].sound",
+        "cue": "Round cue; responsive footsteps"
+      }
+    ]
+  },
+  {
+    "id": "guard",
+    "kind": "sfx",
+    "prompt": "Single short dry guard clack, defensive block accent.",
+    "seconds": 0.5,
+    "file": "docs/audio/generated/guard.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "2.05",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-scene2/SCENE-02.md",
+        "locator": "line 15, Action / sound",
+        "cue": "Defense arrives too late."
+      },
+      {
+        "id": "M2.4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.4].sound",
+        "cue": "Button press, then a delayed guard clack after the hit"
+      }
+    ]
+  },
+  {
+    "id": "ko",
+    "kind": "sfx",
+    "prompt": "Arcade knockout result cue; candidate for existing GAME announcer cue, inspect before approving.",
+    "seconds": 1.76,
+    "file": "assets/sfx/ko.mp3",
+    "reuse": true,
+    "cards": [
+      {
+        "id": "2.06",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-scene2/SCENE-02.md",
+        "locator": "line 16, Action / sound",
+        "cue": "Announcer: `GAME!`; then notification ping. The static frame depicts the result and ensuing notification; it is not an animation."
+      },
+      {
+        "id": "L2.4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss2[id=L2.4].sound",
+        "cue": "Clean hit; GAME"
+      },
+      {
+        "id": "L3.4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=L3.4].sound",
+        "cue": "Whoosh; GAME"
+      },
+      {
+        "id": "R.3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=R.3].sound",
+        "cue": "Replay GAME; spoken line"
+      },
+      {
+        "id": "M2.5",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.5].sound",
+        "cue": "Launch whoosh, announcer GAME"
+      }
+    ]
+  },
+  {
+    "id": "round",
+    "kind": "sfx",
+    "prompt": "Short bright arcade round-start cue, no spoken announcement.",
+    "seconds": 1,
+    "file": "docs/audio/generated/round.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "L2.1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss2[id=L2.1].sound",
+        "cue": "Round cue; responsive footsteps"
+      }
+    ]
+  },
+  {
+    "id": "blast",
+    "kind": "sfx",
+    "prompt": "Cyan arcade spell hiss and release.",
+    "seconds": 0.6,
+    "file": "assets/sfx/blast.mp3",
+    "reuse": true,
+    "cards": [
+      {
+        "id": "L2.2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss2[id=L2.2].sound",
+        "cue": "Spell hiss; landing"
+      },
+      {
+        "id": "M2.3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.3].sound",
+        "cue": "Spell hiss, hit thud, one chat ping"
+      }
+    ]
+  },
+  {
+    "id": "landing",
+    "kind": "sfx",
+    "prompt": "One small landing thump on platform, no impact explosion.",
+    "seconds": 0.5,
+    "file": "docs/audio/generated/landing.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "L2.2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss2[id=L2.2].sound",
+        "cue": "Spell hiss; landing"
+      }
+    ]
+  },
+  {
+    "id": "staff",
+    "kind": "sfx",
+    "prompt": "Brief staff recovery movement, soft wooden handling.",
+    "seconds": 0.5,
+    "file": "docs/audio/generated/staff.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "L3.1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=L3.1].sound",
+        "cue": "Arena music; staff recovery"
+      }
+    ]
+  },
+  {
+    "id": "type",
+    "kind": "sfx",
+    "prompt": "Dry button press / keyboard taps, candidate shared input accent.",
+    "seconds": 0.8,
+    "file": "assets/sfx/type.mp3",
+    "reuse": true,
+    "cards": [
+      {
+        "id": "L3.2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=L3.2].sound",
+        "cue": "Music uninterrupted; button press"
+      },
+      {
+        "id": "L3.3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=L3.3].sound",
+        "cue": "Three presses; combined attack burst"
+      },
+      {
+        "id": "M2.4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.4].sound",
+        "cue": "Button press, then a delayed guard clack after the hit"
+      },
+      {
+        "id": "V2.2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "v2[id=V2.2].sound",
+        "cue": "Fan; one keypress"
+      },
+      {
+        "id": "C1.1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.1].sound",
+        "cue": "Faint caller voice through the headset; keys"
+      },
+      {
+        "id": "C1.3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.3].sound",
+        "cue": "Keys"
+      },
+      {
+        "id": "C1.4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.4].sound",
+        "cue": "Keys, caller"
+      },
+      {
+        "id": "C1.5",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.5].sound",
+        "cue": "Caller line, then the keys fall silent"
+      }
+    ]
+  },
+  {
+    "id": "burst",
+    "kind": "sfx",
+    "prompt": "Combined arcade attack burst as buffered attacks release together, one compact accent.",
+    "seconds": 1,
+    "file": "docs/audio/generated/burst.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "L3.3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=L3.3].sound",
+        "cue": "Three presses; combined attack burst"
+      }
+    ]
+  },
+  {
+    "id": "grip",
+    "kind": "sfx",
+    "prompt": "Tight plastic game-controller grip creak, close and dry.",
+    "seconds": 0.5,
+    "file": "docs/audio/generated/grip.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "T.1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.1].sound",
+        "cue": "Plastic grip creak"
+      }
+    ]
+  },
+  {
+    "id": "smash",
+    "kind": "sfx",
+    "prompt": "Controller striking a monitor, one hard physical impact.",
+    "seconds": 1.6,
+    "file": "assets/sfx/smash.mp3",
+    "reuse": true,
+    "cards": [
+      {
+        "id": "T.2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.2].sound",
+        "cue": "Impact; glass crack; music slows"
+      }
+    ]
+  },
+  {
+    "id": "glass",
+    "kind": "sfx",
+    "prompt": "Brief monitor glass crack spreading, brittle fracture, no explosion.",
+    "seconds": 1,
+    "file": "docs/audio/generated/glass.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "T.2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.2].sound",
+        "cue": "Impact; glass crack; music slows"
+      }
+    ]
+  },
+  {
+    "id": "suction",
+    "kind": "loop",
+    "prompt": "Low monitor-aperture air suction, rising narrow airflow, no 3D vortex or music; mix intensity per card.",
+    "seconds": 4,
+    "file": "docs/audio/generated/suction.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "T.3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.3].sound",
+        "cue": "Low suction; slowed arcade"
+      },
+      {
+        "id": "T.4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.4].sound",
+        "cue": "Suction rises"
+      },
+      {
+        "id": "T.6",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.6].sound",
+        "cue": "Suction cuts off"
+      },
+      {
+        "id": "N3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=N3].sound",
+        "cue": "Queue click; flicker; suction; arcade returns"
+      },
+      {
+        "id": "M2.8",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.8].sound",
+        "cue": "Music pitches down and stops; soft suction, far quieter than the first pull"
+      }
+    ]
+  },
+  {
+    "id": "whistle",
+    "kind": "sfx",
+    "prompt": "Narrow air whistle as a silhouette compresses through monitor aperture.",
+    "seconds": 0.5,
+    "file": "docs/audio/generated/whistle.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "T.5",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.5].sound",
+        "cue": "Narrow air whistle"
+      }
+    ]
+  },
+  {
+    "id": "fan",
+    "kind": "loop",
+    "prompt": "Close rattling electric fan in a small late-night room, steady imperfect mechanical rattle, no dramatic score.",
+    "seconds": 12,
+    "file": "docs/audio/generated/fan.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "T.7",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.7].sound",
+        "cue": "Fan enters BEFORE room reveal; arcade breaks mid-beat"
+      },
+      {
+        "id": "T.8",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.8].sound",
+        "cue": "Rattling fan; traffic; faint laugh"
+      },
+      {
+        "id": "T.9",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.9].sound",
+        "cue": "Fan and traffic continue"
+      },
+      {
+        "id": "R.1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=R.1].sound",
+        "cue": "Fan; distant traffic"
+      },
+      {
+        "id": "A1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=A1].sound",
+        "cue": "Fan only"
+      },
+      {
+        "id": "A2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=A2].sound",
+        "cue": "Fan continues"
+      },
+      {
+        "id": "A3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=A3].sound",
+        "cue": "Fan; no dramatic cue"
+      },
+      {
+        "id": "A4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=A4].sound",
+        "cue": "Mouse click; fan"
+      },
+      {
+        "id": "B1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=B1].sound",
+        "cue": "One soft vibration; fan"
+      },
+      {
+        "id": "B2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=B2].sound",
+        "cue": "Fan; no second vibration"
+      },
+      {
+        "id": "B3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=B3].sound",
+        "cue": "Fan only; no speech, sad score or flashback"
+      },
+      {
+        "id": "B4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=B4].sound",
+        "cue": "Mouse click; fan"
+      },
+      {
+        "id": "C1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=C1].sound",
+        "cue": "Soft container scrape; fan"
+      },
+      {
+        "id": "C3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=C3].sound",
+        "cue": "Spoken line; fan"
+      },
+      {
+        "id": "C4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=C4].sound",
+        "cue": "Spoken line; fan"
+      },
+      {
+        "id": "C5",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=C5].sound",
+        "cue": "Small laugh; spoon tap; fan"
+      },
+      {
+        "id": "N1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=N1].sound",
+        "cue": "Fan; no forced cue"
+      },
+      {
+        "id": "M2.1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.1].sound",
+        "cue": "Arena music resumes loud mid-phrase; the fan cuts dead"
+      },
+      {
+        "id": "V2.1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "v2[id=V2.1].sound",
+        "cue": "The fan returns first, then room tone. No laughter this time"
+      },
+      {
+        "id": "V2.2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "v2[id=V2.2].sound",
+        "cue": "Fan; one keypress"
+      },
+      {
+        "id": "C1.8",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.8].sound",
+        "cue": "Fan only"
+      },
+      {
+        "id": "C1.13",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.13].sound",
+        "cue": "Fan"
+      }
+    ]
+  },
+  {
+    "id": "room",
+    "kind": "loop",
+    "prompt": "Quiet small-room tone, candidate existing room bed without extra dramatic sound.",
+    "seconds": 10.0,
+    "file": "assets/sfx/room.mp3",
+    "reuse": true,
+    "cards": [
+      {
+        "id": "V2.1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "v2[id=V2.1].sound",
+        "cue": "The fan returns first, then room tone. No laughter this time"
+      }
+    ]
+  },
+  {
+    "id": "laugh",
+    "kind": "sfx",
+    "prompt": "Natural small amused laugh from a young adult woman, understated shoulder laugh, no words or audience.",
+    "seconds": 1.5,
+    "file": "docs/audio/generated/laugh.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "T.8",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=T.8].sound",
+        "cue": "Rattling fan; traffic; faint laugh"
+      },
+      {
+        "id": "R.2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=R.2].sound",
+        "cue": "Replay whoosh; Lia laugh"
+      },
+      {
+        "id": "R.4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=R.4].sound",
+        "cue": "0.5 s pause; laugh"
+      },
+      {
+        "id": "C5",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=C5].sound",
+        "cue": "Small laugh; spoon tap; fan"
+      }
+    ]
+  },
+  {
+    "id": "chuckle",
+    "kind": "sfx",
+    "prompt": "Small frustrated amused chuckle from a young adult woman, no words.",
+    "seconds": 1,
+    "file": "docs/audio/generated/chuckle.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "R.5",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=R.5].sound",
+        "cue": "Save tick; frustrated chuckle"
+      }
+    ]
+  },
+  {
+    "id": "mouse",
+    "kind": "sfx",
+    "prompt": "One quiet computer mouse click, dry close perspective.",
+    "seconds": 0.5,
+    "file": "docs/audio/generated/mouse.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "A4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=A4].sound",
+        "cue": "Mouse click; fan"
+      },
+      {
+        "id": "B4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=B4].sound",
+        "cue": "Mouse click; fan"
+      },
+      {
+        "id": "V2.4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "v2[id=V2.4].sound",
+        "cue": "Single click, then quiet"
+      },
+      {
+        "id": "C1.11",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.11].sound",
+        "cue": "One click"
+      },
+      {
+        "id": "C1.12",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.12].sound",
+        "cue": "Click, quiet"
+      }
+    ]
+  },
+  {
+    "id": "phone",
+    "kind": "sfx",
+    "prompt": "One soft phone vibration against a desk; existing phone clip is a candidate only.",
+    "seconds": 1.2,
+    "file": "assets/sfx/phone.mp3",
+    "reuse": true,
+    "cards": [
+      {
+        "id": "B1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=B1].sound",
+        "cue": "One soft vibration; fan"
+      }
+    ]
+  },
+  {
+    "id": "container",
+    "kind": "sfx",
+    "prompt": "Soft plastic food container sliding a short distance on desk.",
+    "seconds": 0.5,
+    "file": "docs/audio/generated/container.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=C1].sound",
+        "cue": "Soft container scrape; fan"
+      }
+    ]
+  },
+  {
+    "id": "chew",
+    "kind": "sfx",
+    "prompt": "Very quiet natural chewing, close but unobtrusive, no speech.",
+    "seconds": 1,
+    "file": "docs/audio/generated/chew.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=C2].sound",
+        "cue": "Quiet chewing; spoken line"
+      }
+    ]
+  },
+  {
+    "id": "spoon",
+    "kind": "sfx",
+    "prompt": "Single soft spoon tap against plastic food container.",
+    "seconds": 0.5,
+    "file": "docs/audio/generated/spoon.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C5",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=C5].sound",
+        "cue": "Small laugh; spoon tap; fan"
+      }
+    ]
+  },
+  {
+    "id": "queue",
+    "kind": "sfx",
+    "prompt": "Single queue confirmation click.",
+    "seconds": 1.0,
+    "file": "assets/sfx/queue.mp3",
+    "reuse": true,
+    "cards": [
+      {
+        "id": "N3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=N3].sound",
+        "cue": "Queue click; flicker; suction; arcade returns"
+      }
+    ]
+  },
+  {
+    "id": "crt",
+    "kind": "sfx",
+    "prompt": "Brief monitor flicker/static accent, no continuous dramatic drone.",
+    "seconds": 5.0,
+    "file": "assets/sfx/crt.mp3",
+    "reuse": true,
+    "cards": [
+      {
+        "id": "N3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=N3].sound",
+        "cue": "Queue click; flicker; suction; arcade returns"
+      }
+    ]
+  },
+  {
+    "id": "send",
+    "kind": "sfx",
+    "prompt": "Single short outgoing chat send blip, distinct from incoming notification.",
+    "seconds": 0.5,
+    "file": "docs/audio/generated/send.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "M2.7A",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.7A].sound",
+        "cue": "Send blip, reply ping"
+      },
+      {
+        "id": "M2.7B",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "m2[id=M2.7B].sound",
+        "cue": "Send blip, reply ping"
+      }
+    ]
+  },
+  {
+    "id": "fabric",
+    "kind": "sfx",
+    "prompt": "Small T-shirt fabric rustle as someone straightens their shirt.",
+    "seconds": 1,
+    "file": "docs/audio/generated/fabric.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "V2.3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "v2[id=V2.3].sound",
+        "cue": "Fabric rustle, one breath"
+      }
+    ]
+  },
+  {
+    "id": "breath",
+    "kind": "sfx",
+    "prompt": "One calm inhale and exhale, close adult woman, no words or sigh.",
+    "seconds": 1.5,
+    "file": "docs/audio/generated/breath.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "V2.3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "v2[id=V2.3].sound",
+        "cue": "Fabric rustle, one breath"
+      }
+    ]
+  },
+  {
+    "id": "call",
+    "kind": "sfx",
+    "prompt": "Soft work-app double chime as a headset call connects.",
+    "seconds": 1,
+    "file": "docs/audio/generated/call.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "V2.5",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "v2[id=V2.5].sound",
+        "cue": "Soft double chime"
+      }
+    ]
+  },
+  {
+    "id": "transfer",
+    "kind": "sfx",
+    "prompt": "Restrained short electronic call-transfer tone, no voice.",
+    "seconds": 1.5,
+    "file": "docs/audio/generated/transfer.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1.7",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.7].sound",
+        "cue": "Transfer tone"
+      }
+    ]
+  },
+  {
+    "id": "chair",
+    "kind": "sfx",
+    "prompt": "Small plastic chair creak as a seated person shifts slightly.",
+    "seconds": 0.5,
+    "file": "docs/audio/generated/chair.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1.9",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.9].sound",
+        "cue": "Her voice, a small chair creak"
+      }
+    ]
+  },
+  {
+    "id": "voice-r-2-lia",
+    "kind": "voice",
+    "prompt": "HAHAHA. Grabe.",
+    "seconds": 1,
+    "file": "docs/audio/generated/voice-r-2-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "R.2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=R.2].speech",
+        "cue": "HAHAHA. Grabe."
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-r-3-lia",
+    "kind": "voice",
+    "prompt": "Sorry, whoever you are.",
+    "seconds": 1.6,
+    "file": "docs/audio/generated/voice-r-3-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "R.3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=R.3].speech",
+        "cue": "Sorry, whoever you are."
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-r-4-lia",
+    "kind": "voice",
+    "prompt": "Actually, not sorry.",
+    "seconds": 1.2,
+    "file": "docs/audio/generated/voice-r-4-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "R.4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=R.4].speech",
+        "cue": "Actually, not sorry."
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-r-5-lia",
+    "kind": "voice",
+    "prompt": "Ay, sayop nga window.",
+    "seconds": 1.6,
+    "file": "docs/audio/generated/voice-r-5-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "R.5",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "loss3[id=R.5].speech",
+        "cue": "Ay, sayop nga window."
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-c2-lia",
+    "kind": "voice",
+    "prompt": "Five-star meal.",
+    "seconds": 1,
+    "file": "docs/audio/generated/voice-c2-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=C2].speech",
+        "cue": "Five-star meal."
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-c3-lia",
+    "kind": "voice",
+    "prompt": "Michelin, where’s my award?",
+    "seconds": 1.6,
+    "file": "docs/audio/generated/voice-c3-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=C3].speech",
+        "cue": "Michelin, where’s my award?"
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-c4-lia",
+    "kind": "voice",
+    "prompt": "Ay. Free vegetable.",
+    "seconds": 1.2,
+    "file": "docs/audio/generated/voice-c4-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=C4].speech",
+        "cue": "Ay. Free vegetable."
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-n2-lia",
+    "kind": "voice",
+    "prompt": "Okay, last one. Promise.",
+    "seconds": 1.6,
+    "file": "docs/audio/generated/voice-n2-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "N2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-10-31-gg-ez-vacuum/story.json",
+        "locator": "objects[id=N2].speech",
+        "cue": "Okay, last one. Promise."
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-v2-6-lia",
+    "kind": "voice",
+    "prompt": "Thank you for calling. My name is Lia. How may I help you today?",
+    "seconds": 5.6,
+    "file": "docs/audio/generated/voice-v2-6-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "V2.6",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "v2[id=V2.6].speech",
+        "cue": "Thank you for calling. My name is Lia. How may I help you today?"
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-c1-2-caller",
+    "kind": "voice",
+    "prompt": "I was told this would be fixed yesterday.",
+    "seconds": 3.2,
+    "file": "docs/audio/generated/voice-c1-2-caller.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1.2",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.2].customer",
+        "cue": "I was told this would be fixed yesterday."
+      }
+    ],
+    "optional": true,
+    "speaker": "caller"
+  },
+  {
+    "id": "voice-c1-3-lia",
+    "kind": "voice",
+    "prompt": "I'm sorry about the delay, sir. Let me check the status for you.",
+    "seconds": 5.2,
+    "file": "docs/audio/generated/voice-c1-3-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1.3",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.3].speech",
+        "cue": "I'm sorry about the delay, sir. Let me check the status for you."
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-c1-4-lia",
+    "kind": "voice",
+    "prompt": "Yes, sir. I'm checking the latest update.",
+    "seconds": 2.8,
+    "file": "docs/audio/generated/voice-c1-4-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1.4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.4].speech",
+        "cue": "Yes, sir. I'm checking the latest update."
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-c1-4-caller",
+    "kind": "voice",
+    "prompt": "Are you even listening?",
+    "seconds": 1.6,
+    "file": "docs/audio/generated/voice-c1-4-caller.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1.4",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.4].customer",
+        "cue": "Are you even listening?"
+      }
+    ],
+    "optional": true,
+    "speaker": "caller"
+  },
+  {
+    "id": "voice-c1-5-caller",
+    "kind": "voice",
+    "prompt": "Then why does nobody there know what they're doing?",
+    "seconds": 3.6,
+    "file": "docs/audio/generated/voice-c1-5-caller.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1.5",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.5].customer",
+        "cue": "Then why does nobody there know what they're doing?"
+      }
+    ],
+    "optional": true,
+    "speaker": "caller"
+  },
+  {
+    "id": "voice-c1-6-lia",
+    "kind": "voice",
+    "prompt": "I understand why you're frustrated.",
+    "seconds": 2.0,
+    "file": "docs/audio/generated/voice-c1-6-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1.6",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.6].speech",
+        "cue": "I understand why you're frustrated."
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-c1-7-lia",
+    "kind": "voice",
+    "prompt": "Of course. Before I transfer you, I can confirm the refund is still processing. I'm sorry I couldn't resolve it today.",
+    "seconds": 8.4,
+    "file": "docs/audio/generated/voice-c1-7-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1.7",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.7].speech",
+        "cue": "Of course. Before I transfer you, I can confirm the refund is still processing. I'm sorry I couldn't resolve it today."
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-c1-7-caller",
+    "kind": "voice",
+    "prompt": "Can I speak to somebody else?",
+    "seconds": 2.4,
+    "file": "docs/audio/generated/voice-c1-7-caller.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1.7",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.7].customer",
+        "cue": "Can I speak to somebody else?"
+      }
+    ],
+    "optional": true,
+    "speaker": "caller"
+  },
+  {
+    "id": "voice-c1-9-lia",
+    "kind": "voice",
+    "prompt": "Sir, if shouting made refunds faster, I'd be shouting with you.",
+    "seconds": 4.4,
+    "file": "docs/audio/generated/voice-c1-9-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1.9",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.9].speech",
+        "cue": "Sir, if shouting made refunds faster, I'd be shouting with you."
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-c1-10-lia",
+    "kind": "voice",
+    "prompt": "Kana. Customer empathy.",
+    "seconds": 1.2,
+    "file": "docs/audio/generated/voice-c1-10-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1.10",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.10].speech",
+        "cue": "Kana. Customer empathy."
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-c1-11-lia",
+    "kind": "voice",
+    "prompt": "Grabe. Unsa pa may gusto nila?",
+    "seconds": 2.4,
+    "file": "docs/audio/generated/voice-c1-11-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1.11",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.11].speech",
+        "cue": "Grabe. Unsa pa may gusto nila?"
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  },
+  {
+    "id": "voice-c1-12-lia",
+    "kind": "voice",
+    "prompt": "Okay. Next time.",
+    "seconds": 1.2,
+    "file": "docs/audio/generated/voice-c1-12-lia.mp3",
+    "reuse": false,
+    "cards": [
+      {
+        "id": "C1.12",
+        "source": "/Users/carl/CODELocalProjects/pi-labs/2026-11-01-gg-ez-act3/act3-story.json",
+        "locator": "c1[id=C1.12].speech",
+        "cue": "Okay. Next time."
+      }
+    ],
+    "optional": true,
+    "speaker": "lia"
+  }
+]
