@@ -46,3 +46,7 @@ Supersedes every Lia entry above. The Microsoft `fil-PH-BlessicaNeural` takes (a
 - Unchanged: the four caller lines (voice-c1-2-caller, voice-c1-4-caller, voice-c1-5-caller, voice-c1-7-caller, still ElevenLabs stock voice Roger, eleven_v3), the thirteen effects and the arcade loop.
 
 No real person's voice was cloned: Voice Library voices are the publisher's own published synthetic or licensed voices, used under the library's terms, and this account performed no voice cloning. Still a synthetic performance of a fictional character; pronunciation and performance should receive the team's playtest review.
+
+## 2026-11-01 14:20 PST: transcription check and one retake
+
+Round trip through ElevenLabs speech-to-text (scribe_v1, language ceb) on the eleven Cebuano lines (tools/stt_check.py): Ate Marcela's set reads back with a mean word match of 0.77 against the script after the retake below (0.73 before), the Jesi alternative 0.59. Lines that read back exactly: K.5, E.6, C1.11, C1.10, N2, C1.12. The two-syllable "Usa pa." (voice-n-5-lia) is heard as "Usapa" or "O sapa" in every take, so it stays as generated. voice-c1-10-lia ("Kana. Customer empathy.") was retaken once with stability 0.6 and now transcribes exactly (tools/voice_retake.py); the earlier take is kept beside it on the Mac. Nobody has listened with ears; this is a machine's reading.
