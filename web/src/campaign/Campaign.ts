@@ -565,7 +565,7 @@ export default class Campaign extends StoryScene {
     const fade=this.rect(0,0,W,H,0x000000,0);await this.tween(fade,{alpha:1},1);
     this.playerDesk(true);this.label('lia_ph',820,462,14,'#aef0e0');await this.beat('E.8',3);
     this.stage();audio.stop();this.big('GG EZ',185,108);this.big('A game by Carl Kho & Dain Kim',325,27);this.big('END OF MATCH',410,20);
-    this.label('Art · Dain Kim     Story & design · Carl Kho\nSound and voices · ElevenLabs',640,480,18,C.dim).setOrigin(.5,0).setAlign('center');
+    this.label('Art · Dain Kim     Story & design · Carl Kho\nSound effects · ElevenLabs     Lia’s voice · Microsoft neural TTS (fil-PH)',640,480,18,C.dim).setOrigin(.5,0).setAlign('center');
     await this.mark('E.9');this.finish({completed:true,outcome:this.outcome,replies:this.replies,seen:[...this.seen],chapters:13});
     if(!this.ctx.autoplay){try{localStorage.removeItem('gg-ez-save-v1');}catch{/* storage unavailable */}}
     await this.survey();
