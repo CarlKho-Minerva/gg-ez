@@ -1,5 +1,9 @@
 # HTML campaign verification — 2026-11-01
 
+## 2026-11-01 14:10 PST: Cebuano library voice (build v4, itch upload 20216318)
+
+Lia's 22 lines regenerated with the ElevenLabs Voice Library voice Ate Marcela (ceb-PH) on the grant account, eleven v3, Cebuano language setting on the Cebuano lines; the in-game credits card, page and brief name it. Checks on the v4 package: campaign suite passed (real final fight: win in 11.0 s, 15 hits; silence 3,020 ms; passive opening: loss at 30.4 s); audio decode passed, 40 clips, 131.2 s; ZIP SHA-256 c7285d68a730a77cb927245d9d80afd2edf5fa5be71c0a62c93070f2568b1423, 55 files. Hosted: see docs/itch/SUBMISSION_LOG.md. Not verified by a machine: how the voice sounds to a Cebuano ear.
+
 ## 2026-11-01 10:00 PST: voice, pull, sprites, survey (build v3, itch upload 20210294)
 
 Changes: Lia's 22 lines regenerated with Microsoft's Filipino neural voice fil-PH-BlessicaNeural (edge-tts), caller lines unchanged; the pull through the monitor rebuilt (lift, stretch toward the hole, air streaks, scraps, compression, flash); hit-stops shortened to 30 to 60 ms and 240 ms on the finishing blow; food-close.png and food-desk.png replace the drawn tub, rice, leaf and spoon; a three-question survey after the credits (answers in localStorage key gg-ez-survey and on window.__done.survey; SURVEY_ENDPOINT constant empty); credits card and page name the voice correctly.

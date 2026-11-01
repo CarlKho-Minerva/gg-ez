@@ -2,7 +2,7 @@
   size: A4;
   margin: 2cm;
   @bottom-center {
-    content: "GG EZ, game design document, 2026-10-31, page " counter(page);
+    content: "GG EZ, game design document, 2026-11-01, page " counter(page);
     font-family: "Helvetica Neue", Inter, Helvetica, Arial, sans-serif;
     font-size: 8.5pt;
     color: #666;

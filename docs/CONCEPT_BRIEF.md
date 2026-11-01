@@ -31,7 +31,7 @@ The sound toggle mutes everything. Progress saves at chapter boundaries when the
 
 Carl Kho: design, code, writing. Dain Kim: pixel art and design. All art in the build is Dain's.
 
-AI use. Claude (Anthropic) wrote most of the code and the dialogue drafts from Carl and Dain's design sessions and the storyboard; the team edited them. Sound effects, the voice lines and the arcade music loop were generated with ElevenLabs. Lia's lines are synthetic speech from Microsoft's Filipino neural voice (fil-PH-BlessicaNeural, Edge TTS); no real person's voice was cloned. Krea 2 Turbo generated art only for the archived Godot prototype of October 2026; none of that art is in this build. The engine is Phaser 3.
+AI use. Claude (Anthropic) wrote most of the code and the dialogue drafts from Carl and Dain's design sessions and the storyboard; the team edited them. Sound effects, the voice lines and the arcade music loop were generated with ElevenLabs. Lia's lines are synthetic speech from "Ate Marcela", a published Cebuano voice in the ElevenLabs Voice Library, generated with eleven v3 on the team's grant account; no real person's voice was cloned. Krea 2 Turbo generated art only for the archived Godot prototype of October 2026; none of that art is in this build. The engine is Phaser 3.
 
 Nothing the player picks leaves the browser. No UN names or emblems appear in the game.
 
