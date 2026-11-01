@@ -45,6 +45,6 @@ Written from the PC session that rebuilt the fight; the upload ran through the M
 
 Hosted checks:
 - From the Mac (Playwright, index.html?v=1): hosted index references the local bundle, bundle byte-identical, title starts the game, collision room has no buttons, keyboard moves the ghost, no page errors and no failed requests (10:38:29 UTC).
-- From the PC (`node tools/hosted-check.mjs 20200964`): see the line appended below.
+- From the PC (`node tools/hosted-check.mjs 20200964`, 02:38 to 02:41 PST, versioned URLs): passed. All six autoplay routes (win and loss, each with credit, hostile and silence) completed on the hosted frame with 107 beats each; the real keyboard final fight with cast and block held ended in a loss after 15.3 s with 14 hits and 9 blocks, so the fair fight is losable; the real silence window measured 3,012 ms; no page errors and no failed requests.
 
 One trap, recorded for next time: a GET of the bare frame URL made in the seconds between Save and itch's first-time unpack returned 404, and Cloudflare's San Jose edge cached that 404 (cf-cache-status HIT, max-age 2678183). Players are unaffected because itch's embed always requests index.html?v=<time>, a different cache key, and that returns 200. Never request the bare frame URL before the public page's Run button has done the first load; verify through the versioned form.
