@@ -14,7 +14,7 @@ const ctx: Context = { autoplay: params.get('autoplay') === '1', pick: params.ge
 if(ctx.autoplay)audio.muted=true;
 void fetch(assetUrl('assets/audio/voices.json')).then(r=>r.ok?r.json():{}).then(v=>{
   (window as Window & {__voices?:Record<string,string>}).__voices=v;
-}).catch(()=>{});
+}).catch(error=>{console.warn('Voice map unavailable; dialogue remains readable.',error);});
 class Menu extends Phaser.Scene {
   constructor() { super('menu'); }
   preload(){this.load.image('title-bg',assetUrl('assets/dain/arena-bg.png'));}
@@ -28,7 +28,7 @@ class Menu extends Phaser.Scene {
     this.add.text(108,115,'GG EZ',{fontFamily:'monospace',fontSize:'120px',fontStyle:'bold',color:C.paper});
     this.add.text(115,268,'A fighting game about losing to a stranger,\nthen inconveniently discovering she’s a person.',
       {fontFamily:'Arial',fontSize:'27px',color:C.paper,lineSpacing:9});
-    this.add.text(115,510,'A/D or arrows · move     W · jump     J/K · attack     L · block\nSpace / Enter · continue     Click · observe and reply',
+    this.add.text(115,510,'A/D or arrows · move     W · jump     J/K · attack     L · block\nSpace / Enter · continue     Drift into objects · observe',
       {fontSize:'21px',color:C.dim,lineSpacing:12});
     this.add.text(115,635,'CARL KHO & DAIN KIM',{fontSize:'17px',color:C.dim});
     const row=document.createElement('div');row.className='button-row';row.style.left='115px';row.style.top='395px';
@@ -39,12 +39,16 @@ class Menu extends Phaser.Scene {
   }
 }
 function resize() {
-  const scale = Math.min(innerWidth / W, innerHeight / H);
+  // Mobile innerWidth can include the unscaled 1280px canvas overflow. Fit the
+  // visible viewport instead, so the game and touch targets stay on the phone.
+  const width=window.visualViewport?.width??document.documentElement.clientWidth;
+  const height=window.visualViewport?.height??document.documentElement.clientHeight;
+  const scale = Math.min(width / W, height / H);
   const frame = document.querySelector<HTMLDivElement>('#frame')!;
   frame.style.transform = `scale(${scale})`;
-  frame.style.left = `${(innerWidth - W * scale) / 2}px`; frame.style.top = `${(innerHeight - H * scale) / 2}px`;
+  frame.style.left = `${(width - W * scale) / 2}px`; frame.style.top = `${(height - H * scale) / 2}px`;
 }
-window.addEventListener('resize', resize); resize();
+window.addEventListener('resize', resize);window.visualViewport?.addEventListener('resize',resize);resize();
 const mute=document.createElement('button');mute.id='audio-toggle';mute.textContent='Sound on';mute.setAttribute('aria-label','Toggle sound');
 mute.onclick=()=>{mute.textContent=audio.toggle()?'Sound off':'Sound on';};document.body.append(mute);
 window.__previewGame = new Phaser.Game({ type: Phaser.CANVAS, parent: 'game', width: W, height: H,

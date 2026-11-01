@@ -35,6 +35,11 @@ try{
  const timeout=await make();await timeout.goto(`${base}?scene=campaign&chapter=12`);await timeout.waitForFunction(()=>window.__choice);
  const started=Date.now();assert.equal(await timeout.getByRole('button',{name:'okay that was clean',exact:true}).count(),1);
  await timeout.waitForFunction(()=>window.__beat==='E.2C');assert(Date.now()-started>=2750);results.push({silenceMs:Date.now()-started});await timeout.close();
+ // A passive new player still reaches the story; the tutorial has a grace period, not a dead end.
+ const passive=await make();await passive.goto(`${base}?scene=campaign&chapter=1`);
+ await passive.waitForFunction(()=>window.__combat||window.__error,{},{timeout:90000}).catch(async error=>{console.error('Passive opening diagnostic',await passive.evaluate(()=>({beat:window.__beat,error:window.__error,visibility:document.visibilityState,fps:window.__previewGame.loop.actualFps,paused:window.__previewGame.isPaused})));throw error;});
+ assert.equal(await passive.evaluate(()=>window.__error),undefined);
+ const idle=await passive.evaluate(()=>window.__combat);assert.equal(idle.outcome,'loss');assert.equal(idle.hits,0);assert(idle.elapsed>20&&idle.elapsed<40);results.push({passiveOpening:idle});await passive.close();
  assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);
  await writeFile(resolve(out,'report.json'),JSON.stringify({passed:true,results,errors,missing},null,2));console.log(JSON.stringify({passed:true,results},null,2));
 }finally{await browser.close();await new Promise(r=>server.close(r));}
