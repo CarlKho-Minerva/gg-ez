@@ -1,138 +1,140 @@
 # GG EZ Game Design Document
 
-Carl Kho and Dain Kim. Written 2026-10-31 for the Checkpoint Game Jam 2026 submission (theme: Play to Prevent). Godot 4.7, one script (`main.gd`). Source: https://github.com/CarlKho-Minerva/gg-ez. This document describes what is in the build, what is storyboarded, and what is not started. It does not claim anything is implemented beyond what `HANDOFF.md` records.
+GG EZ is a short browser fighting game about the reflex to insult a stranger who has just beaten you. You lose by a hair, she types "ez", and you get three seconds and two replies. Then there is one more game. The build on itch.io runs thirteen chapters from the title to the credits; all six routes through them pass an automated suite, and the number that matters most, the reply window, measured 3,012 milliseconds on the hosted page. In words: the clock the player sees is the clock the code keeps.
 
-## 1. What the game is and what it is for
+Carl Kho and Dain Kim. Written 2026-11-01 for the Checkpoint Game Jam 2026 (UNOCT and UNICRI with Global Game Jam, theme Play to Prevent; `docs/CONCEPT_BRIEF.md`). It replaces the document of 2026-10-31, which described the Godot prototype and is kept beside this one as `GDD-2026-10-31`. Game: <https://carlcrafterz.itch.io/gg-ez>, browser upload 20210294. Source: <https://github.com/CarlKho-Minerva/gg-ez>, branch `dev/full-html-campaign` at `414c4a1`.
 
-You lose an online fighting match by a hair. The stranger who beat you types "ez". A chat box opens with two replies and a three-second clock. The cruel one is designed to be the easy one. That reflex is the whole subject of the game.
+How to read the evidence. Each factual sentence names its source in parentheses: a file in the repository, a card id from the scene tables (`early.json`, `act3.json`, `final.json` under `web/src/campaign/`), the fight code (`Campaign.ts`), a node in Dain's Figma file, or a measurement recorded in `web/VERIFICATION.md`, `docs/itch/SUBMISSION_LOG.md` and the JSON reports under `web/verification/`. Where status matters, a claim carries one of five words: measured (a script produced the number), tested (a check passed), storyboarded (written in a scene table), proposed (a plan), or not yet verified (nobody has checked). Every number is copied from those files.
 
-GG EZ is a short browser game about the first rung of online hostility: the fast, automatic insult at whoever is nearest when something goes wrong. Nobody in it is recruited or radicalised. The jam's design resource defines a checkpoint as a gameplay intervention that interrupts a harmful path and shifts the player's perspective. Ours is not the moment the player crosses into the other person's room. It is the moment the same two buttons come back after they have been there.
+The summary above is safe to read before playing. From section 1 on, this document describes the whole game, including the part the itch page keeps off the screen.
 
-That is also the measurement. The opening chat and the closing chat use the same crop, the same scale, the same wording and the same clock. The two replies in the storyboard are "okay that was clean" and "fuck off" (the jam build still carries the older pair, "wow, you're good" and "fuck you"; see section 8), and letting the clock run out is the third answer, silence. The game records which one the player picked and how many milliseconds it took, every time. Nothing on screen marks either button as right. What changes between the first press and the last is only what the player knows about the person who typed "ez".
+## 1. The game is the second press of the same two buttons
 
-We make the narrow claim, not the wide one. A game about trash talk does not prevent radicalisation. It lets a player practise one pause, in a setting they already know, and it shows them their own before-and-after.
+You lose an online fighting match by a hair. The stranger who beat you, lia_ph, types "ez". A chat box opens with two replies, "okay that was clean" and "fuck off", and a clock that starts at three seconds (`REPLIES` in `web/src/StoryScene.ts`; `choose()` there defaults to `seconds = 3`). Letting the clock run out is the third answer, recorded as "silence", a timeout and not a button (`Campaign.ts`, `matchChat()`).
 
-## 2. The loop that is playable now
+The cruel reply is designed to be the easy one. The matches before the fair one are rigged: her health never drops below 18 of 100, the player's inputs are delayed, and once a hit has landed and 19 seconds have passed (30 seconds if none has) the player's own health drains at 26 points a second (`Campaign.ts`, `fight()`, lines 196, 244 and 298). In words: a full bar empties in under four seconds, so every rigged match ends close and ends badly. A player who presses nothing loses the first match at 30.8 seconds (measured, `web/verification/report.json`, `passiveOpening`).
 
-The build is a rage loop. One run takes a few minutes. The tunables are the constants at the top of `main.gd`, named in parentheses below. The self-playing test run (`godot --path . -- --autoplay`) verified the loop end to end at the commit `HANDOFF.md` records.
+After the third loss the controller cracks the monitor and the player is pulled through into her room. The chapters that follow show who typed "ez": a customer-care agent in Lapu-Lapu City, playing on her night-shift break (cards T.4 and A3, `early.json`). The player is a ghost that cannot touch anything or be seen (guardrails in `docs/storyboards/FINAL-SCENES-HTML-HANDOFF.md`; in the build the ghost is the wolf sprite at 50 percent opacity, `Campaign.ts` line 112). Then one more match, on a fair connection, and the same chat box.
 
-1. A 30-second match (`MATCH_TIME`). Side-view arena, keyboard: move, jump, swing. Both fighters carry a damage percentage; the player's hits land for 9 to 14 percent. Once she passes 90 percent, three rigs fire once each: the player's next swing in range whiffs (swings through empty air), the next input lags by 0.45 seconds, and she charges a finisher the player cannot survive. If she never reaches 90, the timer ends it. Her percentage turns red past 90 so the player can see how close it was.
-2. KO. She types "ez" (or "gg ez", or "lol ez"). The reply window opens for 3 seconds (`REPLY_WINDOW`) with a countdown. No pick is logged as "said nothing" at 3000 ms.
-3. The defeat card offers REMATCH. After three losses since the last room visit (`RAGE_AFTER`) a RAGE QUIT button appears beside it. After five (`FORCED_AFTER`) the controller flies on its own.
-4. Rage quit is one animation: the controller hits the screen, the screen cracks, the crack opens onto her room. The first visit shows the phone and two objects; each later visit adds one hotspot (a thing in the room the player clicks to read one line about it): monitor, phone, lanyard, noodles, a note on the wall, the electric fan. A "log off" button in the room ends the game.
-5. Her side: her portrait, her screen with what the player actually typed, then "queue again". Back to step 1 with the same two replies.
-6. End conditions: two nice replies in a row once the player has seen the room at least once (`nice_streak`, `visits`), or eight losses (`MAX_LOSSES`), or log off. The end card lists every loss with the pick and the reply time, or "rage quit". Then a three-question feedback form.
+That last box is the measurement. The opening chat (card 2.07) and the final chat (card E.1) are drawn by one function with the same coordinates, strings and clock (`matchChat()` calls `choose(REPLIES, 230, 420, id, 3, clock)` for both). Nothing on screen marks either button as right (storyboarded, cards M2.6 and E.1; the end card E.9 reads "No empathy score, no moral lesson"). What changes between the first press and the last is what the player knows about the person who typed "ez".
 
-The first nice reply "could not be sent" and does not count toward the streak.
+We make the narrow claim. A game about trash talk does not prevent radicalisation. It lets a player practise one pause, in a setting they already know, and shows them the same box twice. The organisers' PVE 101 webinar names harassment and toxicity as the leading sign that identity dynamics are hardening into us-versus-them (as summarised in `CONCEPT_BRIEF.md`; not re-checked for this document). The game stops at that first rung: nobody in it is recruited or confronted, and her worst line is two letters.
 
-What is logged. Every event goes through one function, `_track`: `start`, `queue`, `ko` (loss number, both damage values, match length), `choice` (pick, reply time in ms, loss number), `rematch`, `rage_quit` (loss number, losses since the room, whether it was forced), `look` (which hotspot), `logoff`, `result` (total losses, every pick, visits, the end reason, the whole loop array) and `feedback`. Every event is printed to the console and, when a project key is set, sent to PostHog, a product analytics service, under a per-session id. Only `result` and `feedback` are also written to a local file (`user://feedback.jsonl` on the player's machine). Nothing a player types is shown to another person.
+What the build records. At the credits it writes a finish record with the outcome, the three replies and the objects seen (`ending()`: `finish({completed, outcome, replies, seen, chapters: 13})`). It does not record how many milliseconds the player took to reply; `choose()` returns the pick and keeps no timestamp (verified in the code; the Godot prototype did record it). Nothing leaves the browser: the survey endpoint constant is empty, answers stay in browser storage under `gg-ez-survey`, and the only way out is a mail link the player taps (`SURVEY_ENDPOINT = ''`, `survey()`).
 
-Three things in the build differ from the story decisions in section 3: the reply buttons still read "wow, you're good" and "fuck you", the pair the storyboard replaced on 2026-10-31; the room text is Quezon City and Tagalog; and the crossing is shown without the ghost (`GHOST = false`). All three are listed in section 8.
+## 2. Four rigged matches, three before the room and one after, end by a hair; the fifth is fair
 
-## 3. The five-act story and the supernatural rule
+The fight is one function with five modes (`Campaign.ts`, `fight()`). Her skill rises each round: 0.3 in the opening, 0.55 in the rematch, 0.75 in the third match, 0.7 after the room, 0.8 in the final (line 163). In words: she gets sharper every time, and the final is the only round where the player's inputs are honest. What rigged means, from the code:
 
-The production bible is the recovered Complete Game Storyboard v0.3: thirteen scenes in five acts, two locations, about 15 to 18 minutes. The build plays the first act and a loop built from it. The rest exists as storyboard tables and, for eight of them, as editable grayboxes in Figma (a rough layout in plain grey shapes, with the camera, action and sound written on each frame).
+1. Input lag. In the opening, once the first hit has landed and the match is past 4 seconds, every press is delayed 0.5 seconds under a NETWORK DELAY banner (line 244); in the third match 0.45 seconds after two hits, with the callout INPUT: ATTACK (line 245). Presses made during lag are released 0.4 seconds later (line 222).
+2. A floor under her health: never below 18 of 100 in a rigged round (line 196).
+3. The drain of 26 health a second described in section 1 (line 298).
+4. A late guard: in the second and third matches the block registers 0.4 seconds after the press and a parry is impossible (lines 187, 203, 247).
 
-Three story rules hold everywhere.
+The final match removes all four. Her health is 150, there is no floor, drain or delay, and the banner reads CONNECTION STABLE (lines 163, 168, 177). It is capped at 40 seconds; at the cap the larger share of health left wins and a tie is a loss (lines 240, 306). The outcome depends only on the fight: `fight()` reads the mode and nothing else, and its comment says "Story flags never affect final combat" (line 157). The one story-dependent line in any fight is a hint in the second match chosen from the object the player saw (line 171); it changes text, not damage.
 
-The ghost is invisible and intangible. It moves, watches and passes through objects. It cannot touch anything, speak to Lia, or change her circumstances. She never knows it is there.
+The moves (`web/README.md`; values from `fight()`). S dashes through her for 0.18 seconds, unhittable, with a 0.75-second cooldown (lines 201, 212). J strikes; three strikes inside half-second windows hit for 8, 9 and 15, the third launching her (lines 214, 218). K throws a crescent for 12 in rigged rounds and 10 in the final, and after two strikes K is a finisher at 1.7 times that (line 220). L held blocks at 4 or 5 chip damage a spell; a block pressed within 160 milliseconds before a hit is a parry that staggers her for 0.9 seconds (lines 203, 204). Lia closes, retreats, blinks, swings her staff for 15 to 19 depending on skill, casts for 22 in rigged rounds and 17 in the final, and in later rounds fires barrages of three (lines 267 to 292). She dodges a crescent with probability 0.9 times her skill (line 284). Hit freezes last 30 milliseconds on a strike, 60 on a launch and 240 on the finishing blow (lines 196, 306).
 
-The fighting game and the bedroom share one faulty connection. A broken screen sends the player into Lia's room. When she queues for another match, the same connection pulls them back. No afterlife, no portal lore; a bad connection that goes somewhere.
+Measured balance (2026-11-01). A probe that only holds cast and block won four times out of four in 11.0 to 12.9 seconds with 15 hits each and 5 to 9 blocked spells; before tuning the same hold won in 6.8 seconds with 9 hits, which is why her health, dodge rate, chip damage and barrage rate went up (`VERIFICATION.md`, 02:25 entry; `tools/fight-probe.mjs`). In words: a player who presses two buttons still wins, but it takes twice as long as it did. The suite's real-keyboard final on the shipped package won in 10.3 seconds with 15 hits, 5 blocks and 0 parries (`report.json`); on the hosted itch frame, 14.1 seconds, 15 hits, 4 blocks (`hosted-report.json`). On the previous upload the same hosted fight was lost at 15.3 seconds with 14 hits and 9 blocks (`SUBMISSION_LOG.md`, 02:38 entry), so the fair fight is losable. Not yet verified: how the parry window and the shorter freezes feel to a person; the probe holds keys, it does not play.
 
-Winning is independent of empathy. The player can win or lose the final match regardless of what they saw. Understanding Lia is not a power-up.
+## 3. Thirteen chapters, every one in the build
 
-| Scene | What the player does | What it establishes | Status |
+The campaign is a list of thirteen scene functions run in order (`Campaign.ts`, `run()`). Each chapter plays the cards of its scene table and marks each card id as it goes. The tables hold 109 cards: 40 in `early.json`, 29 in `act3.json`, 40 in `final.json`. The suite drives all six endings, two fight outcomes times three replies, and each route records 107 beats, a beat being one mark on the route taken (`report.json`; alternatives not taken are not marked). In words: the suite walks every chapter six times, once per ending. Figure 1 shows the order.
+
+![Figure 1. The thirteen chapters in order: the kind of chapter (square, rigged fight; diamond, fair fight; circle, room scene the ghost observes; outlined square, title or chat), the table that holds its cards, and the measurements that exist for it from the 2026-11-01 suite and hosted runs. Chapter order is not elapsed play time.](fig-scene-clock.png)
+
+| Chapter | What the player does | Cards | Board |
 |---|---|---|---|
-| 1 Title screen | Presses Start; watches matchmaking find lia_ph, region PH, ping 248 ms | A bright arcade game that promises nothing serious | Partly playable (title, username, queue); grayboxed, [node 33-2](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=33-2) |
-| 2 The first humiliation | Lands one hit, then loses to a freeze and late guard; three seconds, two replies | The loss feels like a bad connection, not a broken game | Playable now; grayboxed, [node 58-134](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=58-134) and loss 2, [node 77-134](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=77-134) |
-| 3 The broken screen | Mashes through absurd lag; the controller flies; the crack opens | The crossing; sound changes from arcade to fan before the room shows | Playable now (rage quit, crack, reveal); grayboxed with the vacuum and replay, [node 77-498](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=77-498) |
-| 4 The wrong room | Floats for the first time; watches Lia replay the knockout and laugh | Lia is funny and irritating before she is anything else | Room reveal playable, no ghost, no replay beat; grayboxed in node 77-498 |
-| 5 The first exploration | Reads any two of three objects: badge, phone, food | Employment, responsibility, personality, in any order | Hotspots playable (six, one more per visit); grayboxed, [node 78-621](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=78-621) |
-| 6 The second match | Loses again; one inner line varies by what they saw; same two replies | Knowing does not make losing easier | Rematch loop playable (without the inner line); grayboxed, [node 99-964](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=99-964) |
-| 7 The return | Falls gently back; same framing, four changes; the headset goes on | The same person now sounds completely different | Not in build; grayboxed, [node 99-1194](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=99-1194) |
-| 8 The call | Watches Lia take a refund call from an angry customer, then read her own QA score | The scene to protect: "ez" against "I understand why you're frustrated" | Not in build; grayboxed, [node 100-964](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=100-964) |
-| 9 The message home | Lingers while she answers her mother and photographs her dinner | People she cares about; the lean-back gesture repeated with its meaning changed | Not started |
-| 10 "One more game" | Reads the chat with Mika, her friend | She is loved, funny, and sometimes selfish | Not started |
-| 11 The longest night | Floats around the room while her shift passes in four time stamps | Quiet; the ghost goes toward the light willingly | Not started |
-| 12 A fair fight | Plays a match with a stable connection, three exchanges, win or lose | Her skill is real; the connection, not empathy, got better | Not started (the build's match is always rigged) |
-| 13 The last reply | The same chat, the same two buttons, three seconds; then the "Good morning" epilogue | No score, no label; the player reads their own behaviour | End card playable; storyboard ending not started |
+| 1 Matchmaking | Queues; matched with lia_ph, PHILIPPINES, CONNECTION UNSTABLE | 1.01 to 1.09, `Campaign.ts` | [33-2](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=33-2) |
+| 2 First match | Loses to lag and the drain; "ez"; three seconds, two replies | `fight('opening')`, chat 2.07 | [58-134](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=58-134) |
+| 3 Rematch | Loses to a clean punish; "same button again?" | L2.1 to L2.5, `early.json` | [77-134](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=77-134) |
+| 4 The connection | Inputs release together; "skill issue"; the pad spins into the monitor, the crack grows, the body is pulled through | L3.1 to T.9, `early.json`; `connection()` | [77-498](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=77-498) |
+| 5 The wrong room | 2:07 AM. Watches her replay the knockout and laugh; drifts to the badge, phone and dinner; any two of three open the way back | R.1 to N3, `early.json`; `Exploration.ts` line 60 | [78-621](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=78-621) |
+| 6 Second match | One inner line from what was seen; loses again; the same two buttons | M2.1 to M2.8, `act3.json` | [99-964](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=99-964) |
+| 7 The return | 2:31 AM. Same framing, four changes; the headset goes on | V2.1 to V2.6, `act3.json` | [99-1194](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=99-1194) |
+| 8 The call | A refund call from an angry customer; her QA score; what she could have said | C1.1 to C1.13, `act3.json` | [100-964](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=100-964) |
+| 9 Mama | Answers her mother about money after payday; photographs the adobo; the budget note | P.1 to P.9, `final.json` | [127-964](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=127-964) |
+| 10 Mika | Her friend asks about the movie she bailed on; "farming wins" | K.1 to K.6, `final.json` | [127-1031](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=127-1031) |
+| 11 The longest night | Four time stamps, 2:48 to 4:17, while the ghost floats freely; "Usa pa" | N.1 to N.6, `final.json` | [127-1080](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=127-1080) |
+| 12 A fair fight | CONNECTION STABLE; win or lose on the fight alone | F.1 to F.7, `final.json` | [127-1129](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=127-1129) |
+| 13 The last reply | The same chat; 4:25 AM; "Okay. Kaya pa."; the next call; END OF MATCH; three survey questions | E.1 to E.9, `final.json` | [127-1190](https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ?node-id=127-1190) |
 
-The shorter three-match adaptation (three matches, two visits) is kept as history. It made two decisions that stay: Lapu-Lapu City, and Cebuano at home with an English gloss under every line. Quezon City and Tagalog remain only in the archived source text and must not be relabelled.
+In words: the boards are Dain's editable Figma frames for scenes 1 to 8 (`docs/storyboards/ACT3-TABLES.md`) and the five tables added for scenes 9 to 13 (the handoff); the card ranges are what the running game marks.
 
-## 4. Characters
+Three story rules hold everywhere, each with a place in the code or the tables. The ghost observes and never intervenes (cards R.4, "ghost cannot affect Lia", and N3, "Queue causes return, not touch or empathy reward"). One faulty connection links both rooms: the crack reads CONNECTION LOST and "lia_ph is still there" (`connection()`), and her queueing pulls the ghost back (N3). Winning is independent of empathy: section 2 gives the line.
 
-Lia (lia_ph). Lapu-Lapu City, a customer-care agent in BPO (business process outsourcing, the Philippine call-centre industry) on a remote night shift. She plays during her scheduled break. She is good at the game and knows it. She is funny, competitive, a little obnoxious, and she keeps a friend waiting. Work pressure explains her evening; it does not excuse every action. Her register changes with the person: gamer slang to strangers, Cebuano to her mother and landlady, scripted English to customers. She is never cruel; her whole provocation is two letters.
+Timing of a run. The automated driver finishes all thirteen chapters on the packaged standalone file in 251.9 seconds (`VERIFICATION.md`, 00:51 build); it advances every line the instant it appears, so a person takes longer. The brief's "ten to fifteen minutes" is an estimate, not yet verified on a person.
 
-The player. A username with a controller. In the arena they are the wolf (Dain's sprite); Lia's fighter is the wizard. The build's text calls the player "you" and never gives them a face. Their only characterisation is what they press.
+## 4. Lia is competitive before she is sympathetic
 
-The ghost. What the player becomes on the other side of the crack: a small floating shape with the wolf's muzzle and ears, legs replaced by a tail. In the grayboxes it is the wolf sprite at 55 percent opacity until a finished ghost form exists. It needs five animations: float, turn, startled, angry, idle.
+Lia, lia_ph, lives in Lapu-Lapu City and takes customer calls remotely on a night shift, 9 PM to 6 AM with a break from 2:00 to 2:30 and QA coaching on Thursday (badge card A3; T.4 and T.9 for the city and 2:07 AM). She plays on the break, replays her own knockout and laughs (R.2 to R.4: "HAHAHA. Grabe.", "Sorry, whoever you are.", "Actually, not sorry."). Her register changes with the person: gamer slang to strangers ("bro just block", M2.3; "skill issue", L3.5), Cebuano to her mother and to herself (P.3, K.5, N.5, E.6, each with an English gloss under the balloon, `GLOSS` in `Campaign.ts`), scripted English to the customer (C1.3, C1.7). Her provocation is "ez", and after she loses the fair fight, "for you apparently" with a skull (F.6A). She keeps her friend waiting (K.2) and admits she was farming wins (K.4). Work explains her evening; the tables are written so it excuses nothing (handoff guardrail: "they do not turn her into a lesson").
 
-Dain's art pipeline. Dain draws the characters and the arena; her style is soft and warm. The storyboard grayboxes are built from her wolf, wizard, arena background and spell-effect sprites. The build's art came another way, to have something playable on 2026-10-28: Krea 2 Turbo (an open-weights image model, run locally) generated the portraits, the room and the first fighter sprites, and the latest commits render two rigged 3D fighter models (from Meshy, a text-to-3D service) into the sprites. Dain's drawn sprites are meant to replace the generated ones. The v0.3 sheet asks for five Lia portrait expressions (smug, laughing, professional, exhausted, quiet smile) and six small Lia animations (sitting, gaming, celebrating, eating, adjusting the headset, leaning back). No walk cycle is needed.
+The player is a username and a wolf, Dain's 32 by 37 pixel sprite (`web/public/assets/dain/wolf.png`, measured from the file header). The HUD says YOU and the build never gives the player a face; the body at the desk is a wolf-coded silhouette that card T.1 calls a continuity placeholder (proposed: finished protagonist art). The ghost is the wolf at 50 percent opacity with a teal tint (line 112); a drawn ghost form with the wolf's muzzle and ears and a tail for legs is the handoff's ask to Dain (asset id `ghost`; proposed, not in the build).
 
-## 5. Staging rules borrowed from SANABI
+Dain's art (measured from the files in `web/public/assets/dain/`): arena 512 by 224; wizard 46 by 43; wolf 32 by 37; her spell 238 by 73; the crescent 41 by 32; the room 1280 by 565, a retrofit of her room drawing (`README.md`; her work-in-progress file of 2026-10-31 sits beside it), with Lia cut out as a 73 by 96 sprite that `RoomLia.ts` articulates into poses from a fixed set of cropped parts (`VERIFICATION.md`, hardening review); the adobo tub 46 by 24 close and 34 by 12 on the desk. The itch cover is her thumbnail at 630 by 500 (image 31669133, `SUBMISSION_LOG.md`). Every image in the package is hers; the Krea and Meshy art of October belongs to the archived Godot prototype (`CONCEPT_BRIEF.md`, `docs/itch/DESCRIPTION.md`). The poses the handoff asks her for next: `lia-phone`, `lia-photo`, `lia-lean-eyes-closed`, `lia-laugh`, `lia-quiet`, `lia-coffee`, `lia-stretch`, `lia-headset-off`, and the ghost (proposed; swapped in by asset id, no code change). Her file: <https://www.figma.com/design/9n83sdzD1t2Fm3asaMi1Hs/GG-EZ>.
 
-SANABI (WONDER POTION, published by NEOWIZ) is the model for how the story is staged. Its director, You Seung Hyeon, described a cycle of script, temporary art, in-game test, then animation and camera, and said closer framing intensifies a moment while wider framing creates distance (I.N.T interview, 2025-09-08). The rules below are our applications of that, not shots he prescribed; the full notes are in `SANABI_DIRECTOR_RESEARCH.md` in the story branch.
+## 5. Staging rules borrowed from SANABI, each with its place in the build
 
-1. Establish the arena wide. Move closer only as the frustration becomes the subject.
-2. Hold on the result and chat. The two buttons dominate the same composition at the start and the end.
-3. Cross through a matched frame. Both monitors sit in the same part of the image across the transition; the fan is heard before the room is seen.
-4. Reveal the whole room first. Her joke and her failed clip come before any work or hardship detail.
-5. Repeat the camera position on visit two. Posture and a professional voice change the meaning before the camera moves.
-6. Slow push after the call ends. Let the silence land. No melodramatic move on every line.
-7. Keep the dinner joke, the voice note and the Mika chat in the room, in one frame with Lia. No flashbacks.
-8. Return to the exact opening chat. Same crop, scale, buttons, timing. Do not announce the right answer with a new visual language.
-9. End wide and let her life continue. A polite reply does not fix her night.
+SANABI (WONDER POTION, published by NEOWIZ) is the composition reference. Its director, You Seung Hyeon, described a cycle of script, temporary art, in-game test, then animation and camera, and said closer framing intensifies a moment while wider framing creates distance (I.N.T interview, 2025-09-08, as summarised in `SANABI_DIRECTOR_RESEARCH.md` on the story branch; not re-read for this revision). The rules are our applications, not shots he prescribed. The reference screenshots are composition studies only, not GG EZ art or training data.
 
-The reference screenshots are composition studies only, credited to WONDER POTION and NEOWIZ, not training data or GG EZ art.
+1. Establish the arena wide and keep it there: every fight is a fixed wide camera (`fight()` never moves it; cards L2.1 to L3.4).
+2. Hold on the result and the chat; the two buttons dominate the same composition at the start and the end (`matchChat()`, one function for 2.07, M2.6 and E.1).
+3. Cross through a matched frame and hear the fan before the room: the arcade loop stops at the smash (`connection()`, T.2) and card T.7 reads "Fan enters BEFORE room reveal".
+4. Reveal the whole room first; her replay and joke come before any object can be read (R.1 to R.5 precede A1).
+5. Repeat the camera position on visit two: V2.2 is the first-visit wide with four changes, the work app, the headset, the chair 18 pixels closer, both feet down (`act3.json`).
+6. Hold after the call ends: C1.8 is a three-second hold with the typing sound stopped (`roomCards()`).
+7. Keep the phone and the Mika chat in one frame with Lia; the phone panel is drawn beside her, never full screen (`phone()`; K.1).
+8. Return to the exact opening chat (rule 2; E.1 keeps the win-branch message above the buttons).
+9. End wide and let her life continue: E.3 to E.7 return to the first-visit wide, the headset goes back on, and she takes the next call before the fade (`ending()`).
 
-## 6. Systems and content budget
+## 6. Content on disk: what exists, what the code draws, what is still asked for
 
-The v0.3 bible argues that a small set of reusable assets carries the whole story. The table adds what the build holds today.
-
-| Asset | Quantity | Priority | In the build now |
+| Asset | Ask | In the build now | Status |
 |---|---|---|---|
-| Title screen | 1 | Essential | Yes (text title; the v0.3 arcade menu is grayboxed) |
-| Fighting arena background | 1 | Essential | Yes (`bg-arena.png`) |
-| Fighting character sprites | 2 | Essential | Yes (generated; Dain's wolf and wizard to replace them) |
-| Lia bedroom background | 1 | Essential | Yes (`room-reveal.png`, Quezon City text) |
-| Lia portrait expressions | 5 | Essential | 2 (neutral, sad) |
-| Lia sprite animations | 6 | Essential | None |
-| Ghost sprite animations | 4 to 5 | Essential | None |
-| Phone and work UI overlays | 2 | Essential | Phone only |
-| Screen-crack transition | 1 | Essential | Yes (`crack.png`, drawn by script) |
-| Arcade, ambient and call audio loops | 3 | Essential | 3 loops (street, CRT hum, her room); no call loop |
-| Cinematic close-up illustrations | 2 to 3 | Optional | None |
+| Title screen | 1 | Text title and matchmaking cards | in build |
+| Arena, fighters, spell, crescent | 1, 2, 2 | Dain's PNGs, sizes above | in build |
+| Lia's room | 1 | `room-retrofitted.png`, 1280 by 565 | in build |
+| Lia in the room | 6 poses | One sprite articulated by `RoomLia.ts` | placeholder; 8 poses proposed |
+| Lia portraits | 5 | None; a balloon with a pointer replaces the portrait (handoff) | dropped by design |
+| Ghost | 1 form | Wolf sprite at 50 percent opacity | placeholder; form proposed |
+| Phone, work screens, controller, crack | 4 | Drawn by code: `phone()`, `document()`, `controller()`, six crack lines in five steps | in build |
+| Effects, ambiences, music | 10, 3, 1 | 10 effects and 3 loops of 2026-10-28; a 20-second arcade loop | in build |
+| Voice | Lia, caller | 22 Lia lines, 4 caller lines | in build; provenance below |
+| Cinematic close-ups | 2 to 3 | None | not started |
 
-Palette: vivid magenta and cyan for combat, warm amber with muted blues for the bedroom, cooler monitor light for the work sequence. The room never goes colourless when the story turns serious; it is still her home.
+In words: the two things the storyboard asked for that the build does not hold are drawn poses for Lia and a drawn ghost; everything else is a file of Dain's or a shape the code draws.
 
-Sound. Thirteen clips generated with ElevenLabs from prompts written for this game: ten short effects (swing, whiff, hit, blast, ko, chat, type, queue, smash, phone) and three looped ambiences (room, crt, street). The arcade music cuts off mid-beat at the crossing and the fan comes in first.
+Sound and voice provenance (measured from `web/public/assets/audio/CREDITS.md`). The thirteen effects and ambiences are ElevenLabs sound effects of 2026-10-28, the 20-second arcade loop the same service on 2026-11-01. The four caller lines are the ElevenLabs stock voice Roger, model eleven v3. Lia's 22 lines are synthetic speech from the ElevenLabs Voice Library voice "Ate Marcela", a published Cebuano voice (locale ceb-PH, voice id `NL3wAdhrhsFZAoDTBMHk`), generated with eleven v3 on the team's ElevenLabs grant account on 2026-11-01, with the Cebuano language setting on the eleven lines that contain Cebuano; one voice for all 22 so Lia stays one speaker. The earlier Laura and Microsoft Blessica versions were replaced and are not in the build (source at `414c4a1`); upload 20210294 was packaged before this change (`VERIFICATION.md`, 10:00 entry), and the upload that carries the new lines is not yet recorded in `SUBMISSION_LOG.md`. No real person's voice was cloned by the team. All 40 clips decode, 144.76 seconds in total on the 10:00 package (`audio.json`). Not yet verified: a listening pass with a Cebuano ear; the voice's age tag (middle-aged) is the recorded compromise.
 
-Logging. Section 2 lists the events. Each loop entry holds the pick, the reply time and whether the player rage quit, so a single run already contains its own before-and-after. PostHog receives the same events as `gg_<event>` when `POSTHOG_KEY` is set; today it is empty, so nothing leaves the player's machine.
+Saving and the survey. Progress saves at chapter boundaries under `gg-ez-save-v1` when storage is allowed, and Continue resumes it (`save()`, `readSave()`). After the credits: "In the three seconds after ez, what did you feel?", "If the box had been free text, would you have typed something worse?", and an optional line of 280 characters (`survey()`; tested through Send and Done, `VERIFICATION.md` 10:00). Self-report, kept on the device.
 
-## 7. What this jam submission contains and the roadmap after it
+## 7. What is on itch, what was checked, what comes next
 
-The submission package for itch.io: the web build (`gg-ez-web-final.zip`, single-threaded export, 1280 by 720), the concept brief as a PDF, and a two-minute trailer of real footage from the self-playing run. This document lives in the repository as `docs/GDD.md`. At the time of writing the itch.io page and the jam form are the remaining steps (`SUBMIT_ITCH.md`). The build is a partial play of the story: Act I and the rage loop, with the room, the phone and the same-two-replies rematch. Acts II to V are storyboarded in v0.3, and scenes 1 to 8 are grayboxed in Figma with per-frame camera, action, sound and duration values that Dain can edit.
+On the page (`SUBMISSION_LOG.md`, every id read back from itch after saving): browser build 20210294, ZIP SHA-256 beginning `6601d720253f`, 55 files, the only embed, 1280 by 720; the 2026-10-31 design document as upload 20210090; the concept and controls PDF v2 as 20210296; the narrated 70.6-second trailer cut from real play as 20210676 (narration by Microsoft's `en-PH-JamesNeural`); the earlier build 20200964, the Godot build 20115262 and the design notes 20198190 as archives. The jam entry, <https://itch.io/jam/checkpoint-game-jam/rate/5254371>, reads "6 hours, 19 minutes before the deadline"; the jam closed 2026-11-01 03:59:59 PST and the page stayed editable.
 
-After the jam, in order:
+Checked on this build (tested, 2026-11-01, Chrome at 1280 by 720 through Playwright; commands in `web/README.md`). Campaign suite: six routes, 107 beats each, a real keyboard final and a real silence timer (`report.json`). Exploration suite: collision-only discovery, keyboard, pointer and scaled touch, the two-object lock, re-entry, reduced motion; ten 100-millisecond updates move the ghost 225 pixels and a simulated long pause at most 22.5 (`exploration-report.json`). In words: a tab left in the background cannot teleport the ghost when it comes back. Presentation: her footwork, one scaled body in the pull, room frames at a median of 4.2 milliseconds and 4.9 at the 95th percentile on the PC (`presentation-report.json`; an earlier headless run on a busy Mac measured 116.7 and 133.4). In words: on this PC the room draws in under five milliseconds of a 16.7-millisecond frame; on a phone, unknown. Hosted frame: bundle byte-identical to the local build, all six endings, the fight and silence numbers above, no page errors, no failed requests (`hosted-report.json`). Not yet verified: a person's playthrough of this exact upload; a physical phone.
 
-1. Move the build to the story's decisions: Lapu-Lapu City, Cebuano phone lines with English gloss, the approved reply pair, `GHOST = true`.
-2. Build scene 7 and scene 8 from the grayboxes. Scene 8 is the one scene to keep if half the game is cut.
-3. Replace the generated art with Dain's sprites, portraits and the ghost.
-4. Scenes 9 to 13, then the fair final match with its own win and loss branches and the six ending variations that share one epilogue.
-5. If the project is selected for the two-month phase: a second opponent with a different life, voice for Lia's lines, and a short before-and-after quiz alongside the logged replies.
+After the jam, in order (proposed):
+
+1. Record the reply time in milliseconds beside each pick, as the Godot prototype did.
+2. Two reviews before the script locks: the Cebuano lines by an independent speaker, the call English by someone who has worked a Philippine BPO floor (business process outsourcing, the call-centre industry). The lines were drafted to Carl's Lapu-Lapu household voice and nobody else has read them (`CONCEPT_BRIEF.md`).
+3. A listening pass on all 22 Ate Marcela lines, and the Jesi alternate set kept outside the repository for an ear test (`CREDITS.md`).
+4. Dain's eight poses and the ghost form.
+5. A human playtest on the fair fight, the parry window and the shorter freezes.
+6. If selected for the two-month phase: a second opponent with a different life (`CONCEPT_BRIEF.md`).
 
 ## 8. Open questions and risks
 
-Language review. The Cebuano lines are new draft copy with English glosses, tuned to Carl's Lapu-Lapu household voice. No independent speaker has reviewed them, and nobody who has worked a Philippine BPO floor has checked the customer-call English. Both reviews are owed before the script locks; the v0.3 bible says they decide whether Lia is a specific person or a generic hardship.
+The measure is small, and smaller than the prototype's. The build knows which of two buttons a player pressed three times and whether they won; it does not know how long they hesitated. A changed pick on the last chat says the player paused once, after a room designed to make them pause. It says nothing about the next day. The survey is self-report. No player study exists.
 
-The build and the story disagree in three places. `GHOST` is `false`, so the build's crossing is "the camera shows the other side", not the ghost; the room text is Quezon City and Tagalog; the reply buttons are the older pair. Each is a constant or a string in `main.gd`. None has been changed, because the story documents were not allowed to silently rewrite the runtime.
+Language. Eleven of Lia's lines are Cebuano (`CREDITS.md`). The voice is a published Cebuano voice, but no Cebuano speaker outside the team has heard the lines, and the glosses under the balloons are the only guarantee the player understands them.
 
-`POSTHOG_KEY` is empty. Nothing leaves the player's machine, so the jam build measures nothing beyond it. Setting the public project key is one line.
+Registration. The jam form attests that both members registered individually; Dain's country is written as "to be confirmed by her" (`SUBMISSION_LOG.md`, open items). Neither has been independently validated.
 
-The measure is small. A changed pick on loop five says the player paused once, after a room designed to make them pause. It says nothing about the next day, and the feedback form is self-report. The page and the brief should say so rather than let a logged number stand in for impact.
+Feel. Every balance number in section 2 came from a script that holds keys. The tuning moved the two-button win from 6.8 to about 12 seconds; whether that reads as fair to a person is not yet verified, as are the 30 to 60 millisecond freezes, shortened after the first upload felt heavy (`SUBMISSION_LOG.md`, morning update).
 
-Feel. The 2026-10-28 note was "too fast, reads like a movie". The loop structure addresses that; the match itself still wants a human pass. Dain has not yet seen the current build; the grayboxes are the handoff.
+What changed since 2026-10-31. That document described a Godot prototype with a rage loop, Quezon City text, an older reply pair and a `GHOST = false` flag, and said the thirteen scenes were a production plan. All thirteen are now in the build, the city is Lapu-Lapu, the reply pair is the approved one, and the ghost is a sprite the player moves. The prototype is archived as upload 20115262 and its document as `GDD-2026-10-31`.
 
 ## AI use and credits
 
-Code drafted with Claude (Anthropic), edited by the team. Art in the build generated locally with Krea 2 Turbo and cut out by script; fighter models from Meshy. Sound effects generated with ElevenLabs. Intro footage: three Pexels clips, pixelised with ffmpeg. The storyboard v0.3 was drafted in a ChatGPT conversation and recovered verbatim; this document was drafted with Claude from the repository and the story branch and edited by Carl. SANABI references: WONDER POTION and NEOWIZ, composition study only.
+Design, code and writing: Carl Kho. Pixel art and design: Dain Kim. Claude (Anthropic) wrote most of the code and the dialogue drafts from the team's design sessions and the storyboard; the team edited them (`CONCEPT_BRIEF.md`). Engine: Phaser 3. Sound effects, the arcade loop, the caller's lines and Lia's lines: ElevenLabs, as recorded in `CREDITS.md`. Trailer narration: Microsoft `en-PH-JamesNeural`. The archived Godot prototype used art generated with Krea 2 Turbo and fighter models from Meshy; none of it is in this build. SANABI: WONDER POTION and NEOWIZ, composition study only. No UN names or emblems appear in the game. This document was drafted with Claude from the files it cites and edited by Carl; its PDF was rendered with pandoc and WeasyPrint by `tools/render_gdd.sh`.
