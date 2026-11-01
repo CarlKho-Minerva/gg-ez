@@ -16,8 +16,8 @@ try{
  await p.getByRole('button',{name:'Continue',exact:true}).click();await p.waitForFunction(()=>window.__beat==='L3.5');await p.getByRole('button',{name:'Continue',exact:true}).click();
  await p.waitForFunction(()=>window.__beat==='T.2');await p.screenshot({path:resolve('verification/cracked-screen.png')});
  await p.waitForFunction(()=>window.__beat==='T.4');
- const transition=await p.evaluate(()=>{const s=window.__previewGame.scene.getScene('campaign');return {wolves:s.children.list.filter(c=>c.texture?.key==='wolf').map(c=>({sx:c.scaleX,sy:c.scaleY})),shaking:s.cameras.main.shakeEffect.isRunning};});
- assert.equal(transition.wolves.length,1);assert.equal(transition.wolves[0].sx,transition.wolves[0].sy);assert.equal(transition.shaking,false);
+ const transition=await p.evaluate(()=>{const s=window.__previewGame.scene.getScene('campaign');return {wolves:s.children.list.filter(c=>c.texture?.key==='wolf').map(c=>({sx:c.scaleX,sy:c.scaleY,x:c.x})),shaking:s.cameras.main.shakeEffect.isRunning};});
+ assert.equal(transition.wolves.length,1);assert(transition.wolves[0].sx>transition.wolves[0].sy,'the pull stretches the body toward the hole');
  await p.waitForFunction(()=>window.__beat==='T.9');await p.screenshot({path:resolve('verification/room-arrival.png')});results.push({liaFootwork:true,transition});
  await p.close();
  const room=await browser.newPage({viewport:{width:1280,height:720}});room.on('pageerror',e=>errors.push(e.message));

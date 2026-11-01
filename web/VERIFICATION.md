@@ -1,5 +1,13 @@
 # HTML campaign verification — 2026-11-01
 
+## 2026-11-01 10:00 PST: voice, pull, sprites, survey (build v3, itch upload 20210294)
+
+Changes: Lia's 22 lines regenerated with Microsoft's Filipino neural voice fil-PH-BlessicaNeural (edge-tts), caller lines unchanged; the pull through the monitor rebuilt (lift, stretch toward the hole, air streaks, scraps, compression, flash); hit-stops shortened to 30 to 60 ms and 240 ms on the finishing blow; food-close.png and food-desk.png replace the drawn tub, rice, leaf and spoon; a three-question survey after the credits (answers in localStorage key gg-ez-survey and on window.__done.survey; SURVEY_ENDPOINT constant empty); credits card and page name the voice correctly.
+
+Checks (Chrome through Playwright, 1280x720): campaign suite passed (real final fight: win in 10.3 s; silence 3,022 ms; passive opening: loss at 30.8 s); exploration passed; presentation passed with the new pull (the body stretches toward the hole at T.4); audio decode passed, 40 clips, 144.76 s; survey drives through Send and Done and records answers (tools/look.mjs). Package: 55 files, ZIP SHA-256 6601d720253fe12b4588cb3338ec48c19ba202206852370cc81b3be30ae4cb72. Hosted: see docs/itch/SUBMISSION_LOG.md.
+
+Not verified by a machine: how the Filipino voice reads the Cebuano words (Blessica is a Tagalog voice); feel of the shorter freezes by hand.
+
 ## 2026-11-01 02:25 PST: the fight rewrite, Cebuano voice lines, spoiler-free page
 
 What changed since the 00:51 upload: Lia now moves in every match (approach, retreat, hop, blink behind the player, staff swing up close, spell from range, three-spell barrage in later rounds); the player has a three-hit string, a finisher on K after two strikes, a dash on S, a directional guard and a timed parry; the first three matches stay rigged by lag and a drain and end by a hair; the final match is fair with 150 health on her side, no floor and no drain; the controller throw is a drawn pad that trembles, winds up, spins into the monitor, cracks it progressively and bounces onto the desk; the title, matchmaking card, meta description and itch page no longer name the twist; fifteen Lia lines were regenerated with ElevenLabs eleven v3 told the language is Cebuano (CREDITS.md has the full record); new cover from Dain's thumbnail, five new screenshots that stop at the cracked monitor, and a rewritten concept PDF with the spoilers in a final section for judges.

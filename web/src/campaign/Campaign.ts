@@ -16,6 +16,8 @@ const GLOSS: Record<string,string> = {
   'C1.11': 'Seriously. What else do they want?', 'P.5': 'It has vegetables. Technically.',
   'K.5': 'At least in the game, I know I’m good at something.', 'N.5': 'One more.', 'E.6': 'Okay. I can do this.'
 };
+/** Set to a URL that accepts a JSON POST to collect survey answers; empty keeps them on the device. */
+const SURVEY_ENDPOINT = '';
 export function readSave(): Save | null {
   try { const s = JSON.parse(localStorage.getItem('gg-ez-save-v1') ?? 'null');
     return s?.version === 1 && Number.isInteger(s.chapter) && s.chapter >= 0 && s.chapter < 13 &&
@@ -45,6 +47,8 @@ export default class Campaign extends StoryScene {
     super.preload();
     this.load.image('room', assetUrl('assets/dain/room-retrofitted.png'));
     this.load.image('lia-room', assetUrl('assets/dain/lia-room-character.png'));
+    this.load.image('food-close', assetUrl('assets/dain/food-close.png'));
+    this.load.image('food-desk', assetUrl('assets/dain/food-desk.png'));
   }
   async run() {
     this.fx=new Effects(this);
@@ -96,9 +100,7 @@ export default class Campaign extends StoryScene {
     const monitor = this.add.rectangle(640, 416, 58, 36, 0x66cfc9, .9); this.world.add(monitor);
     const screen = this.add.text(620, 408, this.status === 'ON BREAK' ? (this.seen.size>=2?'QUEUE':'GG EZ') : 'WORK', {fontFamily:'monospace',fontSize:'11px',color:'#183d51'}); this.world.add(screen);
     // Dinner is an actual object on the desk, not a floating UI button.
-    const plate = this.add.graphics().fillStyle(0x819da0).fillEllipse(711,454,39,12);
-    plate.fillStyle(0xd7d0ac).fillEllipse(709,451,26,8).fillStyle(0x6c7d48).fillRect(719,448,7,4);
-    this.world.add(plate);
+    const plate = this.add.image(711,452,'food-desk').setScale(1.15); this.world.add(plate);
     // Art-aligned head, shoulder and arm movement; the desk and chair stay still.
     this.roomLia=new RoomLia(this,this.world,this.fx.reduced);
     this.roomLia.setPose(this.status==='ON BREAK'?'mouse':'typing');
@@ -134,10 +136,7 @@ export default class Campaign extends StoryScene {
     this.rect(768,180,416,2,0xadb3a5); this.label(text,768,211,27,'#283831',414);
   }
   private food(x = 935, y = 410) {
-    this.add.ellipse(x,y,174,75,0xd0c5a5).setStrokeStyle(5,0x617777);
-    for(let i=0;i<21;i++) this.rect(x-60+(i*23%122),y-18+(i*13%32),9,3,0xeae2c7);
-    this.add.ellipse(x+25,y,40,15,0x617b3d).setAngle(-25);
-    this.rect(x+75,y-40,7,89,0xa8b3b6).setAngle(30);
+    this.add.image(x,y,'food-close').setScale(4);
   }
   private async matchmaking() {
     this.stage(); this.arena(); this.rect(0,0,W,H,0x101222,.74);
@@ -194,17 +193,17 @@ export default class Campaign extends StoryScene {
       bolts.push({sprite:b,vx:direction*(owner==='lia'?520+skill*170:690),owner,power,breaker,dodged:false});this.fx.ring(b.x,b.y,breaker?0xd58cff:owner==='lia'?0x58e1ff:0xf7ffd8,14*power); audio.play(owner==='lia'?'blast':'swing',.32);
     };
     const staggerLia=(seconds:number,push:number)=>{liaState='stagger';liaTimer=seconds;lia.clearTint();lia.setTintFill(0xfff3bc);this.time.delayedCall(110,()=>lia.active&&lia.clearTint());lia.x=Phaser.Math.Clamp(lia.x+push,40,1160);telegraph.clear();};
-    const hitEnemy=(damage:number,launch=false)=>{firstHit=true;hits++; enemyHealth=rigged?Math.max(18,enemyHealth-damage):Math.max(0,enemyHealth-damage); lia.setTintFill(0xfff3bc); this.time.delayedCall(110,()=>lia.active&&lia.clearTint());this.fx.burst(lia.x+45,lia.y+45,0xfff1bd,launch?1.5:1);hitStop=launch?.09:.045; audio.play('hit',launch?.5:.4);this.fx.impact(launch?.006:.003); hint.setText('');
+    const hitEnemy=(damage:number,launch=false)=>{firstHit=true;hits++; enemyHealth=rigged?Math.max(18,enemyHealth-damage):Math.max(0,enemyHealth-damage); lia.setTintFill(0xfff3bc); this.time.delayedCall(110,()=>lia.active&&lia.clearTint());this.fx.burst(lia.x+45,lia.y+45,0xfff1bd,launch?1.5:1);hitStop=launch?.06:.03; audio.play('hit',launch?.5:.4);this.fx.impact(launch?.006:.003); hint.setText('');
       if(launch){staggerLia(.7,(lia.x<wolf.x?-1:1)*110);liaVy=-260;}
       if(chain>1)pop(combo,`${chain} HIT`,chain===3?'#ffd166':'#fff1bd');
       if(mode==='opening'&&hits===1)hint.setText('J J J is a string. J J then K finishes it. L blocks, S dashes through her.');};
     const hurtPlayer=(damage:number,fromX:number,kind:'spell'|'staff'|'breaker')=>{
       if(dash>0)return;
       const faced=(fromX<wolf.x+40)===(facing<0);
-      if(blocking&&faced&&!delayedBlock&&elapsed-blockAt<=.16){parries++;blocks++;audio.play('whiff',.45);this.fx.burst(wolf.x+40+facing*42,wolf.y+45,0xffffff,1.3);this.fx.ring(wolf.x+40+facing*42,wolf.y+45,0xffffff,30);pop(callout,'PARRY','#ffffff');staggerLia(.9,(lia.x<wolf.x?-1:1)*70);hitStop=.07;this.fx.impact(.004);return;}
+      if(blocking&&faced&&!delayedBlock&&elapsed-blockAt<=.16){parries++;blocks++;audio.play('whiff',.45);this.fx.burst(wolf.x+40+facing*42,wolf.y+45,0xffffff,1.3);this.fx.ring(wolf.x+40+facing*42,wolf.y+45,0xffffff,30);pop(callout,'PARRY','#ffffff');staggerLia(.9,(lia.x<wolf.x?-1:1)*70);hitStop=.05;this.fx.impact(.004);return;}
       if(blocking&&faced&&kind!=='breaker'){blocks++;health-=rigged?4:5;audio.play('whiff',.2);this.fx.burst(wolf.x+40+facing*42,wolf.y+45,0x9dffec,.7);this.fx.ring(wolf.x+40+facing*42,wolf.y+45);guard.setFillStyle(0xffffff);this.time.delayedCall(150,()=>guard.active&&guard.setFillStyle(0xa9fff0));wolf.x=Phaser.Math.Clamp(wolf.x-facing*18,80,1180);return;}
       if(blocking&&faced){pop(callout,'GUARD BROKEN','#ff9bd0');stun=.45;}
-      health-=damage;wolf.x=Phaser.Math.Clamp(wolf.x+(fromX<wolf.x?1:-1)*30,80,1180);wolf.setTintFill(0xffb9b9);hitFlash=.15;hitStop=.07;this.fx.burst(wolf.x+40,wolf.y+40,0xff978d,1.2);audio.play('hit',.4);this.fx.impact(.005);chain=0;
+      health-=damage;wolf.x=Phaser.Math.Clamp(wolf.x+(fromX<wolf.x?1:-1)*30,80,1180);wolf.setTintFill(0xffb9b9);hitFlash=.15;hitStop=.05;this.fx.burst(wolf.x+40,wolf.y+40,0xff978d,1.2);audio.play('hit',.4);this.fx.impact(.005);chain=0;
       if(mode==='second')hint.setText('lia_ph: bro just block 😭');
     };
     const action=(key:string)=>{
@@ -304,7 +303,7 @@ export default class Campaign extends StoryScene {
         if(mode==='third'){shots.push({x:wolf.x,y:wolf.y,angle:wolf.angle});if(shots.length>150)shots.shift();}
         net.setText(finalRound?'CONNECTION STABLE':firstHit&&mode==='opening'?'NETWORK DELAY':mode==='rematch'?'REMATCH':mode==='second'||mode==='third'?'NETWORK DELAY':'CONNECTION UNSTABLE');
         // The last hit lands and the game goes quiet for a third of a second.
-        if(health<=0||enemyHealth<=0||(finalRound&&elapsed>=40)){koAt=elapsed||.001;hitStop=.3;telegraph.clear();if(!this.fx.reduced)this.cameras.main.flash(90,255,255,255);}
+        if(health<=0||enemyHealth<=0||(finalRound&&elapsed>=40)){koAt=elapsed||.001;hitStop=.24;telegraph.clear();if(!this.fx.reduced)this.cameras.main.flash(90,255,255,255);}
       };this.events.on('update',tick);
     });
     if(this.ctx.autoplay)this.outcome=finalRound&&new URLSearchParams(location.search).get('outcome')==='win'?'win':'loss';
@@ -397,9 +396,7 @@ export default class Campaign extends StoryScene {
     await this.tween(pad,this.fx.reduced?{alpha:0}:{x:690,y:549,angle:560},.36,'Bounce.easeOut');
     audio.stop('arcade');await this.beat('T.2',.8);
     this.label('CONNECTION LOST\nlia_ph is still there.',650,310,21,'#d4ffff',300);await this.beat('T.3',1.2);
-    audio.play('crt',.12);
-    await this.tween(body,this.fx.reduced?{alpha:.65}:{x:390,y:430,alpha:.65},.7);await this.mark('T.4');
-    await this.tween(body,{alpha:0},.55);await this.mark('T.5');
+    await this.pullThroughTheScreen(body);
     await this.dissolve(()=>this.room());await this.beat('T.9',1.2);
   }
   private async scriptLine(id:string) {
@@ -495,6 +492,68 @@ export default class Campaign extends StoryScene {
       if(c.speech)await this.say(c.speech,c.id,'lia',GLOSS[c.id]);else await this.beat(c.id,1.8);
     }
   }
+  /** The crack opens into a draft: feet lift, the body stretches toward the hole, compresses into it, and is gone. */
+  private async pullThroughTheScreen(body:Phaser.GameObjects.Image) {
+    const hole={x:790,y:374};
+    body.setOrigin(.5).setPosition(body.x+51,body.y+59);
+    if(this.ctx.autoplay||this.fx.reduced){await this.tween(body,{x:hole.x,y:hole.y,alpha:0},.4);await this.mark('T.4');await this.mark('T.5');return;}
+    audio.play('crt',.16,true);audio.play('whiff',.25);
+    const glow=this.add.graphics().setDepth(5), streaks=this.add.graphics().setDepth(7);
+    const scraps=[0,1,2,3,4,5,6].map(i=>this.rect(230+i*118+(i%2)*40,560-(i%3)*12,10+(i%3)*4,4,0xd8d9e3).setDepth(6));
+    let t=0;
+    const tick=(_:number,dt:number)=>{t+=Math.min(dt,100)/1000;
+      const pulse=.4+Math.sin(t*9)*.18;
+      glow.clear().fillStyle(0xbdf6ff,pulse*.45).fillCircle(hole.x,hole.y,30+Math.sin(t*9)*7).fillStyle(0xffffff,pulse).fillCircle(hole.x,hole.y,9);
+      streaks.clear().lineStyle(2,0xc9f4ff,.5);
+      for(let i=0;i<16;i++){const a=Math.PI*.55+(i/16)*Math.PI*.95;const r=320-((t*560+i*67)%320);const x=hole.x+Math.cos(a)*r*1.7,y=hole.y+Math.sin(a)*r*.6;streaks.lineBetween(x,y,x+(hole.x-x)*.2,y+(hole.y-y)*.2);}
+      scraps.forEach((s,i)=>{const k=Math.min(1,Math.max(0,(t-.3)/(1.2+i*.11)));s.setPosition(Phaser.Math.Linear(230+i*118+(i%2)*40,hole.x,k*k),Phaser.Math.Linear(560-(i%3)*12,hole.y,k*k)).setAngle(k*720+i*40).setScale(1-k*.92);});
+    };this.events.on('update',tick);
+    try{
+      await this.tween(body,{y:body.y-28,angle:-12},.5,'Sine.easeOut');
+      this.cameras.main.shake(1100,.0022);
+      await this.tween(body,{x:hole.x-170,y:hole.y-30,scaleX:5.4,scaleY:2,angle:-30},.8,'Quad.easeIn');
+      await this.mark('T.4');
+      await this.tween(body,{x:hole.x-10,y:hole.y-6,scaleX:.3,scaleY:.8,alpha:.2},.3,'Quad.easeIn');
+      this.cameras.main.flash(140,225,255,255);audio.play('smash',.16);
+      body.setAlpha(0);scraps.forEach(s=>s.setVisible(false));
+      await this.mark('T.5');await this.hold(.4);
+    }finally{this.events.off('update',tick);glow.destroy();streaks.destroy();scraps.forEach(s=>s.destroy());audio.stop('crt');}
+  }
+  /** Three questions after the credits. Answers stay on the device and travel with the finish record; a configured endpoint receives them too. */
+  private survey(): Promise<void> {
+    if(this.ctx.autoplay)return Promise.resolve();
+    return new Promise(resolve=>{
+      const panel=document.createElement('div');panel.className='survey';
+      const answers:Record<string,string>={};
+      const ask=(id:string,question:string,options:string[])=>{
+        const q=document.createElement('div');q.className='survey-q';const h=document.createElement('p');h.textContent=question;q.append(h);
+        const row=document.createElement('div');row.className='survey-row';
+        for(const o of options){const b=document.createElement('button');b.type='button';b.textContent=o;b.onclick=()=>{answers[id]=o;Array.from(row.children).forEach(c=>c.classList.toggle('picked',c===b));};row.append(b);}
+        q.append(row);panel.append(q);
+      };
+      const title=document.createElement('p');title.className='survey-title';title.textContent='Three questions before you go.';panel.append(title);
+      ask('felt','In the three seconds after "ez", what did you feel?',['nothing much','annoyed','angry','something else']);
+      ask('worse','If the box had been free text, would you have typed something worse?',['yes','maybe','no']);
+      const note=document.createElement('textarea');note.className='survey-note';note.placeholder='One line for Lia, or for us (optional)';note.maxLength=280;panel.append(note);
+      const actions=document.createElement('div');actions.className='survey-row';
+      const send=document.createElement('button');send.type='button';send.textContent='Send';
+      const skip=document.createElement('button');skip.type='button';skip.textContent='Skip';
+      const status=document.createElement('p');status.className='survey-status';
+      const finish=(submitted:boolean)=>{
+        const record={submitted,at:new Date().toISOString(),outcome:this.outcome,replies:this.replies,seen:[...this.seen],...answers,note:note.value.trim()};
+        if(window.__done)(window.__done as Record<string,unknown>).survey=record;
+        if(submitted){try{localStorage.setItem('gg-ez-survey',JSON.stringify(record));}catch{/* storage unavailable */}
+          if(SURVEY_ENDPOINT){void fetch(SURVEY_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(record),keepalive:true}).catch(()=>{});}
+          const body=encodeURIComponent(`GG EZ survey\n\nfelt: ${answers.felt??''}\nworse: ${answers.worse??''}\nnote: ${note.value.trim()}\noutcome: ${this.outcome}\nreplies: ${this.replies.join(', ')}`);
+          status.innerHTML='';const a=document.createElement('a');a.href=`mailto:kho@uni.minerva.edu?subject=${encodeURIComponent('GG EZ survey')}&body=${body}`;a.textContent='Thank you. Saved on this device; tap here to also email it to the team.';status.append(a);
+          send.disabled=true;skip.textContent='Done';
+        }else{panel.remove();resolve();}
+      };
+      send.onclick=()=>{if(!answers.felt||!answers.worse){status.textContent='Pick an answer for the two questions first.';return;}finish(true);};
+      skip.onclick=()=>{if(skip.textContent==='Done'){panel.remove();resolve();}else finish(false);};
+      actions.append(send,skip);panel.append(actions,status);this.ui.append(panel);
+    });
+  }
   private async finalFight() {await this.fight('final');}
   private async ending() {
     await this.matchChat('E.1',true);this.replies.push(this.ctx.pick??'silence');
@@ -506,9 +565,10 @@ export default class Campaign extends StoryScene {
     const fade=this.rect(0,0,W,H,0x000000,0);await this.tween(fade,{alpha:1},1);
     this.playerDesk(true);this.label('lia_ph',820,462,14,'#aef0e0');await this.beat('E.8',3);
     this.stage();audio.stop();this.big('GG EZ',185,108);this.big('A game by Carl Kho & Dain Kim',325,27);this.big('END OF MATCH',410,20);
-    this.label('Art · Dain Kim     Story & design · Carl Kho\nSound and voices · ElevenLabs',640,480,18,C.dim).setOrigin(.5,0).setAlign('center');
+    this.label('Art · Dain Kim     Story & design · Carl Kho\nSound effects · ElevenLabs     Lia’s voice · Microsoft neural TTS (fil-PH)',640,480,18,C.dim).setOrigin(.5,0).setAlign('center');
     await this.mark('E.9');this.finish({completed:true,outcome:this.outcome,replies:this.replies,seen:[...this.seen],chapters:13});
     if(!this.ctx.autoplay){try{localStorage.removeItem('gg-ez-save-v1');}catch{/* storage unavailable */}}
+    await this.survey();
     this.row(['Play again'],520,590,()=>{audio.stop();location.href=location.pathname;});
   }
 }

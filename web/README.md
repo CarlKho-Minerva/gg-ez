@@ -28,6 +28,6 @@ Development routes: `?scene=m2` retains the earlier isolated scene; `?scene=camp
 
 ## Audio and source
 
-Thirteen existing ElevenLabs effects, 26 ElevenLabs voice recordings, and a generated arcade loop are bundled locally. See `public/assets/audio/CREDITS.md` and `voice-script.json`. Cebuano lines retain English glosses; a human pronunciation pass is still useful. The narrative tables are in `docs/storyboards/FINAL-SCENES-HTML-HANDOFF.md` at repository root and the runtime scene manifests under `src/campaign/`.
+Thirteen existing ElevenLabs effects, four ElevenLabs caller lines, 22 Lia lines from Microsoft's Filipino neural voice (fil-PH-BlessicaNeural via edge-tts), and a generated arcade loop are bundled locally. See `public/assets/audio/CREDITS.md` and `voice-script.json`. Cebuano lines retain English glosses; a human pronunciation pass is still useful. The narrative tables are in `docs/storyboards/FINAL-SCENES-HTML-HANDOFF.md` at repository root and the runtime scene manifests under `src/campaign/`.
 
 This campaign is now the selected public itch browser build; the old Godot build remains as an archive. Development and packaging commands alone do not publish anything: uploading is a separate step. See `VERIFICATION.md` for the publication record.
