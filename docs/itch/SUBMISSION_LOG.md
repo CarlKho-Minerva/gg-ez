@@ -31,3 +31,20 @@ Project GG EZ · Team leader Carl Kho · Email carlkho.cvk@gmail.com · Team siz
 
 - 0f74e83 docs: concept brief PDF for the Checkpoint jam form
 - 441130f docs: two-minute trailer of the submitted build, for the jam form (force-added past .gitignore)
+
+## Replacement build, 2026-11-01 02:27 to 02:40 PST
+
+Written from the PC session that rebuilt the fight; the upload ran through the Mac's signed-in Dia tab (app-routes rung 4). Every id below was read back from the edit page after Save and from the public page.
+
+- Browser build: upload **20200964**, "GG EZ - browser campaign (2026-11-01)", GG-EZ-itch.zip, 2,442,046 bytes, SHA-256 21715750dc972c30985bab246661115489b29f5732d7e7057464f6e9b9bb6b1b, type html, embed checked, 1280x720, fullscreen on, mobile friendly on, SharedArrayBuffer off. Hosted frame: https://html-classic.itch.zone/html/20200964/index.html (itch's embed requests it as index.html?v=<unix time>). The hosted bundle assets/index-zvn4PRaG.js is byte-identical to the local dist (SHA-256 a1f46777b846e020c1a42c53b28fc607408989241b05cea133c84490649f8e9c).
+- Concept PDF: upload **20200968**, "Concept and controls (2026-11-01)", 31,389 bytes, SHA-256 69cd6e56baa7545e1c09343fd6c73ec0b3a5c13d3364b393ac368d6a23647bd4; the earlier PDF 20200131 is renamed "Concept and controls (archive, 00:51)". The Godot build 20115262 and design notes 20198190 stay as archives. The 00:51 browser upload 20199994 is no longer listed on the edit page: itch dropped that row when a new file with the same name GG-EZ-itch.zip was uploaded (nothing was deleted by hand); its ZIP (SHA-256 67e516ec67bedf59edce223d69a5322b8ba06edd4e22984514e4e5d52903f782) is reproducible from commit 040d7ed.
+- Cover: image **31669133**, Dain's new thumbnail at 630x500. Screenshots, in order: 31669139, 31669144, 31669148, 31669149, 31669151 (title, opening string with the finisher, the fair fight, the three-second chat, the cracked monitor). None shows the room.
+- Short text (83 characters): You lose by a hair. She types "ez". Three seconds, two replies. Then one more game. Description: the four paragraphs in DESCRIPTION.md; the page no longer names the twist.
+- Jam entry https://itch.io/jam/checkpoint-game-jam/rate/5254371 still reads "Submitted by carlcrafterz, 6 hours, 19 minutes before the deadline" (the original submission time; the jam form was not resubmitted). Jam close: 2026-11-01 03:59:59 PST.
+- Source: branch dev/full-html-campaign at 3c5b9d6 and main at merge c2fe963 on GitHub.
+
+Hosted checks:
+- From the Mac (Playwright, index.html?v=1): hosted index references the local bundle, bundle byte-identical, title starts the game, collision room has no buttons, keyboard moves the ghost, no page errors and no failed requests (10:38:29 UTC).
+- From the PC (`node tools/hosted-check.mjs 20200964`): see the line appended below.
+
+One trap, recorded for next time: a GET of the bare frame URL made in the seconds between Save and itch's first-time unpack returned 404, and Cloudflare's San Jose edge cached that 404 (cf-cache-status HIT, max-age 2678183). Players are unaffected because itch's embed always requests index.html?v=<time>, a different cache key, and that returns 200. Never request the bare frame URL before the public page's Run button has done the first load; verify through the versioned form.
