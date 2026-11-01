@@ -2,7 +2,7 @@
 
 ## 2026-11-01 14:10 PST: Cebuano library voice (build v4, itch upload 20216318)
 
-Lia's 22 lines regenerated with the ElevenLabs Voice Library voice Ate Marcela (ceb-PH) on the grant account, eleven v3, Cebuano language setting on the Cebuano lines; the in-game credits card, page and brief name it. Checks on the v4 package: campaign suite passed (real final fight: win in 11.0 s, 15 hits; silence 3,020 ms; passive opening: loss at 30.4 s); audio decode passed, 40 clips, 131.2 s; ZIP SHA-256 c7285d68a730a77cb927245d9d80afd2edf5fa5be71c0a62c93070f2568b1423, 55 files. Hosted: see docs/itch/SUBMISSION_LOG.md. Not verified by a machine: how the voice sounds to a Cebuano ear.
+Lia's 22 lines regenerated with the ElevenLabs Voice Library voice Ate Marcela (ceb-PH) on the grant account, eleven v3, Cebuano language setting on the Cebuano lines; the in-game credits card, page and brief name it. Checks on the v4 package: campaign suite passed (real final fight: win in 11.0 s, 15 hits; silence 3,020 ms; passive opening: loss at 30.4 s); audio decode passed, 40 clips, 131.2 s; ZIP SHA-256 c7285d68a730a77cb927245d9d80afd2edf5fa5be71c0a62c93070f2568b1423, 55 files. Hosted: see docs/itch/SUBMISSION_LOG.md. Machine check of the Cebuano lines: ElevenLabs speech-to-text with the language set to Cebuano reads Ate Marcela's eleven Cebuano lines back with a mean word match of 0.77 (Jesi alternative 0.59; tools/stt_check.py), one retake of voice-c1-10-lia included in build v5. In words: a Cebuano-language transcriber understands her. Still not verified: how she sounds to a Cebuano ear.
 
 ## 2026-11-01 10:00 PST: voice, pull, sprites, survey (build v3, itch upload 20210294)
 
