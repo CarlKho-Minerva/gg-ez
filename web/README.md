@@ -1,47 +1,32 @@
-# GG EZ Web Development Preview
+# GG EZ — HTML campaign
 
-**This is a development preview, not the full submitted game.** It ports the story-scene scaffold and two registered scenes to Vite, TypeScript and Phaser 3.90 at 1280 × 720. Arena action is scripted choreography, as in the supplied Godot story implementation; it is not a playable combat system. Audio is intentionally disabled in this preview. No deployment, submission, merge or push is part of this work.
+A fighting game about losing to a stranger, then inconveniently discovering she’s a person.
 
-## 1. Build and run
+The default page is the complete 13-chapter Phaser campaign. Dain’s pixel artwork is reused throughout; the room uses the existing retrofit and character extraction. It includes keyboard/touch combat, three opening losses, a monitor transition, object exploration, the work call, Mama and Mika chats, a final fight, and three reply branches. Final victory depends on combat, independently of objects and conversation history.
 
-Run from this `web/` directory:
+## Run
 
-```sh
-npm ci
-npm run dev
-npm run build
-npm run zip
-npm test
-```
+Node 20.19+ or 22.12+. From `web/`: `npm ci`, then `npm run dev`.
 
-`build` first runs TypeScript with strict checks, then Vite. `zip` rebuilds and writes `gg-ez-web-ts.zip`, with `index.html` at the archive root. The archive is a static site, not source code. `dist/`, `node_modules/`, ZIP files and `preview/` results are ignored.
+- A/D or arrows: move; W/up: jump; J: strike; K: ranged crescent; L: guard.
+- Space/Enter or Continue: advance a readable line.
+- In the room, W/S or up/down also move the ghost vertically; click objects to observe them. Continue appears after any two observations; the third remains available.
+- Reply windows last three seconds. Silence is timeout, not a third button.
+- Progress saves at chapter boundaries when browser storage is available. Continue resumes the current chapter.
+- Sound toggle mutes all sound. Dialogue is always subtitled. Voice playback may be interrupted by Continue.
 
-No query shows the registered-scene menu. The requested example is:
+## Build and package
 
-```text
-http://127.0.0.1:5173/?scene=m2&autoplay=1&pick=fuck%20off&seen=phone
-```
+`npm run build` checks TypeScript and produces `dist/` with relative asset paths. `npm run package` creates an itch-compatible ZIP (index.html at root) and a self-contained HTML file. No API keys, remote runtime calls, accounts, or server are needed in the shipped game.
 
-Interactive examples omit `autoplay=1`. Continue buttons (or Space/Enter) advance result cards. The reply window is three real seconds. Pick either exact reply, or let the timer expire. Autoplay accepts `pick=silence`; an unknown pick falls back to the first option. `seen` is comma-separated, with badge → phone → food priority and badge fallback.
+## Verification
 
-## 2. Add or inspect a scene
+`npx playwright install chromium`, then `npm test`. You can set `PREVIEW_BROWSER` to an installed Chrome/Edge/Chromium executable instead. The campaign test serves only a nested `/game/` path, runs all six final outcome/reply combinations through every chapter, checks win-branch chat persistence, drives a real keyboard fight, and measures the actual silence timeout. Screenshots and the report go to `verification/`.
 
-`src/main.ts` uses eager `import.meta.glob('./scenes/*/index.ts')`. Each module exports `id`, `title`, and a default `StoryScene` subclass whose Phaser scene key equals `id`. No central registry edits are needed to add a scene. Unknown scene queries return to the menu with an error label.
+Development routes: `?scene=m2` retains the earlier isolated scene; `?scene=campaign&chapter=7` starts the call (chapters are zero-based). `autoplay=1`, `pick=...`, and `outcome=win` are test-only query options; normal play never uses them. `?resume=1` uses saved progress.
 
-`StoryScene` provides `arena`, `pixelSprite`, `rect`, `label`, `balloon`, `chatPanel`, `hold`, `tween`, `mark`, `waitAdvance`, `choose`, and `finish`. Phaser `init(ctx)` and `create()` host the asynchronous `run()` lifecycle. Shutdown aborts pending timers/tweens/input waits and removes HTML controls. A scene returns data through `finish`, never changes scenes itself.
+## Audio and source
 
-Every `mark` waits two animation frames, sets `window.__beat`, appends a timestamp/text snapshot to `window.__beats`, and optionally awaits `window.__captureBeat(id)` for screenshot capture. `finish` sets `window.__done`. Asset/run failures set `window.__error` and show a visible failure panel rather than claiming completion. `__previewGame` exists only as instrumentation in this explicitly development-only build.
+Thirteen existing ElevenLabs effects, 26 ElevenLabs voice recordings, and a generated arcade loop are bundled locally. See `public/assets/audio/CREDITS.md` and `voice-script.json`. Cebuano lines retain English glosses; a human pronunciation pass is still useful. The narrative tables are in `docs/storyboards/FINAL-SCENES-HTML-HANDOFF.md` at repository root and the runtime scene manifests under `src/campaign/`.
 
-`src/scenes/m2/story.json` is the exact `m2` array from the supplied Act 3 storyboard. Runtime dialogue comes from that manifest. The Godot `m2.gd` supplies the motion, timing and positions. All eight files in the source `assets/dain/` are copied unchanged into `public/assets/dain/`; reference images are included but not loaded by the scenes.
-
-## 3. Verification and resources
-
-`npm test` serves built files exclusively below a fake `/sub/` prefix and launches Dia headlessly in an isolated Playwright context. It never uses a personal browser profile or logged-in tabs. The browser executable can be overridden with `PREVIEW_BROWSER` on another machine.
-
-The suite covers the no-query menu, directory and index URLs, unknown scene, sample autoplay and real clicks, every m2 reply branch in autoplay and interactive mode, real timeout duration, inner-line selection/fallback/priority, small-screen button scaling, scene-shutdown cancellation, and a deliberately missing asset. It asserts every m2 beat in order and exact reply text, captures each marked card, and writes `preview/results.json`. Deliberately failed asset requests are a separate negative test, not successful-run errors.
-
-The fixed-size canvas and accessible HTML controls share one CSS scale transform. `pixelArt` uses nearest-neighbour sprite scaling. Vite `base: './'` makes both generated files and image URLs relative to the hosting directory, including itch-style subpaths.
-
-The closing fold uses two 640 × 720 canvas textures anchored at the middle; together their raw pixel storage is 3,686,400 bytes (3.52 MiB). They are destroyed after folding, including on cancellation. This is a fixed-resolution cost, not storage that grows per beat. Text snapshots grow with the finite number of storyboard cards and reset on scene start. Scene imports are eager by contract; Phaser dominates the JavaScript bundle. No private captures or generated screenshots are shipped in the ZIP.
-
-See `VERIFICATION.md` for the measured result of the final local run. Screenshot files and raw timings remain under the ignored `preview/` directory.
+This candidate is separate from the existing public itch upload. The old playable game is not replaced by these development commands.

@@ -1,0 +1,349 @@
+{
+  "scenes": {
+    "p9": [
+      {
+        "id": "P.1",
+        "title": "AFTER-CALL WORK",
+        "view": "medium",
+        "pose": "upright",
+        "mode": "work",
+        "monitor": "AFTER-CALL WORK",
+        "duration": "0.8 s"
+      },
+      {
+        "id": "P.2",
+        "title": "The message is still there",
+        "view": "phone",
+        "pose": "glance",
+        "mode": "work",
+        "monitor": "Mama ❤️\nEarlier tonight\nNak, nakapadala na ka?\nBisan Friday na lang. Amping.",
+        "duration": "1 s hold"
+      },
+      {
+        "id": "P.3",
+        "title": "She types",
+        "view": "phone",
+        "pose": "typing",
+        "mode": "work",
+        "monitor": "Ma, Friday pa akong sweldo. Padala ko after.\nNikaon na pud ko hehe",
+        "duration": "0.6 s between bubbles"
+      },
+      {
+        "id": "P.4",
+        "title": "A photo of the container",
+        "view": "medium",
+        "pose": "present",
+        "mode": "work",
+        "duration": "0.8 s"
+      },
+      {
+        "id": "P.5",
+        "title": "Naay gulay. Technically.",
+        "view": "medium",
+        "pose": "leaf",
+        "mode": "work",
+        "speech": "Naay gulay. Technically.",
+        "duration": "Line hold"
+      },
+      {
+        "id": "P.6",
+        "title": "Sent",
+        "view": "phone",
+        "pose": "upright",
+        "mode": "work",
+        "monitor": "[photo: adobo container, one bay leaf]\nSent ✓",
+        "duration": "0.5 s"
+      },
+      {
+        "id": "P.7",
+        "title": "Her mother's earlier line",
+        "view": "phone",
+        "pose": "glance",
+        "mode": "work",
+        "monitor": "MAMA: Ayaw pasagdi imong kaugalingon, nak.",
+        "duration": "1.5 s hold"
+      },
+      {
+        "id": "P.8",
+        "title": "The budget note",
+        "view": "close",
+        "pose": "upright",
+        "mode": "work",
+        "monitor": "RENT · KURYENTE · GROCERY\nTRANSPO (onsite days)\nPADALA SA BALAY: Friday",
+        "duration": "Player read hold"
+      },
+      {
+        "id": "P.9",
+        "title": "The same lean, eyes closed",
+        "view": "room",
+        "pose": "leanback",
+        "mode": "work",
+        "duration": "3 s hold"
+      }
+    ],
+    "k10": [
+      {
+        "id": "K.1",
+        "title": "buhi pa ka?",
+        "view": "phone",
+        "pose": "glance",
+        "mode": "work",
+        "monitor": "MIKA: buhi pa ka?\nLIA: unfortunately",
+        "duration": "0.8 s"
+      },
+      {
+        "id": "K.2",
+        "title": "movie later?",
+        "view": "phone",
+        "pose": "typing",
+        "mode": "work",
+        "monitor": "MIKA: movie later? you bailed last time\nLIA: after shift promise\nMIKA: that's what you said last time",
+        "duration": "0.7 s per bubble"
+      },
+      {
+        "id": "K.3",
+        "title": "Types, deletes, types again",
+        "view": "phone",
+        "pose": "typing",
+        "mode": "work",
+        "monitor": "LIA: i was|\n(deleted)\nLIA: |",
+        "duration": "2 s"
+      },
+      {
+        "id": "K.4",
+        "title": "farming wins",
+        "view": "phone",
+        "pose": "laugh",
+        "mode": "work",
+        "monitor": "LIA: okay fine i was farming wins 😭\nMIKA: farming enemies more like\nLIA: character development\nMIKA: yours or theirs?",
+        "duration": "0.7 s per bubble"
+      },
+      {
+        "id": "K.5",
+        "title": "At least sa game",
+        "view": "medium",
+        "pose": "upright",
+        "mode": "work",
+        "speech": "At least sa game, kabalo ko nga maayo ko.",
+        "duration": "2 s hold"
+      },
+      {
+        "id": "K.6",
+        "title": "Back to the queue",
+        "view": "medium",
+        "pose": "upright",
+        "mode": "work",
+        "monitor": "STATUS: AVAILABLE\nNEXT BREAK 4:17",
+        "duration": "1 s"
+      }
+    ],
+    "t11": [
+      {
+        "id": "N.1",
+        "title": "2:48 AM",
+        "view": "room",
+        "pose": "typing",
+        "mode": "work",
+        "monitor": "CALL 00:04",
+        "overlay": "2:48 AM",
+        "duration": "Player-paced, 3 s minimum"
+      },
+      {
+        "id": "N.2",
+        "title": "3:19 AM",
+        "view": "room",
+        "pose": "present",
+        "mode": "work",
+        "overlay": "3:19 AM",
+        "duration": "3 s minimum"
+      },
+      {
+        "id": "N.3",
+        "title": "3:52 AM",
+        "view": "room",
+        "pose": "leanback",
+        "mode": "work",
+        "overlay": "3:52 AM",
+        "duration": "3 s minimum"
+      },
+      {
+        "id": "N.4",
+        "title": "4:17 AM, BREAK",
+        "view": "room",
+        "pose": "upright",
+        "mode": "work",
+        "monitor": "STATUS: BREAK",
+        "overlay": "4:17 AM",
+        "duration": "2 s"
+      },
+      {
+        "id": "N.5",
+        "title": "Usa pa.",
+        "view": "medium",
+        "pose": "upright",
+        "mode": "break",
+        "monitor": "GG EZ · QUEUE",
+        "speech": "Usa pa.",
+        "duration": "Line hold"
+      },
+      {
+        "id": "N.6",
+        "title": "Toward the light",
+        "view": "medium",
+        "pose": "upright",
+        "mode": "break",
+        "duration": "1.5 s"
+      }
+    ],
+    "f12": [
+      {
+        "id": "F.1",
+        "title": "CONNECTION: STABLE",
+        "view": "arena",
+        "pose": "idle",
+        "overlay": "OPPONENT: lia_ph\nCONNECTION: STABLE",
+        "duration": "1.2 s"
+      },
+      {
+        "id": "F.2",
+        "title": "Your block works",
+        "view": "arena",
+        "pose": "block",
+        "duration": "0.4 s"
+      },
+      {
+        "id": "F.3",
+        "title": "Exchange one",
+        "view": "arena",
+        "pose": "hit",
+        "duration": "2 s of play"
+      },
+      {
+        "id": "F.4",
+        "title": "Exchange two",
+        "view": "arena",
+        "pose": "approach",
+        "duration": "Up to 20 s"
+      },
+      {
+        "id": "F.5",
+        "title": "Final stock",
+        "view": "arena",
+        "pose": "ko",
+        "duration": "0.3 s"
+      },
+      {
+        "id": "F.6A",
+        "title": "ALTERNATIVE A: VICTORY",
+        "view": "chat",
+        "chat": "lia_ph: ez\nlia_ph: for you apparently 💀",
+        "overlay": "VICTORY",
+        "duration": "Hold until advance"
+      },
+      {
+        "id": "F.6B",
+        "title": "ALTERNATIVE B: DEFEAT",
+        "view": "chat",
+        "chat": "lia_ph: ez",
+        "overlay": "DEFEAT",
+        "duration": "Hold until advance"
+      },
+      {
+        "id": "F.7",
+        "title": "We stay in the game",
+        "view": "chat",
+        "chat": "lia_ph",
+        "duration": "2 s"
+      }
+    ],
+    "e13": [
+      {
+        "id": "E.1",
+        "title": "Only the chat remains",
+        "view": "chat",
+        "chat": "lia_ph: ez",
+        "duration": "3 s window"
+      },
+      {
+        "id": "E.2A",
+        "title": "ENDING A: give her credit",
+        "view": "chat",
+        "chat": "you: okay that was clean\nlia_ph: gg",
+        "duration": "Hold 2 s"
+      },
+      {
+        "id": "E.2B",
+        "title": "ENDING B: lash out",
+        "view": "chat",
+        "chat": "you: fuck off\n(lia_ph closed the chat)",
+        "duration": "Hold 2 s"
+      },
+      {
+        "id": "E.2C",
+        "title": "ENDING C: nothing sent",
+        "view": "chat",
+        "chat": "00:03 · 00:02 · 00:01\n(reply box gone)\nlia_ph requested a rematch",
+        "duration": "Hold 3 s"
+      },
+      {
+        "id": "E.3",
+        "title": "4:25 AM, Good morning",
+        "view": "room",
+        "pose": "leanback",
+        "mode": "break",
+        "overlay": "4:25 AM — LAPU-LAPU CITY",
+        "duration": "3 s"
+      },
+      {
+        "id": "E.4",
+        "title": "BREAK ENDS IN 00:15",
+        "view": "medium",
+        "pose": "upright",
+        "mode": "work",
+        "monitor": "BREAK ENDS IN 00:15",
+        "duration": "1 s"
+      },
+      {
+        "id": "E.5",
+        "title": "It was sent",
+        "view": "phone",
+        "pose": "glance",
+        "mode": "work",
+        "monitor": "Mama ❤️\n[photo] Sent ✓✓",
+        "duration": "1.5 s"
+      },
+      {
+        "id": "E.6",
+        "title": "Okay. Kaya pa.",
+        "view": "medium",
+        "pose": "upright",
+        "mode": "work",
+        "speech": "Okay. Kaya pa.",
+        "duration": "Line hold"
+      },
+      {
+        "id": "E.7",
+        "title": "Thank you for calling",
+        "view": "room",
+        "pose": "typing",
+        "mode": "work",
+        "speech": "Thank you for calling. My name is Lia. How may I help you?",
+        "duration": "Line, then 1 s fade"
+      },
+      {
+        "id": "E.8",
+        "title": "Your side",
+        "view": "grip",
+        "overlay": "",
+        "duration": "3 s, then cut"
+      },
+      {
+        "id": "E.9",
+        "title": "END OF MATCH",
+        "view": "black",
+        "overlay": "GG EZ\nA game by Carl Kho & Dain Kim\nEND OF MATCH",
+        "duration": "Hold until the player leaves"
+      }
+    ]
+  }
+}

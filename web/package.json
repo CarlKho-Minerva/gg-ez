@@ -1,15 +1,22 @@
 {
-  "name": "gg-ez-web-development-preview",
-  "version": "0.1.0",
+  "name": "gg-ez",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "node tools/preview.mjs",
-    "zip": "npm run build && node tools/zip.mjs"
+    "test": "node tools/campaign-test.mjs",
+    "zip": "npm run package",
+    "package": "npm run build && node tools/package.mjs"
   },
-  "dependencies": { "phaser": "3.90.0" },
-  "devDependencies": { "playwright": "1.64.1", "typescript": "5.9.3", "vite": "7.3.7" }
+  "dependencies": {
+    "phaser": "3.90.0"
+  },
+  "devDependencies": {
+    "playwright": "1.64.1",
+    "typescript": "5.9.3",
+    "vite": "7.3.7"
+  }
 }

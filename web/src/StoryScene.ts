@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { assetUrl } from './assets';
 
 export const W = 1280, H = 720, PIX = 2.5, ARENA_TOP = 80, ARENA_FLOOR = 570;
 export const C = { night: 0x111226, paper: '#f4f2eb', ink: '#141625', pink: '#ff729b', dim: '#8991b9' };
@@ -31,7 +32,7 @@ export abstract class StoryScene extends Phaser.Scene {
   }
   preload() {
     for (const name of ['arena-bg', 'lia-wizard', 'wolf', 'lia-spell', 'wolf-crescent']) {
-      if (!this.textures.exists(name)) this.load.image(name, `${import.meta.env.BASE_URL}assets/dain/${name}.png`);
+      if (!this.textures.exists(name)) this.load.image(name, assetUrl(`assets/dain/${name}.png`));
     }
     const onError = (file: { key: string }) => this.fail(new Error(`Asset failed: ${file.key}`));
     this.load.on('loaderror', onError);
@@ -94,10 +95,13 @@ export abstract class StoryScene extends Phaser.Scene {
     return { lia, wolf };
   }
   balloon(text: string, headX: number, headY: number) {
-    const x = Phaser.Math.Clamp(headX - 126, 20, W - 480), y = Math.max(headY - 150, 20);
-    const box = this.rect(x, y, 448, 100, 0xf4f2eb);
-    const pointer = this.add.graphics().fillStyle(0xf4f2eb).fillTriangle(x + 126, y + 99, x + 148, y + 99, headX, headY - 8);
-    const label = this.label(text, x + 14, y + 14, 24, C.ink, 420);
+    const x = Phaser.Math.Clamp(headX - 200, 20, W - 500);
+    const label = this.label(text, x + 20, 0, 26, C.ink, 440);
+    const height = Math.max(80, label.height + 36), y = Math.max(78, headY - height - 42);
+    label.y = y + 18;
+    const box = this.rect(x, y, 480, height, 0xf4f2eb);
+    const pointer = this.add.graphics().fillStyle(0xf4f2eb).fillTriangle(headX - 12, y + height - 1, headX + 12, y + height - 1, headX, headY - 8);
+    this.children.moveBelow(box,label); this.children.moveBelow(pointer,label);
     return { destroy: () => { box.destroy(); pointer.destroy(); label.destroy(); } };
   }
   chatPanel(lines: string[], timer = '') {
