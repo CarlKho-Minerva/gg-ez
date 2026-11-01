@@ -1,0 +1,131 @@
+[
+  {
+    "id": "M2.1",
+    "title": "Arena returns",
+    "view": "arena",
+    "pose": "idle",
+    "action": "Hard cut from the room to the arena. Dain's arena background, wizard left, wolf right, at the exact Scene 2 start positions. Wolf settles into idle; wizard raises the staff. Full arcade color in one frame, no fade.",
+    "camera": "Fixed wide, identical crop to Scene 2 frame 2.01",
+    "sound": "Arena music resumes loud mid-phrase; the fan cuts dead",
+    "duration": "0.3 s cut, 0.8 s idle",
+    "control": "Move, attack, dodge and block available; connection still unstable",
+    "note": "v0.3 Scene 6: the arcade colors return, the music is loud again, the ghost is no longer visible."
+  },
+  {
+    "id": "M2.2",
+    "title": "One inner line, varies by what you saw",
+    "view": "narration",
+    "pose": "idle",
+    "narration": "Isn't her break almost over?",
+    "alts": [
+      "Badge seen: Isn't her break almost over?",
+      "Phone seen: She still hasn't answered her mom.",
+      "Food seen: She's probably laughing with her mouth full of rice again."
+    ],
+    "action": "Fighters idle. One narration line fades in along the bottom of the arena in the player's inner voice, then fades out before the first exchange. Exactly one line plays, chosen from the objects the player actually observed.",
+    "camera": "Fixed wide; no portrait, no cutaway to the room",
+    "sound": "Music continues under the line; no sting",
+    "duration": "Line visible 1.6 s, 0.3 s fade each side",
+    "control": "Not a prompt; player keeps control the whole time",
+    "note": "Exact v0.3 narration lines. Evidence of imagining a person, not moral prompts."
+  },
+  {
+    "id": "M2.3",
+    "title": "Lia lands a hit",
+    "view": "arena",
+    "pose": "hit",
+    "chat": "lia_ph: bro just block 😭",
+    "action": "Wizard fires the cyan spell rightward (Dain's leah-effect sprite). It connects; the wolf is pushed 40 px right and flinches, feet still on the platform. A chat line pops top-right while the match keeps going.",
+    "camera": "Fixed wide",
+    "sound": "Spell hiss, hit thud, one chat ping",
+    "duration": "Spell travel 0.3 s, flinch 0.2 s, chat stays 1.5 s",
+    "control": "Player can still act; mid-match chat is read-only",
+    "note": "v0.3: Lia lands a hit. lia_ph: bro just block 😭"
+  },
+  {
+    "id": "M2.4",
+    "title": "You try to block, late",
+    "view": "arena",
+    "pose": "block",
+    "overlay": "NETWORK DELAY",
+    "action": "Player presses block. The wolf's guard (gray shield slab in front of it) appears 0.4 s after the press, after the second spell has already passed. NETWORK DELAY flashes once in the top band; the wizard keeps moving.",
+    "camera": "Fixed wide",
+    "sound": "Button press, then a delayed guard clack after the hit",
+    "duration": "Press-to-guard delay 0.4 s; flash 0.5 s",
+    "control": "Input accepted, resolved late; the world never pauses",
+    "note": "Same NETWORK DELAY device as Scene 2; v0.3 shows no millisecond number here."
+  },
+  {
+    "id": "M2.5",
+    "title": "Knocked off the platform",
+    "view": "arena",
+    "pose": "ko",
+    "overlay": "DEFEAT",
+    "action": "The wizard's follow-up launches the wolf right and up past the platform edge, rotated 20 degrees, beyond the arena border. DEFEAT drops in over the arena after 0.3 s; the wizard returns to idle on the left.",
+    "camera": "Fixed wide; result holds",
+    "sound": "Launch whoosh, announcer GAME",
+    "duration": "Launch 0.5 s, result hold until advance",
+    "control": "Combat locked; advance after read",
+    "note": "v0.3: Your character gets knocked off the platform. DEFEAT."
+  },
+  {
+    "id": "M2.6",
+    "title": "ez, and the same two replies",
+    "view": "chat",
+    "chat": "lia_ph: ez",
+    "action": "MATCH CHAT slides up over the frozen result. lia_ph: ez. The two reply buttons appear with the 00:03 timer, pixel-identical to Scene 2: okay that was clean / fuck off. Nothing on screen marks either one.",
+    "camera": "Same chat crop and scale as Scene 2 frame 2.07",
+    "sound": "Chat ping; the timer ticks each second",
+    "duration": "3 s window; timeout counts as silence",
+    "control": "One tap on either button, or let the clock run",
+    "note": "v0.3: the same three-second response returns. Carl: identical pair at the opening and the end so the comparison survives; wording approved 2026-10-31."
+  },
+  {
+    "id": "M2.7A",
+    "title": "ALTERNATIVE A: give her credit",
+    "view": "chat",
+    "chat": "you: okay that was clean\nlia_ph: wait weren't you here earlier",
+    "action": "Your line appears; her reply lands 0.8 s later. Nothing else changes: no apology, no warmer tone. The result stays frozen behind the chat.",
+    "camera": "Same chat crop",
+    "sound": "Send blip, reply ping",
+    "duration": "Reply after 0.8 s; hold until advance",
+    "control": "Advance after read",
+    "note": "v0.3 reply to a compliment in the second match: wait weren't you here earlier."
+  },
+  {
+    "id": "M2.7B",
+    "title": "ALTERNATIVE B: lash out",
+    "view": "chat",
+    "chat": "you: fuck off\nlia_ph: HAHAHA still mad",
+    "action": "Your line appears; her reply lands 0.8 s later. She does not escalate; she is amused. Result stays frozen behind.",
+    "camera": "Same chat crop",
+    "sound": "Send blip, reply ping",
+    "duration": "Reply after 0.8 s; hold until advance",
+    "control": "Advance after read",
+    "note": "v0.3 reply to an insult in the second match: HAHAHA still mad."
+  },
+  {
+    "id": "M2.7C",
+    "title": "ALTERNATIVE C: say nothing",
+    "view": "chat",
+    "chat": "00:00\n(nothing sent)",
+    "action": "The timer reaches 00:00; the reply box greys out and closes. No message from Lia this time; the chat simply ends. The result stays on screen for one quiet second.",
+    "camera": "Same chat crop",
+    "sound": "Final tick, then nothing",
+    "duration": "Timeout at 3 s, 1 s hold",
+    "control": "No input; recorded as said nothing",
+    "note": "v0.3: if they remain silent, the conversation simply ends. Lia doesn't apologize."
+  },
+  {
+    "id": "M2.8",
+    "title": "Disconnect: the screen folds inward",
+    "view": "fold",
+    "overlay": "CONNECTION LOST\nRECONNECTING TO HOST: lia_ph",
+    "action": "The arena image creases down the middle and folds inward toward the center like paper closing, taking the chat with it. No crack and no thrown controller this time. The fold ends in a thin vertical line of light.",
+    "camera": "Fixed wide; the fold happens inside the frame",
+    "sound": "Music pitches down and stops; soft suction, far quieter than the first pull",
+    "duration": "Fold 0.9 s, line of light 0.4 s",
+    "control": "Cinematic; no input",
+    "note": "v0.3 Scene 7: the match disconnects again; the screen folds inward. Same faulty-connection rule, no new portal mythology."
+  }
+]
