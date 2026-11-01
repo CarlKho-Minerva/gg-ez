@@ -1,6 +1,6 @@
 # GG EZ — HTML campaign
 
-A fighting game about losing to a stranger, then inconveniently discovering she’s a person.
+One more game. You lose by a hair, she types ez, and you get three seconds and two replies. (The page copy stops there on purpose; the rest of the game is the twist.)
 
 The default page is the complete 13-chapter Phaser campaign. Dain’s pixel artwork is reused throughout; the room uses the existing retrofit and character extraction. It includes keyboard/touch combat, three opening losses, a monitor transition, object exploration, the work call, Mama and Mika chats, a final fight, and three reply branches. Final victory depends on combat, independently of objects and conversation history.
 
@@ -8,7 +8,8 @@ The default page is the complete 13-chapter Phaser campaign. Dain’s pixel artw
 
 Node 20.19+ or 22.12+. From `web/`: `npm ci`, then `npm run dev`.
 
-- A/D or arrows: move; W/up: jump; J: strike; K: ranged crescent; L: guard.
+- A/D or arrows: move; W/up: jump; S/down: dash through her (briefly invulnerable); J: strike, three in a row make a string whose third hit launches her; K: crescent, and after two strikes a double-damage finisher; L: hold to block, and a block in the instant before a hit parries and staggers her.
+- Lia moves on her own: she closes, backs off, blinks across the arena, swings her staff up close, casts from range and fires three-spell barrages in later rounds. The first three matches are rigged by lag and end by a hair; only the final one is fair.
 - Space/Enter or Continue: advance a readable line.
 - In the room, WASD/arrows move the ghost. Clicking, tapping or dragging sets a movement destination; entering an object's space opens it. There are no exploration buttons. After any two discoveries, drift into the monitor to return to the match; the third object remains available. On a phone, landscape gives the text more room.
 - Reply windows last three seconds. Silence is timeout, not a third button.

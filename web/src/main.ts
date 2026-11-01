@@ -26,9 +26,9 @@ class Menu extends Phaser.Scene {
     this.add.image(640,360,'title-bg').setDisplaySize(1280,560).setAlpha(.3);
     this.add.rectangle(0,0,W,H,0x0b0c19,.45).setOrigin(0);
     this.add.text(108,115,'GG EZ',{fontFamily:'monospace',fontSize:'120px',fontStyle:'bold',color:C.paper});
-    this.add.text(115,268,'A fighting game about losing to a stranger,\nthen inconveniently discovering she’s a person.',
+    this.add.text(115,268,'One more game.\nYou lose by a hair. She types ez. You get three seconds and two replies.',
       {fontFamily:'Arial',fontSize:'27px',color:C.paper,lineSpacing:9});
-    this.add.text(115,510,'A/D or arrows · move     W · jump     J/K · attack     L · block\nSpace / Enter · continue     Drift into objects · observe',
+    this.add.text(115,496,'A/D · move     W · jump     S · dash     J · strike     K · crescent     L · block\nJ J J · string     J J K · finisher     L on the hit · parry\nSpace / Enter · continue     Drift into objects · observe',
       {fontSize:'21px',color:C.dim,lineSpacing:12});
     this.add.text(115,635,'CARL KHO & DAIN KIM',{fontSize:'17px',color:C.dim});
     const row=document.createElement('div');row.className='button-row';row.style.left='115px';row.style.top='395px';
